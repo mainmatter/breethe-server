@@ -14,7 +14,7 @@ install:
   - mix deps.get
 
 script:
-  - mix text
+  - mix test
 
 notifications:
   email: false
