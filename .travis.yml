@@ -13,6 +13,9 @@ install:
   - mix local.hex --force
   - mix deps.get
 
+before_script:
+  - psql -c " CREATE USER airquality WITH CREATEDB PASSWORD 'airquality'; ALTER USER airquality superuser;" -U postgres
+
 script:
   - mix test
 
