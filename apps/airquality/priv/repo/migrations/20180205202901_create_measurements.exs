@@ -5,7 +5,7 @@ defmodule Airquality.Repo.Migrations.CreateMeasurements do
     create table(:measurements) do
       add :parameter, :parameter
       add :location_id, references(:locations), null: false
-      add :measured_id, :utc_datetime
+      add :measured_at, :utc_datetime
       add :value, :float
       add :unit, :unit
       add :coordinates, :geometry

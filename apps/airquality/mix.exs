@@ -39,7 +39,8 @@ defmodule Airquality.Mixfile do
       {:postgrex, ">= 0.0.0"},
       {:ecto, "~> 2.1"},
       {:ecto_enum, "~> 1.0"},
-      {:geo_postgis, "~> 1.1"}
+      {:geo_postgis, "~> 1.1"},
+      {:ex_machina, "~> 2.1", only: :test}
     ]
   end
 

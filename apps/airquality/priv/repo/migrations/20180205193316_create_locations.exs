@@ -12,5 +12,6 @@ defmodule Airquality.Repo.Migrations.CreateLocations do
 
       timestamps()
     end
+    create unique_index(:locations, [:identifier])
   end
 end
