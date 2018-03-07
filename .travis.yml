@@ -3,6 +3,7 @@ elixir:
   - 1.6.2
 
 install:
+  - mix local.rebar --force
   - mix local.hex --force
   - mix deps.get
 
