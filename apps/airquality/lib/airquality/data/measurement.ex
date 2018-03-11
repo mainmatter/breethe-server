@@ -4,12 +4,12 @@ defmodule Airquality.Data.Measurement do
   alias Airquality.Data.{Measurement, Location}
 
   schema "measurements" do
-    belongs_to :location, Location
-    field :parameter, ParameterEnum
-    field :measured_at, :utc_datetime
-    field :value, :float
-    field :unit, UnitEnum
-    field :coordinates, Geo.Geometry
+    belongs_to(:location, Location)
+    field(:parameter, ParameterEnum)
+    field(:measured_at, :utc_datetime)
+    field(:value, :float)
+    field(:unit, UnitEnum)
+    field(:coordinates, Geo.Geometry)
 
     timestamps()
   end

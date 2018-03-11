@@ -1,3 +1,5 @@
-Postgrex.Types.define(Airquality.PostgresTypes,
+Postgrex.Types.define(
+  Airquality.PostgresTypes,
   [Geo.PostGIS.Extension] ++ Ecto.Adapters.Postgres.extensions(),
-  json: Poison)
+  json: Poison
+)
