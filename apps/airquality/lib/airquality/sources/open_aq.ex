@@ -9,12 +9,11 @@ defmodule Airquality.Sources.OpenAQ do
   end
 
   def get_locations(lat, lon) do
-    url = "https://api.openaq.org/v1/locations?coordinates=#{lat},#{lon}&nearest=10"
+    url = "#{Application.get_env(:airquality, :open_aq_api_endpoint)}/locations?coordinates=#{lat},#{lon}&nearest=100"
     {:ok, response} = HTTPoison.get(url)
-
     data = Poison.decode!(response.body)
-    %{"results" => results} = data
 
+    %{"results" => results} = data
     Enum.map(results, fn result ->
       %{
         "location" => identifier,
@@ -28,13 +27,11 @@ defmodule Airquality.Sources.OpenAQ do
         }
       } = result
 
-      {:ok, last_updated, _} = DateTime.from_iso8601(last_updated)
-
       params = %{
         identifier: identifier,
         city: city,
         country: country,
-        last_updated: last_updated,
+        last_updated: Timex.parse!(last_updated, "{ISO:Extended:Z}"),
         available_parameters: available_parameters,
         coordinates: %Geo.Point{coordinates: {lat, lon}, srid: 4326}
       }
@@ -44,9 +41,6 @@ defmodule Airquality.Sources.OpenAQ do
     end)
   end
 
-  def get_locations(location) do
-  end
-
   defp find_location(search_term) do
     query =
       URI.encode_query(%{
@@ -54,7 +48,7 @@ defmodule Airquality.Sources.OpenAQ do
         "key" => Application.get_env(:airquality, :google_maps_api_key)
       })
 
-    url = "https://maps.googleapis.com/maps/api/geocode/json?#{query}"
+    url = "#{Application.get_env(:airquality, :google_maps_api_endpoint)}?#{query}"
     {:ok, response} = HTTPoison.get(url)
 
     data = Poison.decode!(response.body)

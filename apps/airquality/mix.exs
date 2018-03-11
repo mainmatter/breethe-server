@@ -41,7 +41,10 @@ defmodule Airquality.Mixfile do
       {:ecto_enum, "~> 1.0"},
       {:geo_postgis, "~> 1.1"},
       {:ex_machina, "~> 2.1", only: :test},
-      {:httpoison, "~> 1.0"}
+      {:httpoison, "~> 1.0"},
+      {:bypass, "~> 0.8", only: :test},
+      {:poison, "~> 3.1"},
+      {:timex, "~> 3.1"}
     ]
   end
 
