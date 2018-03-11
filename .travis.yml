@@ -12,12 +12,13 @@ install:
   - mix local.hex --force
   - mix deps.get
 
-before_script:
-  - psql -c "CREATE EXTENSION postgis" -U postgres
-  - psql -c "CREATE USER airquality WITH CREATEDB PASSWORD 'airquality'; ALTER USER airquality superuser;" -U postgres
-
-script:
-  - mix test
+jobs:
+  include:
+    - stage: test
+      before_script: psql -c "CREATE EXTENSION postgis; CREATE USER airquality WITH CREATEDB PASSWORD 'airquality'; ALTER USER airquality superuser;" -U postgres
+      script: mix test
+    - stage: test
+      script: mix format --check-formatted
 
 notifications:
   email: false

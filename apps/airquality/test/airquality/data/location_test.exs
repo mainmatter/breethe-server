@@ -4,7 +4,14 @@ defmodule Airquality.Data.LocationTest do
 
   alias Airquality.Data.Location
 
-  @valid_attrs %{identifier: "identifer", city: "city", country: "country", last_updated: DateTime.utc_now, available_parameters: [:pm10], coordinates: %Geo.Point{coordinates: {1, 2}, srid: 4326}}
+  @valid_attrs %{
+    identifier: "identifer",
+    city: "city",
+    country: "country",
+    last_updated: DateTime.utc_now(),
+    available_parameters: [:pm10],
+    coordinates: %Geo.Point{coordinates: {1, 2}, srid: 4326}
+  }
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do
