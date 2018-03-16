@@ -23,7 +23,7 @@ defmodule Airquality.Mixfile do
   def application do
     [
       mod: {Airquality.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :httpoison]
     ]
   end
 
@@ -40,7 +40,11 @@ defmodule Airquality.Mixfile do
       {:ecto, "~> 2.1"},
       {:ecto_enum, "~> 1.0"},
       {:geo_postgis, "~> 1.1"},
-      {:ex_machina, "~> 2.1", only: :test}
+      {:ex_machina, "~> 2.1", only: :test},
+      {:httpoison, "~> 1.0"},
+      {:bypass, "~> 0.8", only: :test},
+      {:poison, "~> 3.1"},
+      {:timex, "~> 3.1"}
     ]
   end
 
