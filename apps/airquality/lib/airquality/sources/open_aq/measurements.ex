@@ -1,7 +1,6 @@
 defmodule Airquality.Sources.OpenAQ.Measurements do
   alias Airquality.Repo
   alias Airquality.Data.{Measurement, Location}
-  require IEx
 
   def get_latest(lat, lon) do
     url =

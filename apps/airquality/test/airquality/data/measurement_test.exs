@@ -1,8 +1,6 @@
 defmodule Airquality.Data.MeasurementTest do
   use Airquality.DataCase
-  import Airquality.Factory
-
-  alias Airquality.Data.{Measurement, Location}
+  alias Airquality.Data.Measurement
 
   @valid_attrs %{
     location_id: 1,
