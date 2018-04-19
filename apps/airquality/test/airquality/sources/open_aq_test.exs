@@ -74,7 +74,7 @@ defmodule Airquality.Sources.OpenAQTest do
   end
 
   describe "load location data on demand" do
-    test "it gets locations by latitude and longitude", %{bypass: bypass} do
+    test "by latitude and longitude", %{bypass: bypass} do
       Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
         assert %{"nearest" => "100", "coordinates" => "10,20"} ==
                  URI.decode_query(conn.query_string)
@@ -96,7 +96,7 @@ defmodule Airquality.Sources.OpenAQTest do
              }
     end
 
-    test "it gets locations by search term", %{bypass: bypass} do
+    test "by search term", %{bypass: bypass} do
       Bypass.expect(bypass, "GET", "/google-maps", fn conn ->
         assert %{
                  "address" => "marienplatz münchen",
@@ -130,18 +130,18 @@ defmodule Airquality.Sources.OpenAQTest do
   end
 
   describe "load ppm data on demand" do
-    test "it loads ppm data on demand for a location based on lattitude and longitude", %{
+    test "based on location id", %{
       bypass: bypass
     } do
       location = insert(:location)
 
       Bypass.expect(bypass, "GET", "/open-aq/latest", fn conn ->
-        assert %{"coordinates" => "10,20"} == URI.decode_query(conn.query_string)
+        assert %{"location" => location.identifier} == URI.decode_query(conn.query_string)
 
         Plug.Conn.resp(conn, 200, Poison.encode!(@sample_measurement))
       end)
 
-      :ok = OpenAQ.get_latest_measurements(10, 20)
+      :ok = OpenAQ.get_latest_measurements(location.id)
 
       assert measurements = Repo.preload(location, :measurements).measurements
       assert assert length(measurements) == 2

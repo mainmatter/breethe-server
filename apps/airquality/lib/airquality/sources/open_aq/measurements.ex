@@ -1,18 +1,18 @@
 defmodule Airquality.Sources.OpenAQ.Measurements do
   alias Airquality.Data
 
-  def get_latest(lat, lon) do
-    result = query_open_aq(lat, lon)
-    measurements = result["measurements"]
+  def get_latest(location_id) do
+    location = Data.get_location(location_id)
 
-    location = Data.get_location(lat, lon)
+    result = query_open_aq(location.identifier)
+    measurements = result["measurements"]
 
     Enum.each(measurements, fn measurement ->
       params =
         measurement
         |> parse_measurement()
         |> Map.put_new(:location_id, location.id)
-        |> Data.add_coordinates(lat, lon)
+        |> Map.put_new(:coordinates, location.coordinates)
 
       Data.create_measurement(params)
     end)
@@ -34,9 +34,9 @@ defmodule Airquality.Sources.OpenAQ.Measurements do
     }
   end
 
-  defp query_open_aq(lat, lon) do
+  defp query_open_aq(identifier) do
     url =
-      "#{Application.get_env(:airquality, :open_aq_api_endpoint)}/latest?coordinates=#{lat},#{lon}"
+      "#{Application.get_env(:airquality, :open_aq_api_endpoint)}/latest?location=#{identifier}"
 
     {:ok, response} = HTTPoison.get(url)
     %{"results" => [result]} = Poison.decode!(response.body)

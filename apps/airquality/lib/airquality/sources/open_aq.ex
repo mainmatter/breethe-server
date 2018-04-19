@@ -12,7 +12,7 @@ defmodule Airquality.Sources.OpenAQ do
     Locations.get_locations(lat, lon)
   end
 
-  def get_latest_measurements(lat, lon) do
-    Measurements.get_latest(lat, lon)
+  def get_latest_measurements(location_id) do
+    Measurements.get_latest(location_id)
   end
 end
