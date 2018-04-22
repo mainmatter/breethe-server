@@ -8,7 +8,7 @@ defmodule Airquality.Sources.OpenAQ.Measurements do
     result = query_open_aq(location.identifier)
     measurements = result["measurements"]
 
-    Enum.each(measurements, fn measurement ->
+    Enum.map(measurements, fn measurement ->
       params =
         measurement
         |> parse_measurement()

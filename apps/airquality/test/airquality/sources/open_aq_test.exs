@@ -2,7 +2,6 @@ defmodule Airquality.Sources.OpenAQTest do
   use Airquality.DataCase
   import Airquality.Factory
   alias Airquality.Sources.OpenAQ
-  alias Airquality.Repo
 
   @sample_location %{
     "results" => [
@@ -141,10 +140,7 @@ defmodule Airquality.Sources.OpenAQTest do
         Plug.Conn.resp(conn, 200, Poison.encode!(@sample_measurement))
       end)
 
-      :ok = OpenAQ.get_latest_measurements(location.id)
-
-      assert measurements = Repo.preload(location, :measurements).measurements
-      assert assert length(measurements) == 2
+      measurements = OpenAQ.get_latest_measurements(location.id)
 
       [
         %Airquality.Data.Measurement{
