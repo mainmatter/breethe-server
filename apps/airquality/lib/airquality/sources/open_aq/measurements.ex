@@ -13,7 +13,6 @@ defmodule Airquality.Sources.OpenAQ.Measurements do
         measurement
         |> parse_measurement()
         |> Map.put_new(:location_id, location.id)
-        |> Map.put_new(:coordinates, location.coordinates)
 
       create_measurement(params)
     end)

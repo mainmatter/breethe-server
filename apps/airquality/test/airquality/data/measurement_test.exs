@@ -7,8 +7,7 @@ defmodule Airquality.Data.MeasurementTest do
     parameter: :pm10,
     measured_at: DateTime.utc_now(),
     value: 1.0,
-    unit: :micro_grams_m3,
-    coordinates: %Geo.Point{coordinates: {1, 2}, srid: 4326}
+    unit: :micro_grams_m3
   }
   @invalid_attrs %{}
 

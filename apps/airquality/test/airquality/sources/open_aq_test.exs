@@ -148,7 +148,6 @@ defmodule Airquality.Sources.OpenAQTest do
 
       [
         %Airquality.Data.Measurement{
-          coordinates: coordinates1,
           location_id: location1,
           measured_at: measured_at1,
           parameter: parameter1,
@@ -156,7 +155,6 @@ defmodule Airquality.Sources.OpenAQTest do
           value: value1
         },
         %Airquality.Data.Measurement{
-          coordinates: coordinates2,
           location_id: location2,
           measured_at: measured_at2,
           parameter: parameter2,
@@ -165,8 +163,6 @@ defmodule Airquality.Sources.OpenAQTest do
         }
       ] = measurements
 
-      assert coordinates1 == coordinates2
-      assert coordinates2 == %Geo.Point{coordinates: {10.0, 20.0}, srid: 4326}
       assert location1 == location2 && location2 == location.id
       assert measured_at1 == measured_at2
 
