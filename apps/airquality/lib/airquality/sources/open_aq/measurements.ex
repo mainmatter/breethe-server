@@ -18,7 +18,7 @@ defmodule Airquality.Sources.OpenAQ.Measurements do
     end)
   end
 
-  def parse_measurement(measurement) do
+  defp parse_measurement(measurement) do
     %{
       "parameter" => parameter,
       "lastUpdated" => measured_at,
@@ -46,7 +46,7 @@ defmodule Airquality.Sources.OpenAQ.Measurements do
   defp convert_unit(unit) do
     case unit do
       "µg/m³" -> :micro_grams_m3
-      "mg/m³" -> :milli_grams_m3
+      "ppm" -> :ppm
     end
   end
 
