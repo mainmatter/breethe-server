@@ -7,5 +7,7 @@ defmodule AirqualityWeb.Router do
 
   scope "/api", AirqualityWeb do
     pipe_through(:api)
+
+    get("/locations", LocationController, :index)
   end
 end
