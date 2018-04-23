@@ -42,7 +42,8 @@ defmodule AirqualityWeb.Mixfile do
       {:phoenix_ecto, "~> 3.2"},
       {:gettext, "~> 0.11"},
       {:airquality, in_umbrella: true},
-      {:cowboy, "~> 1.0"}
+      {:cowboy, "~> 1.0"},
+      {:ja_serializer, "~> 0.13.0"}
     ]
   end
 
