@@ -1,16 +1,13 @@
 defmodule Airquality.Data.MeasurementTest do
   use Airquality.DataCase
-  import Airquality.Factory
-
-  alias Airquality.Data.{Measurement, Location}
+  alias Airquality.Data.Measurement
 
   @valid_attrs %{
     location_id: 1,
     parameter: :pm10,
     measured_at: DateTime.utc_now(),
     value: 1.0,
-    unit: :micro_grams_m3,
-    coordinates: %Geo.Point{coordinates: {1, 2}, srid: 4326}
+    unit: :micro_grams_m3
   }
   @invalid_attrs %{}
 
