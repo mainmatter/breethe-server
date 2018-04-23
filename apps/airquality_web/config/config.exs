@@ -24,8 +24,7 @@ config :logger, :console,
 
 config :airquality_web, :generators, context_app: :airquality
 
-config :phoenix, :format_encoders,
-  "json-api": Poison
+config :phoenix, :format_encoders, "json-api": Poison
 
 config :mime, :types, %{
   "application/vnd.api+json" => ["json-api"]
