@@ -9,11 +9,9 @@ defmodule AirqualityWeb.LocationControllerTest do
                "data" => [
                  %{
                    "attributes" => %{
-                     "available-parameters" => ["pm10", "pm25", "so2", "no2", "o3", "co", "bc"],
                      "city" => "test-city",
                      "coordinates" => [10, 20],
                      "country" => "test-country",
-                     "identifier" => "test-identifier",
                      "last-updated" => "2019-01-01T00:00:00Z"
                    },
                    "id" => "",
@@ -31,11 +29,9 @@ defmodule AirqualityWeb.LocationControllerTest do
                "data" => [
                  %{
                    "attributes" => %{
-                     "available-parameters" => ["pm10", "pm25", "so2", "no2", "o3", "co", "bc"],
                      "city" => "test-city",
                      "coordinates" => [10, 20],
                      "country" => "test-country",
-                     "identifier" => "test-identifier",
                      "last-updated" => "2019-01-01T00:00:00Z"
                    },
                    "id" => "",

@@ -2,7 +2,7 @@ defmodule AirqualityWeb.LocationView do
   use AirqualityWeb, :view
   use JaSerializer.PhoenixView
 
-  attributes([:identifier, :city, :country, :last_updated, :available_parameters, :coordinates])
+  attributes([:city, :country, :last_updated, :coordinates])
 end
 
 defimpl JaSerializer.Formatter, for: [Geo.Point] do
