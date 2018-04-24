@@ -1,4 +1,4 @@
-defmodule Airquality.Sources.HTTPClient do
+defmodule Airquality.Sources.OpenAQ do
   @behaviour Airquality.Sources.Behaviour
 
   alias Airquality.Sources.{Google, OpenAQ}

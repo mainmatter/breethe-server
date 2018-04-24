@@ -1,13 +1,13 @@
 defmodule AirqualityWeb.LocationController do
   use AirqualityWeb, :controller
 
-  @open_aq_api Application.get_env(:airquality, :open_aq)
+  @source Application.get_env(:airquality, :source)
 
   def index(conn, %{"filter" => filter}) do
     locations =
       case process_params(filter) do
-        [lat, lon] -> @open_aq_api.get_locations(lat, lon)
-        name -> @open_aq_api.get_locations(name)
+        [lat, lon] -> @source.get_locations(lat, lon)
+        name -> @source.get_locations(name)
       end
 
     render(conn, "index.json-api", data: locations)
