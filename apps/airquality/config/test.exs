@@ -9,3 +9,5 @@ config :airquality, Airquality.Repo,
   database: "airquality_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :airquality, open_aq: Airquality.Sources.OpenAQ.InMemory

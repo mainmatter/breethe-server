@@ -1,12 +1,14 @@
 defmodule AirqualityWeb.LocationController do
   use AirqualityWeb, :controller
-  alias Airquality.Sources.OpenAQ
+  @open_aq_api Application.get_env(:airquality, :open_aq)
+
+  require IEx
 
   def index(conn, %{"filter" => filter}) do
     locations =
       case process_params(filter) do
-        [lat, lon] -> OpenAQ.get_locations(lat, lon)
-        name -> OpenAQ.get_locations(name)
+        [lat, lon] -> @open_aq_api.get_locations(lat, lon)
+        name -> @open_aq_api.get_locations(name)
       end
 
     render(conn, "index.json-api", data: locations)
@@ -17,6 +19,12 @@ defmodule AirqualityWeb.LocationController do
   defp process_params(%{"coordinates" => coordinates}) do
     coordinates
     |> String.split(",")
-    |> Enum.map(&String.to_float/1)
+    |> Enum.map(&parse_float/1)
+  end
+
+  defp parse_float(string) do
+    # if remainder not "" - might want to raise.
+    {float, _remainder} = Float.parse(string)
+    float
   end
 end
