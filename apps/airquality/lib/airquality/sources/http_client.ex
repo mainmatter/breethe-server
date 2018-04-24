@@ -1,6 +1,7 @@
-defmodule Airquality.Sources.OpenAQ do
-  alias Airquality.Sources.Google
-  alias Airquality.Sources.OpenAQ.{Locations, Measurements}
+defmodule Airquality.Sources.HTTPClient do
+  @behaviour Airquality.Sources.Behaviour
+
+  alias Airquality.Sources.{Google, OpenAQ}
 
   def get_locations(search_term) do
     [lat, lon] = Google.Geocoding.find_location(search_term)
@@ -9,10 +10,10 @@ defmodule Airquality.Sources.OpenAQ do
   end
 
   def get_locations(lat, lon) do
-    Locations.get_locations(lat, lon)
+    OpenAQ.Locations.get_locations(lat, lon)
   end
 
   def get_latest_measurements(location_id) do
-    Measurements.get_latest(location_id)
+    OpenAQ.Measurements.get_latest(location_id)
   end
 end

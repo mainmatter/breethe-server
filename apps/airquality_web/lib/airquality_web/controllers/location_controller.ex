@@ -1,8 +1,7 @@
 defmodule AirqualityWeb.LocationController do
   use AirqualityWeb, :controller
-  @open_aq_api Application.get_env(:airquality, :open_aq)
 
-  require IEx
+  @open_aq_api Application.get_env(:airquality, :open_aq)
 
   def index(conn, %{"filter" => filter}) do
     locations =

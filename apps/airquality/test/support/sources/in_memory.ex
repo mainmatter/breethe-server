@@ -1,4 +1,6 @@
-defmodule Airquality.Sources.OpenAQ.InMemory do
+defmodule Airquality.Sources.InMemory do
+  @behaviour Airquality.Sources.Behaviour
+
   import Airquality.Factory
 
   def get_locations(search_term) when is_binary(search_term) do

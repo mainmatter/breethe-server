@@ -1,7 +1,7 @@
-defmodule Airquality.Sources.OpenAQTest do
+defmodule Airquality.Sources.HTTPClientTest do
   use Airquality.DataCase
   import Airquality.Factory
-  alias Airquality.Sources.OpenAQ
+  alias Airquality.Sources.HTTPClient
 
   @sample_location %{
     "results" => [
@@ -81,7 +81,7 @@ defmodule Airquality.Sources.OpenAQTest do
         Plug.Conn.resp(conn, 200, Poison.encode!(@sample_location))
       end)
 
-      [location] = OpenAQ.get_locations(10, 20)
+      [location] = HTTPClient.get_locations(10, 20)
 
       assert location.identifier == "test-location"
       assert location.city == "test-city"
@@ -122,7 +122,7 @@ defmodule Airquality.Sources.OpenAQTest do
         Plug.Conn.resp(conn, 200, Poison.encode!(@sample_location))
       end)
 
-      [location] = OpenAQ.get_locations("marienplatz münchen")
+      [location] = HTTPClient.get_locations("marienplatz münchen")
 
       assert location.identifier == "test-location"
     end
@@ -140,7 +140,7 @@ defmodule Airquality.Sources.OpenAQTest do
         Plug.Conn.resp(conn, 200, Poison.encode!(@sample_measurement))
       end)
 
-      measurements = OpenAQ.get_latest_measurements(location.id)
+      measurements = HTTPClient.get_latest_measurements(location.id)
 
       [
         %Airquality.Data.Measurement{
