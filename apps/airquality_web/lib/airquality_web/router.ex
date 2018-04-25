@@ -9,5 +9,6 @@ defmodule AirqualityWeb.Router do
     pipe_through(:api)
 
     get("/locations", LocationController, :index)
+    get("/measurements", MeasurementController, :index)
   end
 end
