@@ -11,4 +11,13 @@ defmodule Airquality.Factory do
       coordinates: %Geo.Point{coordinates: {10, 20}, srid: 4326}
     }
   end
+
+  def measurement_factory do
+    %Airquality.Data.Measurement{
+      parameter: :pm10,
+      measured_at: Timex.parse!("2019-01-01T00:00:00Z", "{ISO:Extended:Z}"),
+      value: 13.2,
+      unit: :ppm
+    }
+  end
 end
