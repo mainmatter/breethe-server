@@ -44,7 +44,8 @@ defmodule Airquality.Mixfile do
       {:httpoison, "~> 1.0"},
       {:bypass, "~> 0.8", only: :test},
       {:poison, "~> 3.1"},
-      {:timex, "~> 3.1"}
+      {:timex, "~> 3.1"},
+      {:mox, "~> 0.3", only: :test}
     ]
   end
 
