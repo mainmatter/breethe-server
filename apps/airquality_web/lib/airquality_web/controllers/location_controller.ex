@@ -22,8 +22,7 @@ defmodule AirqualityWeb.LocationController do
   end
 
   defp parse_float(string) do
-    # if remainder not "" - might want to raise.
-    {float, _remainder} = Float.parse(string)
+    {float, ""} = Float.parse(string)
     float
   end
 end

@@ -20,6 +20,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                "data" => [
                  %{
                    "attributes" => %{
+                     "name" => "test-identifier",
                      "city" => "test-city",
                      "coordinates" => [10, 20],
                      "country" => "test-country",
@@ -43,6 +44,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                "data" => [
                  %{
                    "attributes" => %{
+                     "name" => "test-identifier",
                      "city" => "test-city",
                      "coordinates" => [10, 20],
                      "country" => "test-country",
