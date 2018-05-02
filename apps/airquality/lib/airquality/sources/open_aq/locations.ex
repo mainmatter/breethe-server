@@ -46,9 +46,18 @@ defmodule Airquality.Sources.OpenAQ.Locations do
     results
   end
 
+  defp get_location(params) do
+    Location
+    |> Repo.get_by(Map.take(params, [:city, :coordinates, :identifier, :country]))
+    |> Repo.preload(:measurements)
+  end
+
   defp create_location(params) do
-    %Location{}
+    case get_location(params) do
+      nil -> %Location{}
+      location -> location
+    end
     |> Location.changeset(params)
-    |> Repo.insert!()
+    |> Repo.insert_or_update!()
   end
 end
