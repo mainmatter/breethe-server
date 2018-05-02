@@ -1,6 +1,4 @@
 defmodule Airquality.Sources.OpenAQ.Measurements do
-  alias Airquality.Data.{Measurement, Location}
-  alias Airquality.Repo
   alias Airquality.Data
 
   def get_latest(location_id) do
@@ -15,7 +13,7 @@ defmodule Airquality.Sources.OpenAQ.Measurements do
         |> parse_measurement()
         |> Map.put_new(:location_id, location.id)
 
-      create_measurement(params)
+      Data.create_measurement(params)
     end)
   end
 
@@ -49,16 +47,5 @@ defmodule Airquality.Sources.OpenAQ.Measurements do
       "µg/m³" -> :micro_grams_m3
       "ppm" -> :ppm
     end
-  end
-
-  defp get_measurement(params), do: Repo.get_by(Measurement, params)
-
-  defp create_measurement(params) do
-    case get_measurement(params) do
-      nil -> %Measurement{}
-      measurement -> measurement
-    end
-    |> Measurement.changeset(params)
-    |> Repo.insert_or_update!()
   end
 end

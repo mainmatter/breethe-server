@@ -1,6 +1,5 @@
 defmodule Airquality.Sources.OpenAQ.Locations do
-  alias Airquality.Repo
-  alias Airquality.Data.Location
+  alias Airquality.Data
 
   def get_locations(lat, lon) do
     results = query_open_aq(lat, lon)
@@ -8,7 +7,7 @@ defmodule Airquality.Sources.OpenAQ.Locations do
     Enum.map(results, fn result ->
       params = parse_location(result)
 
-      create_location(params)
+      Data.create_location(params)
     end)
   end
 
@@ -44,20 +43,5 @@ defmodule Airquality.Sources.OpenAQ.Locations do
     {:ok, response} = HTTPoison.get(url)
     %{"results" => results} = Poison.decode!(response.body)
     results
-  end
-
-  defp get_location(params) do
-    Location
-    |> Repo.get_by(Map.take(params, [:city, :coordinates, :identifier, :country]))
-    |> Repo.preload(:measurements)
-  end
-
-  defp create_location(params) do
-    case get_location(params) do
-      nil -> %Location{}
-      location -> location
-    end
-    |> Location.changeset(params)
-    |> Repo.insert_or_update!()
   end
 end
