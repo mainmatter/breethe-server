@@ -4,7 +4,10 @@ defmodule AirqualityWeb.MeasurementController do
   @source Application.get_env(:airquality, :source)
 
   def index(conn, %{"filter" => %{"location" => location_id}}) do
-    measurements = @source.get_latest_measurements(location_id)
+    measurements =
+      location_id
+      |> String.to_integer()
+      |> @source.get_latest_measurements()
 
     render(conn, "index.json-api", data: measurements)
   end

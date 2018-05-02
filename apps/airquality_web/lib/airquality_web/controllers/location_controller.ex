@@ -15,10 +15,12 @@ defmodule AirqualityWeb.LocationController do
     # 3. return locations
 
     db_locations =
-    case process_params(filter) do
-      [lat, lon] -> Data.search_locations(lat, lon)
-      name -> Data.search_locations(name)
-    end
+      case process_params(filter) do
+        [lat, lon] -> Data.search_locations(lat, lon)
+        name -> Data.search_locations(name)
+      end
+
+    IEx.pry()
 
     locations =
       case process_params(filter) do
