@@ -8,7 +8,7 @@ defmodule AirqualityWeb.LocationControllerTest do
 
   setup :verify_on_exit!
 
-  describe "returns locations" do
+  describe "index route: returns locations" do
     test "when filtering by location name" do
       Mock
       |> expect(:get_locations, fn _search_term -> Mock.get_locations(10, 20) end)
@@ -54,6 +54,29 @@ defmodule AirqualityWeb.LocationControllerTest do
                    "type" => "location"
                  }
                ],
+               "jsonapi" => %{"version" => "1.0"}
+             }
+    end
+  end
+
+  describe "show route: returns location" do
+    test "by id" do
+      location = insert(:location)
+
+      conn = get(build_conn(), "api/locations/#{location.id}", [])
+
+      assert json_response(conn, 200) == %{
+               "data" => %{
+                 "attributes" => %{
+                   "name" => "test-identifier",
+                   "city" => "test-city",
+                   "coordinates" => [10.0, 20.0],
+                   "country" => "test-country",
+                   "last-updated" => "2019-01-01T00:00:00.000000Z"
+                 },
+                 "id" => "#{location.id}",
+                 "type" => "location"
+               },
                "jsonapi" => %{"version" => "1.0"}
              }
     end
