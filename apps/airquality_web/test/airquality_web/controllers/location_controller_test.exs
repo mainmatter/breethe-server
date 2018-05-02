@@ -22,9 +22,9 @@ defmodule AirqualityWeb.LocationControllerTest do
                    "attributes" => %{
                      "name" => "test-identifier",
                      "city" => "test-city",
-                     "coordinates" => [10, 20],
+                     "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "last-updated" => "2019-01-01T00:00:00Z"
+                     "last-updated" => "2019-01-01T00:00:00.000000Z"
                    },
                    "id" => "",
                    "type" => "location"
@@ -46,9 +46,9 @@ defmodule AirqualityWeb.LocationControllerTest do
                    "attributes" => %{
                      "name" => "test-identifier",
                      "city" => "test-city",
-                     "coordinates" => [10, 20],
+                     "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "last-updated" => "2019-01-01T00:00:00Z"
+                     "last-updated" => "2019-01-01T00:00:00.000000Z"
                    },
                    "id" => "",
                    "type" => "location"

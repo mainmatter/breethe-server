@@ -6,16 +6,16 @@ defmodule Airquality.Factory do
       identifier: "test-identifier",
       city: "test-city",
       country: "test-country",
-      last_updated: Timex.parse!("2019-01-01T00:00:00Z", "{ISO:Extended:Z}"),
+      last_updated: DateTime.from_naive!(~N[2019-01-01 00:00:00.000000], "Etc/UTC"),
       available_parameters: [:pm10, :pm25, :so2, :no2, :o3, :co, :bc],
-      coordinates: %Geo.Point{coordinates: {10, 20}, srid: 4326}
+      coordinates: %Geo.Point{coordinates: {10.0, 20.0}, srid: 4326}
     }
   end
 
   def measurement_factory do
     %Airquality.Data.Measurement{
       parameter: :pm10,
-      measured_at: Timex.parse!("2019-01-01T00:00:00Z", "{ISO:Extended:Z}"),
+      measured_at: DateTime.from_naive!(~N[2019-01-01 00:00:00.000000], "Etc/UTC"),
       value: 13.2,
       unit: :ppm
     }
