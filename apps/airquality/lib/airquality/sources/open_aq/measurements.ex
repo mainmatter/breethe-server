@@ -50,10 +50,15 @@ defmodule Airquality.Sources.OpenAQ.Measurements do
     end
   end
 
+  defp get_measurement(params), do: Repo.get_by(Measurement, params)
+
   defp create_measurement(params) do
-    %Measurement{}
+    case get_measurement(params) do
+      nil -> %Measurement{}
+      measurement -> measurement
+    end
     |> Measurement.changeset(params)
-    |> Repo.insert!()
+    |> Repo.insert_or_update!()
   end
 
   defp get_location(location_id) do
