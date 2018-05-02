@@ -26,6 +26,66 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                    },
                    "id" => "",
                    "type" => "measurement"
+                 },
+                 %{
+                   "attributes" => %{
+                     "measured-at" => nil,
+                     "parameter" => "pm25",
+                     "unit" => nil,
+                     "value" => nil
+                   },
+                   "id" => "",
+                   "type" => "measurement"
+                 },
+                 %{
+                   "attributes" => %{
+                     "measured-at" => nil,
+                     "parameter" => "so2",
+                     "unit" => nil,
+                     "value" => nil
+                   },
+                   "id" => "",
+                   "type" => "measurement"
+                 },
+                 %{
+                   "attributes" => %{
+                     "measured-at" => nil,
+                     "parameter" => "no2",
+                     "unit" => nil,
+                     "value" => nil
+                   },
+                   "id" => "",
+                   "type" => "measurement"
+                 },
+                 %{
+                   "attributes" => %{
+                     "measured-at" => nil,
+                     "parameter" => "o3",
+                     "unit" => nil,
+                     "value" => nil
+                   },
+                   "id" => "",
+                   "type" => "measurement"
+                 },
+                 %{
+                   "attributes" => %{
+                     "measured-at" => nil,
+                     "parameter" => "co",
+                     "unit" => nil,
+                     "value" => nil
+                   },
+                   "id" => "",
+                   "type" => "measurement"
+                 },
+                 %{
+                   "attributes" => %{
+                     "measured-at" => nil,
+                     "parameter" => "bc",
+                     "unit" => nil,
+                     "value" => nil
+                   },
+                   "id" => "",
+                   "type" => "measurement"
                  }
                ],
                "jsonapi" => %{"version" => "1.0"}
