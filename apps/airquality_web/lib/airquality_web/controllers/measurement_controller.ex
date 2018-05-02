@@ -13,9 +13,14 @@ defmodule AirqualityWeb.MeasurementController do
 
   defp generate_missing_measurements(measurements) do
     measurements
-    |> Enum.map(& &1.parameter)
-    |> (&(@parameters -- &1)).()
+    |> list_missing_parameters()
     |> Enum.map(&add_nil_measurement/1)
+  end
+
+  defp list_missing_parameters(measurements) do
+    included_parameters = Enum.map(measurements, & &1.parameter)
+
+    @parameters -- included_parameters
   end
 
   defp add_nil_measurement(param) do
