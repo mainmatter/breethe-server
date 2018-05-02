@@ -1,9 +1,10 @@
 defmodule Airquality.Sources.OpenAQ.Measurements do
   alias Airquality.Data.{Measurement, Location}
   alias Airquality.Repo
+  alias Airquality.Data
 
   def get_latest(location_id) do
-    location = get_location(location_id)
+    location = Data.get_location(location_id)
 
     result = query_open_aq(location.identifier)
     measurements = result["measurements"]
@@ -59,9 +60,5 @@ defmodule Airquality.Sources.OpenAQ.Measurements do
     end
     |> Measurement.changeset(params)
     |> Repo.insert_or_update!()
-  end
-
-  defp get_location(location_id) do
-    Repo.get(Location, location_id)
   end
 end
