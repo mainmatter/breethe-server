@@ -19,10 +19,10 @@ defmodule Airquality.Data do
     |> Repo.insert_or_update!()
   end
 
-  defp get_measurement(params), do: Repo.get_by(Measurement, params)
+  defp find_measurement(params), do: Repo.get_by(Measurement, params)
 
   def create_measurement(params) do
-    case get_measurement(params) do
+    case find_measurement(params) do
       nil -> %Measurement{}
       measurement -> measurement
     end
