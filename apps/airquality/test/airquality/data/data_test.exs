@@ -13,12 +13,6 @@ defmodule Airquality.DataTest do
       assert location == Data.get_location(location.id)
     end
 
-    test "get_location by params" do
-      location = insert(:location)
-
-      assert Repo.preload(location, :measurements) == Data.get_location(location)
-    end
-
     test "create_location from params" do
       params = params_for(:location)
 

@@ -4,14 +4,14 @@ defmodule Airquality.Data do
 
   def get_location(id) when is_integer(id), do: Repo.get(Location, id)
 
-  def get_location(params) when is_map(params) do
+  defp find_location(params) when is_map(params) do
     Location
     |> Repo.get_by(Map.take(params, [:city, :coordinates, :identifier, :country]))
     |> Repo.preload(:measurements)
   end
 
   def create_location(params) do
-    case get_location(params) do
+    case find_location(params) do
       nil -> %Location{}
       location -> location
     end
