@@ -22,7 +22,7 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                      "parameter" => "pm10",
                      "unit" => "ppm",
                      "value" => 13.2,
-                     "measured-at" => "2019-01-01T00:00:00Z"
+                     "measured-at" => "2019-01-01T00:00:00.000000Z"
                    },
                    "id" => "",
                    "type" => "measurement"
