@@ -2,9 +2,9 @@ defmodule Airquality.Data do
   alias __MODULE__.{Location, Measurement}
   alias Airquality.Repo
 
-  def get_location(id) when is_integer(id), do: Repo.get(Location, id)
+  def get_location(id), do: Repo.get(Location, id)
 
-  defp find_location(params) when is_map(params) do
+  defp find_location(params) do
     Location
     |> Repo.get_by(Map.take(params, [:city, :coordinates, :identifier, :country]))
     |> Repo.preload(:measurements)
