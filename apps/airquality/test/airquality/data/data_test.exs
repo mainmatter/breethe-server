@@ -39,14 +39,6 @@ defmodule Airquality.DataTest do
   end
 
   describe "measurement: " do
-    test "get_measurement by params" do
-      params = params_for(:measurement)
-      location = insert(:location)
-      measurement = insert(:measurement, location_id: location.id)
-
-      assert measurement == Data.get_measurement(params)
-    end
-
     test "create_measurement from params" do
       location = insert(:location)
       params = params_for(:measurement, location_id: location.id)
