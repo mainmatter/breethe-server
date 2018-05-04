@@ -8,7 +8,8 @@ defmodule AirqualityWeb.Router do
   scope "/api", AirqualityWeb do
     pipe_through(:api)
 
-    resources("/locations", LocationController, only: [:index, :show])
-    get("/measurements", MeasurementController, :index)
+    resources("/locations", LocationController, only: [:index, :show]) do
+      resources("/measurements", MeasurementController, only: [:index])
+    end
   end
 end
