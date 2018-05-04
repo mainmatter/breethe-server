@@ -17,8 +17,8 @@ defmodule Airquality.Data.Measurement do
   @doc false
   def changeset(%Measurement{} = measurement, attrs) do
     measurement
-    |> cast(attrs, [:location_id, :parameter, :measured_at, :value, :unit])
+    |> cast(attrs, [:location_id, :parameter, :measured_at, :value, :unit, :quality_index])
     |> cast_assoc(:location)
-    |> validate_required([:location_id, :parameter, :measured_at, :value, :unit])
+    |> validate_required([:location_id, :parameter, :measured_at, :value, :unit, :quality_index])
   end
 end
