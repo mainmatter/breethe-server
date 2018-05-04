@@ -9,6 +9,7 @@ defmodule Airquality.Data.Measurement do
     field(:measured_at, :utc_datetime)
     field(:value, :float)
     field(:unit, UnitEnum)
+    field(:quality_index, IndexEnum)
 
     timestamps()
   end
