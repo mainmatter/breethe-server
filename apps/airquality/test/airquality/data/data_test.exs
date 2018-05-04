@@ -35,7 +35,7 @@ defmodule Airquality.DataTest do
   describe "measurement: " do
     test "create_measurement from params" do
       location = insert(:location)
-      params = params_for(:measurement, location_id: location.id)
+      params = params_for(:measurement, location: location)
 
       measurement = Data.create_measurement(params)
 
@@ -45,9 +45,12 @@ defmodule Airquality.DataTest do
     test "create_measurement updates (no-op) if measurement already exists" do
       params = params_for(:measurement)
       location = insert(:location)
-      measurement = insert(:measurement, location_id: location.id)
+      measurement = insert(:measurement, location: location)
 
-      assert measurement == Data.create_measurement(params)
+      created_measurement = Data.create_measurement(params)
+      |> Repo.preload(:location)
+
+      assert measurement == created_measurement
     end
   end
 end
