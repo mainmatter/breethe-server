@@ -13,7 +13,7 @@ defmodule AirqualityWeb.MeasurementControllerTest do
       Mock
       |> expect(:get_latest_measurements, fn _id -> build_list(1, :measurement) end)
 
-      conn = get(build_conn(), "api/measurements?filter[location]=1", [])
+      conn = get(build_conn(), "api/locations/1/measurements", [])
 
       assert json_response(conn, 200) == %{
                "data" => [
