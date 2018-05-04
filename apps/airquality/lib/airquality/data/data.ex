@@ -107,7 +107,7 @@ defmodule Airquality.Data do
         value >= 240 -> :very_high
       end
 
-    ret = Map.put_new(params, :quality_index, index)
+    Map.put_new(params, :quality_index, index)
   end
 
   def compute_caqi(%{parameter: "co", value: value} = params) do
