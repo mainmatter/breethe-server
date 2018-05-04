@@ -10,9 +10,11 @@ defmodule AirqualityWeb.LocationControllerTest do
 
   describe "index route: returns locations" do
     test "when filtering by location name" do
+      location = insert(:location)
+  
       Mock
       |> expect(:get_locations, fn _search_term -> Mock.get_locations(10, 20) end)
-      |> expect(:get_locations, fn _lat, _lon -> build_list(1, :location) end)
+      |> expect(:get_locations, fn _lat, _lon -> [location] end)
 
       conn = get(build_conn(), "api/locations?filter[name]=London", [])
 
@@ -26,7 +28,12 @@ defmodule AirqualityWeb.LocationControllerTest do
                      "country" => "test-country",
                      "last-updated" => "2019-01-01T00:00:00.000000Z"
                    },
-                   "id" => "",
+                   "relationships" => %{
+                     "measurements" => %{
+                       "links" => %{ "related" => "/locations/#{location.id}/measuremsnts" }
+                     }
+                   },
+                   "id" => "#{location.id}",
                    "type" => "location"
                  }
                ],
@@ -35,8 +42,10 @@ defmodule AirqualityWeb.LocationControllerTest do
     end
 
     test "when filtering by coordinates (lat/lon)" do
+      location = insert(:location)
+
       Mock
-      |> expect(:get_locations, fn _lat, _lon -> build_list(1, :location) end)
+      |> expect(:get_locations, fn _lat, _lon -> [location] end)
 
       conn = get(build_conn(), "api/locations?filter[coordinates]=20.3,10", [])
 
@@ -50,7 +59,12 @@ defmodule AirqualityWeb.LocationControllerTest do
                      "country" => "test-country",
                      "last-updated" => "2019-01-01T00:00:00.000000Z"
                    },
-                   "id" => "",
+                   "relationships" => %{
+                     "measurements" => %{
+                       "links" => %{ "related" => "/locations/#{location.id}/measuremsnts" }
+                     }
+                   },
+                   "id" => "#{location.id}",
                    "type" => "location"
                  }
                ],
@@ -73,6 +87,11 @@ defmodule AirqualityWeb.LocationControllerTest do
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",
                    "last-updated" => "2019-01-01T00:00:00.000000Z"
+                 },
+                 "relationships" => %{
+                   "measurements" => %{
+                     "links" => %{ "related" => "/locations/#{location.id}/measuremsnts" }
+                   }
                  },
                  "id" => "#{location.id}",
                  "type" => "location"

@@ -4,6 +4,11 @@ defmodule AirqualityWeb.LocationView do
 
   attributes([:name, :city, :country, :last_updated, :coordinates])
 
+  has_many :measurements,
+    links: [
+      related: "/locations/:id/measuremsnts"
+    ]
+
   defp name(struct, _conn), do: Map.get(struct, :identifier)
 end
 
