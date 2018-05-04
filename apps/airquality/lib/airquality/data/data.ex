@@ -35,7 +35,7 @@ defmodule Airquality.Data do
     |> Repo.insert_or_update!()
   end
 
-  def compute_caqi(%{parameter: "pm10", value: value} = params) do
+  defp compute_caqi(%{parameter: "pm10", value: value} = params) do
     value = round(value)
 
     index =
@@ -50,7 +50,7 @@ defmodule Airquality.Data do
     Map.put_new(params, :quality_index, index)
   end
 
-  def compute_caqi(%{parameter: "pm25", value: value} = params) do
+  defp compute_caqi(%{parameter: "pm25", value: value} = params) do
     value = round(value)
 
     index =
@@ -65,7 +65,7 @@ defmodule Airquality.Data do
     Map.put_new(params, :quality_index, index)
   end
 
-  def compute_caqi(%{parameter: "so2", value: value} = params) do
+  defp compute_caqi(%{parameter: "so2", value: value} = params) do
     value = round(value)
 
     index =
@@ -80,7 +80,7 @@ defmodule Airquality.Data do
     Map.put_new(params, :quality_index, index)
   end
 
-  def compute_caqi(%{parameter: "no2", value: value} = params) do
+  defp compute_caqi(%{parameter: "no2", value: value} = params) do
     value = round(value)
 
     index =
@@ -95,7 +95,7 @@ defmodule Airquality.Data do
     Map.put_new(params, :quality_index, index)
   end
 
-  def compute_caqi(%{parameter: "o3", value: value} = params) do
+  defp compute_caqi(%{parameter: "o3", value: value} = params) do
     value = round(value)
 
     index =
@@ -110,7 +110,7 @@ defmodule Airquality.Data do
     Map.put_new(params, :quality_index, index)
   end
 
-  def compute_caqi(%{parameter: "co", value: value} = params) do
+  defp compute_caqi(%{parameter: "co", value: value} = params) do
     value = round(value)
 
     index =
