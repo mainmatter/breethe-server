@@ -22,7 +22,10 @@ defmodule Airquality.Data do
   defp find_measurement(params), do: Repo.get_by(Measurement, params)
 
   def create_measurement(params) do
-    case find_measurement(params) do
+    params
+    |> Map.take([:parameter, :measured_at])
+    |> find_measurement()
+    |> case do
       nil -> %Measurement{}
       measurement -> measurement
     end
