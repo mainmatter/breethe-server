@@ -23,13 +23,5 @@ defmodule AirqualityWeb.MeasurementController do
     @parameters -- included_parameters
   end
 
-  defp add_nil_measurement(param, location_id) do
-    %{
-      parameter: param,
-      value: nil,
-      unit: nil,
-      measured_at: nil,
-      location_id: location_id
-    }
-  end
+  defp add_nil_measurement(param, location_id), do: %{parameter: param, location_id: location_id}
 end
