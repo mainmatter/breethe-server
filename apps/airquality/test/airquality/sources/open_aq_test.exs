@@ -148,16 +148,14 @@ defmodule Airquality.Sources.OpenAQTest do
           measured_at: measured_at1,
           parameter: parameter1,
           unit: unit1,
-          value: value1,
-          quality_index: quality_index1
+          value: value1
         },
         %Airquality.Data.Measurement{
           location_id: location2,
           measured_at: measured_at2,
           parameter: parameter2,
           unit: unit2,
-          value: value2,
-          quality_index: quality_index2
+          value: value2
         }
       ] = measurements
 
@@ -171,7 +169,6 @@ defmodule Airquality.Sources.OpenAQTest do
       assert parameter2 == :no2
       assert unit1 == unit2 && unit1 == :micro_grams_m3
       assert value1 == value2 && value1 == 0
-      assert quality_index1 == quality_index2 && quality_index1 == :very_low
     end
   end
 end
