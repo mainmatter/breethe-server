@@ -30,7 +30,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                    },
                    "relationships" => %{
                      "measurements" => %{
-                       "links" => %{ "related" => "/locations/#{location.id}/measuremsnts" }
+                       "links" => %{ "related" => "/locations/#{location.id}/measurements" }
                      }
                    },
                    "id" => "#{location.id}",
@@ -61,7 +61,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                    },
                    "relationships" => %{
                      "measurements" => %{
-                       "links" => %{ "related" => "/locations/#{location.id}/measuremsnts" }
+                       "links" => %{ "related" => "/locations/#{location.id}/measurements" }
                      }
                    },
                    "id" => "#{location.id}",
@@ -90,7 +90,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                  },
                  "relationships" => %{
                    "measurements" => %{
-                     "links" => %{ "related" => "/locations/#{location.id}/measuremsnts" }
+                     "links" => %{ "related" => "/locations/#{location.id}/measurements" }
                    }
                  },
                  "id" => "#{location.id}",
