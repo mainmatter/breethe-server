@@ -9,7 +9,6 @@ defmodule Airquality.Data.Measurement do
     field(:measured_at, :utc_datetime)
     field(:value, :float)
     field(:unit, UnitEnum)
-    field(:quality_index, IndexEnum)
 
     timestamps()
   end
@@ -17,8 +16,8 @@ defmodule Airquality.Data.Measurement do
   @doc false
   def changeset(%Measurement{} = measurement, attrs) do
     measurement
-    |> cast(attrs, [:location_id, :parameter, :measured_at, :value, :unit, :quality_index])
+    |> cast(attrs, [:location_id, :parameter, :measured_at, :value, :unit])
     |> cast_assoc(:location)
-    |> validate_required([:location_id, :parameter, :measured_at, :value, :unit, :quality_index])
+    |> validate_required([:location_id, :parameter, :measured_at, :value, :unit])
   end
 end
