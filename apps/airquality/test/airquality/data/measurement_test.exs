@@ -6,8 +6,9 @@ defmodule Airquality.Data.MeasurementTest do
     location_id: 1,
     parameter: :pm10,
     measured_at: DateTime.utc_now(),
-    value: 1.0,
-    unit: :micro_grams_m3
+    value: 0,
+    unit: :micro_grams_m3,
+    quality_index: :very_low
   }
   @invalid_attrs %{}
 

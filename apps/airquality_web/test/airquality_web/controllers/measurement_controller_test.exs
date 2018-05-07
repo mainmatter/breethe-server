@@ -18,13 +18,15 @@ defmodule AirqualityWeb.MeasurementControllerTest do
       conn = get(build_conn(), "api/locations/#{measurement.location.id}/measurements", [])
 
       assert json_response(conn, 200) == %{
+               "jsonapi" => %{"version" => "1.0"},
                "data" => [
                  %{
                    "attributes" => %{
                      "parameter" => "pm10",
-                     "unit" => "ppm",
-                     "value" => 13.2,
-                     "measured-at" => "2019-01-01T00:00:00.000000Z"
+                     "measured-at" => "2019-01-01T00:00:00.000000Z",
+                     "quality-index" => "very_low",
+                     "unit" => "micro_grams_m3",
+                     "value" => 0.0
                    },
                    "relationships" => %{
                      "location" => %{
@@ -39,8 +41,9 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                  },
                  %{
                    "attributes" => %{
-                     "measured-at" => nil,
                      "parameter" => "pm25",
+                     "measured-at" => nil,
+                     "quality-index" => nil,
                      "unit" => nil,
                      "value" => nil
                    },
@@ -57,8 +60,9 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                  },
                  %{
                    "attributes" => %{
-                     "measured-at" => nil,
                      "parameter" => "so2",
+                     "measured-at" => nil,
+                     "quality-index" => nil,
                      "unit" => nil,
                      "value" => nil
                    },
@@ -75,8 +79,9 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                  },
                  %{
                    "attributes" => %{
-                     "measured-at" => nil,
                      "parameter" => "no2",
+                     "measured-at" => nil,
+                     "quality-index" => nil,
                      "unit" => nil,
                      "value" => nil
                    },
@@ -93,8 +98,9 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                  },
                  %{
                    "attributes" => %{
-                     "measured-at" => nil,
                      "parameter" => "o3",
+                     "measured-at" => nil,
+                     "quality-index" => nil,
                      "unit" => nil,
                      "value" => nil
                    },
@@ -111,8 +117,9 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                  },
                  %{
                    "attributes" => %{
-                     "measured-at" => nil,
                      "parameter" => "co",
+                     "measured-at" => nil,
+                     "quality-index" => nil,
                      "unit" => nil,
                      "value" => nil
                    },
@@ -129,8 +136,9 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                  },
                  %{
                    "attributes" => %{
-                     "measured-at" => nil,
                      "parameter" => "bc",
+                     "measured-at" => nil,
+                     "quality-index" => nil,
                      "unit" => nil,
                      "value" => nil
                    },
@@ -145,8 +153,7 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                    "id" => "",
                    "type" => "measurement"
                  }
-               ],
-               "jsonapi" => %{"version" => "1.0"}
+               ]
              }
     end
   end

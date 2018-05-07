@@ -35,13 +35,13 @@ defmodule Airquality.Sources.OpenAQTest do
         "measurements" => [
           %{
             "parameter" => "pm10",
-            "value" => 14.15,
+            "value" => 0,
             "unit" => "µg/m³",
             "lastUpdated" => "2019-01-01T00:00:00Z"
           },
           %{
             "parameter" => "no2",
-            "value" => 14.15,
+            "value" => 0,
             "unit" => "ppm",
             "lastUpdated" => "2019-01-01T00:00:00Z"
           }
@@ -167,9 +167,8 @@ defmodule Airquality.Sources.OpenAQTest do
 
       assert parameter1 == :pm10
       assert parameter2 == :no2
-      assert unit1 == :micro_grams_m3
-      assert unit2 == :ppm
-      assert value1 == value2 && value2 == 14.15
+      assert unit1 == unit2 && unit1 == :micro_grams_m3
+      assert value1 == value2 && value1 == 0
     end
   end
 end

@@ -25,11 +25,13 @@ defmodule Airquality.Sources.OpenAQ.Measurements do
       "unit" => unit
     } = measurement
 
+    {value, unit} = convert_measurement(parameter, value, unit)
+
     %{
       parameter: parameter,
       measured_at: Timex.parse!(measured_at, "{ISO:Extended:Z}"),
       value: value,
-      unit: convert_unit(unit)
+      unit: unit
     }
   end
 
@@ -42,10 +44,26 @@ defmodule Airquality.Sources.OpenAQ.Measurements do
     result
   end
 
-  defp convert_unit(unit) do
+  defp convert_measurement(parameter, value, unit) do
     case unit do
-      "µg/m³" -> :micro_grams_m3
-      "ppm" -> :ppm
+      "µg/m³" -> {value, :micro_grams_m3}
+      "ppm" -> {convert_to_micro_grams_m3(parameter, value), :micro_grams_m3}
     end
+  end
+
+  defp convert_to_micro_grams_m3(parameter, ppm_value) do
+    molar_mass =
+      case parameter do
+        "so2" -> 64.0638
+        "no2" -> 46.0055
+        "o3" -> 47.9982
+        "co" -> 28.0101
+      end
+
+    # rough conversion which assumes a temp of 0C and 1atm (101.325 kPa) of pressure.
+    # precise formula: ppm * (molar_mass / 22.414) * (273.15 / T) * (P / 101.325)
+    # 22.414 is the molar volume of the mixture, 273.15K = OC, T is temperature of measurement in K, P is pressure of measurement in kPa
+
+    ppm_value * (molar_mass / 22.414) * 1000
   end
 end
