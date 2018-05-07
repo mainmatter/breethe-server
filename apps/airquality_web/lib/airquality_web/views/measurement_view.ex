@@ -4,5 +4,5 @@ defmodule AirqualityWeb.MeasurementView do
 
   attributes([:parameter, :value, :unit, :measured_at])
 
-  has_one :location, type: "location", field: :location_id
+  has_one(:location, type: "location", field: :location_id)
 end

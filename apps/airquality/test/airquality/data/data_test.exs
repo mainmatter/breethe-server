@@ -47,8 +47,9 @@ defmodule Airquality.DataTest do
       location = insert(:location)
       measurement = insert(:measurement, location: location)
 
-      created_measurement = Data.create_measurement(params)
-      |> Repo.preload(:location)
+      created_measurement =
+        Data.create_measurement(params)
+        |> Repo.preload(:location)
 
       assert measurement == created_measurement
     end

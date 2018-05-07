@@ -31,9 +31,9 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                        "data" => %{
                          "id" => "#{measurement.location.id}",
                          "type" => "location"
-                        }
-                      }
-                    },
+                       }
+                     }
+                   },
                    "id" => "#{measurement.id}",
                    "type" => "measurement"
                  },
@@ -49,8 +49,8 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                        "data" => %{
                          "id" => "#{measurement.location.id}",
                          "type" => "location"
-                        }
-                      }
+                       }
+                     }
                    },
                    "id" => "",
                    "type" => "measurement"
@@ -67,9 +67,9 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                        "data" => %{
                          "id" => "#{measurement.location.id}",
                          "type" => "location"
-                        }
-                      }
-                    },
+                       }
+                     }
+                   },
                    "id" => "",
                    "type" => "measurement"
                  },
@@ -85,9 +85,9 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                        "data" => %{
                          "id" => "#{measurement.location.id}",
                          "type" => "location"
-                        }
-                      }
-                    },
+                       }
+                     }
+                   },
                    "id" => "",
                    "type" => "measurement"
                  },
@@ -103,9 +103,9 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                        "data" => %{
                          "id" => "#{measurement.location.id}",
                          "type" => "location"
-                        }
-                      }
-                    },
+                       }
+                     }
+                   },
                    "id" => "",
                    "type" => "measurement"
                  },
@@ -121,9 +121,9 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                        "data" => %{
                          "id" => "#{measurement.location.id}",
                          "type" => "location"
-                        }
-                      }
-                    },
+                       }
+                     }
+                   },
                    "id" => "",
                    "type" => "measurement"
                  },
@@ -139,9 +139,9 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                        "data" => %{
                          "id" => "#{measurement.location.id}",
                          "type" => "location"
-                        }
-                      }
-                    },
+                       }
+                     }
+                   },
                    "id" => "",
                    "type" => "measurement"
                  }

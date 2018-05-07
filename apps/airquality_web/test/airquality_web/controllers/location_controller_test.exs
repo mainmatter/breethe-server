@@ -11,7 +11,7 @@ defmodule AirqualityWeb.LocationControllerTest do
   describe "index route: returns locations" do
     test "when filtering by location name" do
       location = insert(:location)
-  
+
       Mock
       |> expect(:get_locations, fn _search_term -> Mock.get_locations(10, 20) end)
       |> expect(:get_locations, fn _lat, _lon -> [location] end)
@@ -30,7 +30,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                    },
                    "relationships" => %{
                      "measurements" => %{
-                       "links" => %{ "related" => "/locations/#{location.id}/measurements" }
+                       "links" => %{"related" => "/locations/#{location.id}/measurements"}
                      }
                    },
                    "id" => "#{location.id}",
@@ -61,7 +61,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                    },
                    "relationships" => %{
                      "measurements" => %{
-                       "links" => %{ "related" => "/locations/#{location.id}/measurements" }
+                       "links" => %{"related" => "/locations/#{location.id}/measurements"}
                      }
                    },
                    "id" => "#{location.id}",
@@ -90,7 +90,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                  },
                  "relationships" => %{
                    "measurements" => %{
-                     "links" => %{ "related" => "/locations/#{location.id}/measurements" }
+                     "links" => %{"related" => "/locations/#{location.id}/measurements"}
                    }
                  },
                  "id" => "#{location.id}",
