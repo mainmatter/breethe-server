@@ -2,6 +2,21 @@ defmodule Airquality.Data do
   alias __MODULE__.{Location, Measurement}
   alias Airquality.Repo
 
+  @caqi_scale %{
+    "pm10" => %{very_low: 25, low: 25..49, medium: 50..89, high: 90..180, very_high: 180},
+    "pm25" => %{very_low: 15, low: 15..29, medium: 30..54, high: 55..110, very_high: 110},
+    "so2" => %{very_low: 50, low: 50..99, medium: 100..349, high: 350..500, very_high: 500},
+    "no2" => %{very_low: 50, low: 50..99, medium: 100..199, high: 200..400, very_high: 400},
+    "o3" => %{very_low: 60, low: 60..119, medium: 120..179, high: 180..240, very_high: 240},
+    "co" => %{
+      very_low: 5000,
+      low: 5000..7499,
+      medium: 7500..9999,
+      high: 10_000..20_000,
+      very_high: 20_000
+    }
+  }
+
   def get_location(id), do: Repo.get(Location, id)
 
   defp find_location(params) do
@@ -35,91 +50,17 @@ defmodule Airquality.Data do
     |> Repo.insert_or_update!()
   end
 
-  defp compute_caqi(%{parameter: "pm10", value: value} = params) do
+  defp compute_caqi(%{parameter: parameter, value: value} = params) do
     value = round(value)
+    scale = @caqi_scale[parameter]
 
     index =
       cond do
-        value < 25 -> :very_low
-        value in 25..50 -> :low
-        value in 50..89 -> :medium
-        value in 90..179 -> :high
-        value >= 180 -> :very_high
-      end
-
-    Map.put_new(params, :quality_index, index)
-  end
-
-  defp compute_caqi(%{parameter: "pm25", value: value} = params) do
-    value = round(value)
-
-    index =
-      cond do
-        value < 15 -> :very_low
-        value in 15..29 -> :low
-        value in 30..54 -> :medium
-        value in 55..110 -> :high
-        value >= 110 -> :very_high
-      end
-
-    Map.put_new(params, :quality_index, index)
-  end
-
-  defp compute_caqi(%{parameter: "so2", value: value} = params) do
-    value = round(value)
-
-    index =
-      cond do
-        value < 50 -> :very_low
-        value in 50..99 -> :low
-        value in 100..349 -> :medium
-        value in 350..499 -> :high
-        value >= 500 -> :very_high
-      end
-
-    Map.put_new(params, :quality_index, index)
-  end
-
-  defp compute_caqi(%{parameter: "no2", value: value} = params) do
-    value = round(value)
-
-    index =
-      cond do
-        value < 50 -> :very_low
-        value in 50..99 -> :low
-        value in 100..199 -> :medium
-        value in 200..399 -> :high
-        value >= 400 -> :very_high
-      end
-
-    Map.put_new(params, :quality_index, index)
-  end
-
-  defp compute_caqi(%{parameter: "o3", value: value} = params) do
-    value = round(value)
-
-    index =
-      cond do
-        value < 60 -> :very_low
-        value in 60..119 -> :low
-        value in 120..179 -> :medium
-        value in 180..239 -> :high
-        value >= 240 -> :very_high
-      end
-
-    Map.put_new(params, :quality_index, index)
-  end
-
-  defp compute_caqi(%{parameter: "co", value: value} = params) do
-    value = round(value)
-
-    index =
-      cond do
-        value < 5000 -> :very_low
-        value in 5000..7499 -> :low
-        value in 7500..9999 -> :medium
-        value in 10_000..19_999 -> :high
-        value >= 20_000 -> :very_high
+        value < scale.very_low -> :very_low
+        value in scale.low -> :low
+        value in scale.medium -> :medium
+        value in scale.high -> :high
+        value > scale.very_high -> :very_high
       end
 
     Map.put_new(params, :quality_index, index)
