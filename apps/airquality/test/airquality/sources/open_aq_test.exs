@@ -35,13 +35,13 @@ defmodule Airquality.Sources.OpenAQTest do
         "measurements" => [
           %{
             "parameter" => "pm10",
-            "value" => 14.15,
+            "value" => 0,
             "unit" => "µg/m³",
             "lastUpdated" => "2019-01-01T00:00:00Z"
           },
           %{
             "parameter" => "no2",
-            "value" => 14.15,
+            "value" => 0,
             "unit" => "ppm",
             "lastUpdated" => "2019-01-01T00:00:00Z"
           }
@@ -148,14 +148,16 @@ defmodule Airquality.Sources.OpenAQTest do
           measured_at: measured_at1,
           parameter: parameter1,
           unit: unit1,
-          value: _value1
+          value: value1,
+          quality_index: quality_index1
         },
         %Airquality.Data.Measurement{
           location_id: location2,
           measured_at: measured_at2,
           parameter: parameter2,
           unit: unit2,
-          value: _value2
+          value: value2,
+          quality_index: quality_index2
         }
       ] = measurements
 
@@ -168,6 +170,8 @@ defmodule Airquality.Sources.OpenAQTest do
       assert parameter1 == :pm10
       assert parameter2 == :no2
       assert unit1 == unit2 && unit1 == :micro_grams_m3
+      assert value1 == value2 && value1 == 0
+      assert quality_index1 == quality_index2 && quality_index1 == :very_low
     end
   end
 end
