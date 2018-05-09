@@ -75,7 +75,7 @@ defmodule Airquality.Sources.OpenAQTest do
   describe "load location data on demand" do
     test "by latitude and longitude", %{bypass: bypass} do
       Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
-        assert %{"nearest" => "100", "coordinates" => "10,20"} ==
+        assert %{"nearest" => "10", "coordinates" => "10,20"} ==
                  URI.decode_query(conn.query_string)
 
         Plug.Conn.resp(conn, 200, Poison.encode!(@sample_location))
@@ -116,7 +116,7 @@ defmodule Airquality.Sources.OpenAQTest do
       end)
 
       Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
-        assert %{"nearest" => "100", "coordinates" => "10,20"} ==
+        assert %{"nearest" => "10", "coordinates" => "10,20"} ==
                  URI.decode_query(conn.query_string)
 
         Plug.Conn.resp(conn, 200, Poison.encode!(@sample_location))
