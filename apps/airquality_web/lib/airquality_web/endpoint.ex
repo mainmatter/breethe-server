@@ -42,6 +42,7 @@ defmodule AirqualityWeb.Endpoint do
     signing_salt: "KUZ/RHEu"
   )
 
+  plug(CORSPlug)
   plug(AirqualityWeb.Router)
 
   @doc """
