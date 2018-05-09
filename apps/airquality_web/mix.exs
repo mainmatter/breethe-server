@@ -24,7 +24,7 @@ defmodule AirqualityWeb.Mixfile do
   def application do
     [
       mod: {AirqualityWeb.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :sentry]
     ]
   end
 
@@ -44,7 +44,8 @@ defmodule AirqualityWeb.Mixfile do
       {:airquality, in_umbrella: true},
       {:cowboy, "~> 1.0"},
       {:ja_serializer, "~> 0.13.0"},
-      {:cors_plug, "~> 1.5"}
+      {:cors_plug, "~> 1.5"},
+      {:sentry, "~> 6.2.1"}
     ]
   end
 
