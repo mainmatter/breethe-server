@@ -38,7 +38,7 @@ defmodule Airquality.Sources.OpenAQ.Locations do
     url =
       "#{Application.get_env(:airquality, :open_aq_api_endpoint)}/locations?coordinates=#{lat},#{
         lon
-      }&nearest=100"
+      }&nearest=10"
 
     {:ok, response} = HTTPoison.get(url)
     %{"results" => results} = Poison.decode!(response.body)
