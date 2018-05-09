@@ -1,3 +1,10 @@
 use Mix.Config
 
-import_config "prod.secret.exs"
+config :airquality, Airquality.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  types: Airquality.PostgresTypes,
+  url: System.get_env("DATABASE_URL"),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  ssl: true
+
+config :airquality, source: Airquality.Sources.OpenAQ
