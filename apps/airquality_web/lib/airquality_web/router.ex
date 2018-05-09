@@ -2,7 +2,7 @@ defmodule AirqualityWeb.Router do
   use AirqualityWeb, :router
 
   pipeline :api do
-    plug(:accepts, ["json"])
+    plug(:accepts, ["json-api"])
   end
 
   scope "/api", AirqualityWeb do
