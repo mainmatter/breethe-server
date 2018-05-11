@@ -24,8 +24,8 @@ defmodule AirqualityWeb.Endpoint do
 
   plug(
     Plug.Parsers,
-    parsers: [:urlencoded, :multipart, :json],
-    pass: ["*/*"],
+    parsers: [:json],
+    pass: ["application/vnd.api+json"],
     json_decoder: Poison
   )
 
