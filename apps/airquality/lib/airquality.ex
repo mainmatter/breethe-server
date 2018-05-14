@@ -7,7 +7,14 @@ defmodule Airquality do
   if it comes from the database, an external API or others.
   """
 
+  @behaviour Airquality.Behaviour
+
   alias __MODULE__.{Data, Sources.OpenAQ}
+
+  defmodule Behaviour do
+    @callback search_locations(search_term :: String.t()) :: [%Airquality.Data.Location{}]
+    @callback search_locations(lat :: number, lon :: number) :: [%Airquality.Data.Location{}]
+  end
 
   def search_locations(search_term) do
     case Data.find_locations(search_term) do
