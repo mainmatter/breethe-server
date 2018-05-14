@@ -5,4 +5,6 @@ config :airquality, google_maps_api_key: "AIzaSyBBlWdXl4PykS60hfR3_-6zCK2PX0GLCt
 config :airquality, google_maps_api_endpoint: "https://maps.googleapis.com/maps/api/geocode/json"
 config :airquality, open_aq_api_endpoint: "https://api.openaq.org/v1"
 
+config :logger, backends: [:console]
+
 import_config "#{Mix.env()}.exs"
