@@ -4,7 +4,7 @@ defmodule AirqualityWeb.MeasurementControllerTest do
   import Mox
   import Airquality.Factory
 
-  alias Airquality.Sources.OpenAQMock, as: Mock
+  alias Airquality.Mock
 
   setup :verify_on_exit!
 
@@ -13,7 +13,7 @@ defmodule AirqualityWeb.MeasurementControllerTest do
       measurement = insert(:measurement)
 
       Mock
-      |> expect(:get_latest_measurements, fn _id -> [measurement] end)
+      |> expect(:search_measurements, fn _id -> [measurement] end)
 
       conn = get(build_conn(), "api/locations/#{measurement.location.id}/measurements", [])
 

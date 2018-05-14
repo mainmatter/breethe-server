@@ -15,8 +15,8 @@ defmodule Airquality do
     @callback search_locations(search_term :: String.t()) :: [%Airquality.Data.Location{}]
     @callback search_locations(lat :: number, lon :: number) :: [%Airquality.Data.Location{}]
     @callback search_measurements(location_id :: integer | String.t()) :: [
-      %Airquality.Data.Measurement{}
-    ]
+                %Airquality.Data.Measurement{}
+              ]
   end
 
   def search_locations(search_term) do
@@ -42,7 +42,7 @@ defmodule Airquality do
         Task.async(fn ->
           OpenAQ.get_locations(lat, lon)
         end)
-        |> Task.await
+        |> Task.await()
 
       locations ->
         Task.start(fn ->
