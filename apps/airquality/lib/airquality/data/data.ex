@@ -36,25 +36,6 @@ defmodule Airquality.Data do
     |> Repo.insert_or_update!()
   end
 
-  ## ASYNC
-
-  def search_locations(search_term) do
-    case find_locations(search_term) do
-      [] ->
-        Task.async(fn ->
-          Sources.OpenAQ.get_locations(search_term)
-        end)
-        |> Task.await()
-
-      locations ->
-        Task.start(fn ->
-          Sources.OpenAQ.get_locations(search_term)
-        end)
-
-        locations
-    end
-  end
-
   ## REPO SEARCH QUERIES:
 
   def find_locations(search_term) do

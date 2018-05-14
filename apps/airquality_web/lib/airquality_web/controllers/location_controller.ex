@@ -9,7 +9,7 @@ defmodule AirqualityWeb.LocationController do
     locations =
       case process_params(filter) do
         [lat, lon] -> @source.get_locations(lat, lon)
-        name -> @source.get_locations(name)
+        name -> @source.search_locations(name)
       end
 
     render(conn, "index.json-api", data: locations)
