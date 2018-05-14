@@ -14,6 +14,9 @@ defmodule Airquality do
   defmodule Behaviour do
     @callback search_locations(search_term :: String.t()) :: [%Airquality.Data.Location{}]
     @callback search_locations(lat :: number, lon :: number) :: [%Airquality.Data.Location{}]
+    @callback search_measurements(location_id :: integer | String.t()) :: [
+      %Airquality.Data.Measurement{}
+    ]
   end
 
   def search_locations(search_term) do
@@ -48,5 +51,9 @@ defmodule Airquality do
 
         locations
     end
+  end
+
+  def search_measurements(location_id) do
+    OpenAQ.get_latest_measurements(location_id)
   end
 end
