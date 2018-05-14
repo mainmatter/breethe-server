@@ -3,7 +3,7 @@ defmodule Airquality.Data do
   import Geo.PostGIS
 
   alias __MODULE__.{Location, Measurement}
-  alias Airquality.Repo
+  alias Airquality.{Repo, Sources}
 
   def get_location(id), do: Repo.get(Location, id)
 
@@ -36,13 +36,36 @@ defmodule Airquality.Data do
     |> Repo.insert_or_update!()
   end
 
-  def search_locations(search_term) do
-    search_term = "%" <> search_term <> "%"
+  ## ASYNC
 
-    Repo.all(from(l in Location, where: ilike(l.identifier, ^search_term) or ilike(l.city, ^search_term)))
+  def search_locations(search_term) do
+    case find_locations(search_term) do
+      [] ->
+        Task.async(fn ->
+          Sources.OpenAQ.get_locations(search_term)
+        end)
+        |> Task.await()
+
+      locations ->
+        Task.start(fn ->
+          Sources.OpenAQ.get_locations(search_term)
+        end)
+
+        locations
+    end
   end
 
-  def search_locations(lat, lon) do
+  ## REPO SEARCH QUERIES:
+
+  def find_locations(search_term) do
+    search_term = "%" <> search_term <> "%"
+
+    Repo.all(
+      from(l in Location, where: ilike(l.identifier, ^search_term) or ilike(l.city, ^search_term))
+    )
+  end
+
+  def find_locations_db(lat, lon) do
     search_term = %Geo.Point{coordinates: {lat, lon}, srid: 4326}
 
     Repo.all(from(l in Location, where: st_dwithin_in_meters(l.coordinates, ^search_term, 10000)))
