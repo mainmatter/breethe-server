@@ -8,7 +8,7 @@ defmodule AirqualityWeb.LocationController do
   def index(conn, %{"filter" => filter}) do
     locations =
       case process_params(filter) do
-        [lat, lon] -> @source.get_locations(lat, lon)
+        [lat, lon] -> @source.search_locations(lat, lon)
         name -> @source.search_locations(name)
       end
 

@@ -3,7 +3,7 @@ defmodule Airquality.Data do
   import Geo.PostGIS
 
   alias __MODULE__.{Location, Measurement}
-  alias Airquality.{Repo, Sources}
+  alias Airquality.Repo
 
   def get_location(id), do: Repo.get(Location, id)
 
@@ -46,7 +46,7 @@ defmodule Airquality.Data do
     )
   end
 
-  def find_locations_db(lat, lon) do
+  def find_locations(lat, lon) do
     search_term = %Geo.Point{coordinates: {lat, lon}, srid: 4326}
 
     Repo.all(from(l in Location, where: st_dwithin_in_meters(l.coordinates, ^search_term, 10000)))

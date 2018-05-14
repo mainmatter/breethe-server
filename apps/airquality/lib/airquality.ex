@@ -25,4 +25,21 @@ defmodule Airquality do
         locations
     end
   end
+
+  def search_locations(lat, lon) do
+    case Data.find_locations(lat, lon) do
+      [] ->
+        Task.async(fn ->
+          OpenAQ.get_locations(lat, lon)
+        end)
+        |> Task.await
+
+      locations ->
+        Task.start(fn ->
+          OpenAQ.get_locations(lat, lon)
+        end)
+
+        locations
+    end
+  end
 end
