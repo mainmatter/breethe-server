@@ -31,7 +31,7 @@ defmodule Airquality.Data do
     Repo.all(
       from(
         l in Location,
-        where: st_dwithin_in_meters(l.coordinates, ^search_term, 10000),
+        where: st_dwithin_in_meters(l.coordinates, ^search_term, 1000),
         order_by: st_distance(l.coordinates, ^search_term),
         limit: 20
       )
