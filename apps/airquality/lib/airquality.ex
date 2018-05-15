@@ -24,10 +24,7 @@ defmodule Airquality do
   def search_locations(search_term) do
     case Data.find_locations(search_term) do
       [] ->
-        Task.async(fn ->
-          @source.get_locations(search_term)
-        end)
-        |> Task.await()
+        @source.get_locations(search_term)
 
       locations ->
         {:ok, _pid} =
@@ -42,10 +39,7 @@ defmodule Airquality do
   def search_locations(lat, lon) do
     case Data.find_locations(lat, lon) do
       [] ->
-        Task.async(fn ->
-          @source.get_locations(lat, lon)
-        end)
-        |> Task.await()
+        @source.get_locations(lat, lon)
 
       locations ->
         {:ok, _pid} =
