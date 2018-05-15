@@ -11,7 +11,7 @@ defmodule AirqualityTest do
   setup :verify_on_exit!
 
   describe "search_locations(search_term):" do
-    test "returns locations after awaiting on async call to API (no matching records in db)" do
+    test "returns locations from the API if none are present in the DB" do
       location = build(:location)
 
       Mock
@@ -21,7 +21,7 @@ defmodule AirqualityTest do
       assert [location] == Airquality.search_locations("pdx")
     end
 
-    test "returns matching locations from db and starts a Task to retreive new data in the background" do
+    test "returns locations and starts a background task to get locations from the API if some are present in the DB" do
       location = insert(:location)
 
       Mock
@@ -36,7 +36,7 @@ defmodule AirqualityTest do
   end
 
   describe "search_locations(lat, lon):" do
-    test "returns locations after awaiting on async call to API (no matching records in db)" do
+    test "returns locations from the API if none are present in the DB" do
       location = build(:location)
 
       Mock
@@ -45,7 +45,7 @@ defmodule AirqualityTest do
       assert [location] == Airquality.search_locations(0.0, 0.0)
     end
 
-    test "returns matching locations from db and starts a Task to retreive new data in the background" do
+    test "returns locations and starts a background task to get locations from the API if some are present in the DB" do
       location = insert(:location)
       {lat, lon} = location.coordinates.coordinates
 
