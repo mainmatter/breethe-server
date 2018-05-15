@@ -9,7 +9,9 @@ defmodule Airquality do
 
   @behaviour Airquality.Behaviour
 
-  alias __MODULE__.{Data, Sources.OpenAQ}
+  alias __MODULE__.{Data, Sources.OpenAQ, TaskSupervisor}
+
+  @source Application.get_env(:airquality, :source)
 
   defmodule Behaviour do
     @callback search_locations(search_term :: String.t()) :: [%Airquality.Data.Location{}]
@@ -23,14 +25,15 @@ defmodule Airquality do
     case Data.find_locations(search_term) do
       [] ->
         Task.async(fn ->
-          OpenAQ.get_locations(search_term)
+          @source.get_locations(search_term)
         end)
         |> Task.await()
 
       locations ->
-        Task.start(fn ->
-          OpenAQ.get_locations(search_term)
-        end)
+        {:ok, _pid} =
+          Task.Supervisor.start_child(TaskSupervisor, fn ->
+            @source.get_locations(search_term)
+          end)
 
         locations
     end
@@ -40,14 +43,15 @@ defmodule Airquality do
     case Data.find_locations(lat, lon) do
       [] ->
         Task.async(fn ->
-          OpenAQ.get_locations(lat, lon)
+          @source.get_locations(lat, lon)
         end)
         |> Task.await()
 
       locations ->
-        Task.start(fn ->
-          OpenAQ.get_locations(lat, lon)
-        end)
+        {:ok, _pid} =
+          Task.Supervisor.start_child(TaskSupervisor, fn ->
+            @source.get_locations(lat, lon)
+          end)
 
         locations
     end
