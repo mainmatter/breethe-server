@@ -21,7 +21,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                "data" => [
                  %{
                    "attributes" => %{
-                     "name" => "test-identifier",
+                     "name" => location.identifier,
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
@@ -52,7 +52,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                "data" => [
                  %{
                    "attributes" => %{
-                     "name" => "test-identifier",
+                     "name" => location.identifier,
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
@@ -81,7 +81,7 @@ defmodule AirqualityWeb.LocationControllerTest do
       assert json_response(conn, 200) == %{
                "data" => %{
                  "attributes" => %{
-                   "name" => "test-identifier",
+                   "name" => location.identifier,
                    "city" => "test-city",
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",
