@@ -22,11 +22,13 @@ defmodule Airquality do
   end
 
   def search_locations(search_term) do
-    case Data.find_locations(search_term) do
-      [] ->
+    locations = Data.find_locations(search_term)
+
+    case length(locations) > 9 do
+      false ->
         @source.get_locations(search_term)
 
-      locations ->
+      true ->
         {:ok, _pid} =
           Task.Supervisor.start_child(TaskSupervisor, fn ->
             @source.get_locations(search_term)
@@ -37,11 +39,13 @@ defmodule Airquality do
   end
 
   def search_locations(lat, lon) do
-    case Data.find_locations(lat, lon) do
-      [] ->
+    locations = Data.find_locations(lat, lon)
+
+    case length(locations) > 9 do
+      false ->
         @source.get_locations(lat, lon)
 
-      locations ->
+      true ->
         {:ok, _pid} =
           Task.Supervisor.start_child(TaskSupervisor, fn ->
             @source.get_locations(lat, lon)
