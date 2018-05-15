@@ -20,6 +20,8 @@ config :airquality_web, AirqualityWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
 
+config :airquality_web, source: Airquality
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
