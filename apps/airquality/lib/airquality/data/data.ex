@@ -49,6 +49,13 @@ defmodule Airquality.Data do
   def find_locations(lat, lon) do
     search_term = %Geo.Point{coordinates: {lat, lon}, srid: 4326}
 
-    Repo.all(from(l in Location, where: st_dwithin_in_meters(l.coordinates, ^search_term, 10000)))
+    Repo.all(
+      from(
+        l in Location,
+        where: st_dwithin_in_meters(l.coordinat.es, ^search_term, 10000),
+        order_by: st_distance(l.coordinates, ^search_term),
+        limit: 20
+      )
+    )
   end
 end
