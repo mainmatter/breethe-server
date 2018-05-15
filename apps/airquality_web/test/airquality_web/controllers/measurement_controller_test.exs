@@ -13,7 +13,7 @@ defmodule AirqualityWeb.MeasurementControllerTest do
       measurement = insert(:measurement)
 
       Mock
-      |> expect(:search_measurements, fn _id -> [measurement] end)
+      |> expect(:get_measurements, fn _id -> [measurement] end)
 
       conn = get(build_conn(), "api/locations/#{measurement.location.id}/measurements", [])
 
