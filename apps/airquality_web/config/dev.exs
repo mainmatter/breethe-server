@@ -13,8 +13,6 @@ config :airquality_web, AirqualityWeb.Endpoint,
   check_origin: false,
   watchers: []
 
-config :airquality_web, source: Airquality
-
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

@@ -9,5 +9,3 @@ config :airquality, Airquality.Repo,
   database: "airquality_dev",
   hostname: "localhost",
   pool_size: 10
-
-config :airquality, source: Airquality.Sources.OpenAQ
