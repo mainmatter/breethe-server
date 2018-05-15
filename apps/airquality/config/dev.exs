@@ -10,4 +10,4 @@ config :airquality, Airquality.Repo,
   hostname: "localhost",
   pool_size: 10
 
-config :airquality, source: Airquality
+config :airquality, source: Airquality.Sources.OpenAQ

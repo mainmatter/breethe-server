@@ -3,7 +3,7 @@ defmodule AirqualityWeb.LocationController do
 
   alias Airquality.Data
 
-  @source Application.get_env(:airquality, :source)
+  @source Application.get_env(:airquality_web, :source)
 
   def index(conn, %{"filter" => filter}) do
     locations =

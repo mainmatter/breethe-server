@@ -5,3 +5,5 @@ use Mix.Config
 config :airquality_web, AirqualityWeb.Endpoint,
   http: [port: 4001],
   server: false
+
+config :airquality_web, source: Airquality.Mock
