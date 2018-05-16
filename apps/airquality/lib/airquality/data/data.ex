@@ -20,7 +20,7 @@ defmodule Airquality.Data do
       from(
         l in Location,
         where: ilike(l.identifier, ^search_term) or ilike(l.city, ^search_term),
-        limit: 20
+        limit: 10
       )
     )
   end
@@ -33,7 +33,7 @@ defmodule Airquality.Data do
         l in Location,
         where: st_dwithin_in_meters(l.coordinates, ^search_term, 1000),
         order_by: st_distance(l.coordinates, ^search_term),
-        limit: 20
+        limit: 10
       )
     )
   end
