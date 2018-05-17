@@ -30,7 +30,12 @@ defmodule AirqualityTest do
 
       locations = Airquality.search_locations("pdx")
 
-      stop_tasks()
+      # stops background tasks to avoid throwing error when test process exits
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.each(fn task ->
+        Task.Supervisor.terminate_child(TaskSupervisor, task)
+      end)
 
       assert locations == cached_locations
     end
@@ -44,7 +49,12 @@ defmodule AirqualityTest do
 
       Airquality.search_locations("pdx")
 
-      assert_tasks_started()
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.all?(fn task ->
+        ref = Process.monitor(task)
+        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
+      end)
     end
   end
 
@@ -70,7 +80,12 @@ defmodule AirqualityTest do
 
       locations = Airquality.search_locations(lat, lon)
 
-      stop_tasks()
+      # stops background tasks to avoid throwing error when test process exits
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.each(fn task ->
+        Task.Supervisor.terminate_child(TaskSupervisor, task)
+      end)
 
       assert locations == cached_locations
     end
@@ -87,25 +102,12 @@ defmodule AirqualityTest do
 
       Airquality.search_locations(lat, lon)
 
-      assert_tasks_started()
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.all?(fn task ->
+        ref = Process.monitor(task)
+        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
+      end)
     end
-  end
-
-  defp assert_tasks_started() do
-    tasks = Task.Supervisor.children(TaskSupervisor)
-
-    Enum.all?(tasks, fn task ->
-      ref = Process.monitor(task)
-      assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
-    end)
-  end
-
-  # stops background tasks to avoid throwing error when test process exits
-  defp stop_tasks() do
-    tasks = Task.Supervisor.children(TaskSupervisor)
-
-    Enum.each(tasks, fn task ->
-      Task.Supervisor.terminate_child(TaskSupervisor, task)
-    end)
   end
 end
