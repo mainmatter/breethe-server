@@ -170,5 +170,17 @@ defmodule Airquality.Sources.OpenAQTest do
       assert unit1 == unit2 && unit1 == :micro_grams_m3
       assert value1 == value2 && value1 == 0
     end
+
+    test "returns empty list if no measurements for a location are available", %{bypass: bypass} do
+      location = insert(:location)
+
+      Bypass.expect(bypass, "GET", "/open-aq/latest", fn conn ->
+        assert %{"location" => location.identifier} == URI.decode_query(conn.query_string)
+
+        Plug.Conn.resp(conn, 200, Poison.encode!(%{"results" => []}))
+      end)
+
+      assert [] == OpenAQ.get_latest_measurements(location.id)
+    end
   end
 end
