@@ -49,6 +49,9 @@ defmodule Airquality.Data do
 
   defp find_measurement(params), do: Repo.get_by(Measurement, params)
 
+  def find_measurements(location_id),
+    do: Repo.all(from(m in Measurement, where: m.location_id == ^location_id))
+
   def create_measurement(params) do
     params
     |> Map.take([:parameter, :measured_at])
