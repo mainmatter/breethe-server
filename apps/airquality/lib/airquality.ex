@@ -16,7 +16,7 @@ defmodule Airquality do
   defmodule Behaviour do
     @callback search_locations(search_term :: String.t()) :: [%Airquality.Data.Location{}]
     @callback search_locations(lat :: number, lon :: number) :: [%Airquality.Data.Location{}]
-    @callback get_measurements(location_id :: integer | String.t()) :: [
+    @callback search_measurements(location_id :: integer | String.t()) :: [
                 %Airquality.Data.Measurement{}
               ]
   end
@@ -55,7 +55,18 @@ defmodule Airquality do
     end
   end
 
-  def get_measurements(location_id) do
-    OpenAQ.get_latest_measurements(location_id)
+  def search_measurements(location_id) do
+    location_id
+    |> Data.find_measurements()
+    |> case do
+      [] -> @source.get_latest_measurements(location_id)
+
+      measurements ->
+        Task.Supervisor.start_child(TaskSupervisor, fn ->
+          @source.get_latest_measurements(location_id)
+        end)
+
+        measurements
+    end
   end
 end
