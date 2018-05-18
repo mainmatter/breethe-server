@@ -6,7 +6,7 @@ defmodule Airquality.DataTest do
   alias Airquality.{Data, Repo}
   alias Airquality.Data.{Location, Measurement}
 
-  describe "location: " do
+  describe "location:" do
     test "get_location by id" do
       location = insert(:location)
 
@@ -23,7 +23,7 @@ defmodule Airquality.DataTest do
 
     test "create_location updates if location already exists" do
       params = params_for(:location, last_updated: DateTime.utc_now())
-      location = insert(:location)
+      location = insert(:location, %{identifier: params.identifier})
 
       updated_location = Data.create_location(params)
 
@@ -32,7 +32,7 @@ defmodule Airquality.DataTest do
     end
   end
 
-  describe "measurement: " do
+  describe "measurement:" do
     test "create_measurement from params" do
       location = insert(:location)
       params = params_for(:measurement, location: location)

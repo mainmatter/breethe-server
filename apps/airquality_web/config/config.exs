@@ -10,6 +10,8 @@ config :airquality_web,
   namespace: AirqualityWeb,
   ecto_repos: [Airquality.Repo]
 
+config :airquality_web, source: Airquality
+
 # Configures the endpoint
 config :airquality_web, AirqualityWeb.Endpoint,
   url: [host: "localhost"],

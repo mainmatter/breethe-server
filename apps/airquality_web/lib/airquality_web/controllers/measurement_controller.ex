@@ -1,11 +1,11 @@
 defmodule AirqualityWeb.MeasurementController do
   use AirqualityWeb, :controller
 
-  @source Application.get_env(:airquality, :source)
+  @source Application.get_env(:airquality_web, :source)
   @parameters [:pm10, :pm25, :so2, :no2, :o3, :co, :bc]
 
   def index(conn, %{"location_id" => location_id}) do
-    measurements = @source.get_latest_measurements(location_id)
+    measurements = @source.get_measurements(location_id)
     nil_measurements = generate_missing_measurements(measurements, location_id)
 
     render(conn, "index.json-api", data: measurements ++ nil_measurements)

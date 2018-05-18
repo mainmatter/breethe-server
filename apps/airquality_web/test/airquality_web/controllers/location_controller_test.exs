@@ -4,7 +4,7 @@ defmodule AirqualityWeb.LocationControllerTest do
   import Mox
   import Airquality.Factory
 
-  alias Airquality.Sources.OpenAQMock, as: Mock
+  alias Airquality.Mock
 
   setup :verify_on_exit!
 
@@ -13,8 +13,7 @@ defmodule AirqualityWeb.LocationControllerTest do
       location = insert(:location)
 
       Mock
-      |> expect(:get_locations, fn _search_term -> Mock.get_locations(10, 20) end)
-      |> expect(:get_locations, fn _lat, _lon -> [location] end)
+      |> expect(:search_locations, fn _search_term -> [location] end)
 
       conn = get(build_conn(), "api/locations?filter[name]=London", [])
 
@@ -22,7 +21,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                "data" => [
                  %{
                    "attributes" => %{
-                     "name" => "test-identifier",
+                     "name" => location.identifier,
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
@@ -45,7 +44,7 @@ defmodule AirqualityWeb.LocationControllerTest do
       location = insert(:location)
 
       Mock
-      |> expect(:get_locations, fn _lat, _lon -> [location] end)
+      |> expect(:search_locations, fn _lat, _lon -> [location] end)
 
       conn = get(build_conn(), "api/locations?filter[coordinates]=20.3,10", [])
 
@@ -53,7 +52,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                "data" => [
                  %{
                    "attributes" => %{
-                     "name" => "test-identifier",
+                     "name" => location.identifier,
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
@@ -82,7 +81,7 @@ defmodule AirqualityWeb.LocationControllerTest do
       assert json_response(conn, 200) == %{
                "data" => %{
                  "attributes" => %{
-                   "name" => "test-identifier",
+                   "name" => location.identifier,
                    "city" => "test-city",
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",

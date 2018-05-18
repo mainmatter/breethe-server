@@ -14,7 +14,8 @@ defmodule Airquality.Application do
 
     Supervisor.start_link(
       [
-        supervisor(Airquality.Repo, [])
+        supervisor(Airquality.Repo, []),
+        supervisor(Task.Supervisor, [[name: Airquality.TaskSupervisor]])
       ],
       strategy: :one_for_one,
       name: Airquality.Supervisor

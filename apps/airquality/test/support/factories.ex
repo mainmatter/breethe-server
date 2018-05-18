@@ -3,7 +3,7 @@ defmodule Airquality.Factory do
 
   def location_factory do
     %Airquality.Data.Location{
-      identifier: "test-identifier",
+      identifier: sequence("test-identifier"),
       city: "test-city",
       country: "test-country",
       last_updated: DateTime.from_naive!(~N[2019-01-01 00:00:00.000000], "Etc/UTC"),
