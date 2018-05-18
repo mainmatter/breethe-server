@@ -110,4 +110,58 @@ defmodule AirqualityTest do
       end)
     end
   end
+
+  describe "search_measurements(location_id):" do
+    test "returns measurements from the API if none are present in the DB" do
+      location = insert(:location)
+
+      Mock
+      |> expect(:get_latest_measurements, fn _location_id ->
+        insert(:measurement, location: location)
+      end)
+
+      measurement = Airquality.search_measurements(location.id)
+      assert measurement.location_id == location.id
+    end
+
+    test "returns cached measurements if any are present in DB" do
+      location = insert(:location)
+      cached_measurement = [insert(:measurement, location_id: location.id)]
+
+      Mock
+      |> expect(:get_latest_measurements, fn _location_id ->
+        insert(:measurement, location_id: location.id)
+      end)
+
+      measurements = Airquality.search_measurements(location.id)
+
+      # stops background tasks to avoid throwing error when test process exits
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.each(fn task ->
+        Task.Supervisor.terminate_child(TaskSupervisor, task)
+      end)
+
+      assert measurements == cached_measurement
+    end
+
+    test "starts a background task to get measurements if any are present in the DB" do
+      location = insert(:location)
+      insert(:measurement, location: location)
+
+      Mock
+      |> expect(:get_latest_measurements, fn _location_id ->
+        insert(:measurement, location: location)
+      end)
+
+      Airquality.search_measurements(location.id)
+
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.all?(fn task ->
+        ref = Process.monitor(task)
+        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
+      end)
+    end
+  end
 end

@@ -5,7 +5,7 @@ defmodule AirqualityWeb.MeasurementController do
   @parameters [:pm10, :pm25, :so2, :no2, :o3, :co, :bc]
 
   def index(conn, %{"location_id" => location_id}) do
-    measurements = @source.get_measurements(location_id)
+    measurements = @source.search_measurements(location_id)
     nil_measurements = generate_missing_measurements(measurements, location_id)
 
     render(conn, "index.json-api", data: measurements ++ nil_measurements)

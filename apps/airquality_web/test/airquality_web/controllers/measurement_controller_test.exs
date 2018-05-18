@@ -10,10 +10,11 @@ defmodule AirqualityWeb.MeasurementControllerTest do
 
   describe "returns measurements" do
     test "when filtering by location id" do
-      measurement = insert(:measurement)
+      location = build(:location)
+      measurement = insert(:measurement, location: location)
 
       Mock
-      |> expect(:get_measurements, fn _id -> [measurement] end)
+      |> expect(:search_measurements, fn _id -> [measurement] end)
 
       conn = get(build_conn(), "api/locations/#{measurement.location.id}/measurements", [])
 
