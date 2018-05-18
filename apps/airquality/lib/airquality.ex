@@ -9,7 +9,7 @@ defmodule Airquality do
 
   @behaviour Airquality.Behaviour
 
-  alias __MODULE__.{Data, Sources.OpenAQ, TaskSupervisor}
+  alias __MODULE__.{Data, TaskSupervisor}
 
   @source Application.get_env(:airquality, :source)
 
