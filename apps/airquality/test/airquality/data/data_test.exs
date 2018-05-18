@@ -8,7 +8,10 @@ defmodule Airquality.DataTest do
 
   describe "get_location(id):" do
     test "returns a location by id" do
-      location = insert(:location)
+      location =
+        :location
+        |> insert()
+        |> Repo.preload(:measurements)
 
       assert location == Data.get_location(location.id)
     end
