@@ -59,7 +59,8 @@ defmodule Airquality do
     location_id
     |> Data.find_measurements()
     |> case do
-      [] -> @source.get_latest_measurements(location_id)
+      [] ->
+        @source.get_latest_measurements(location_id)
 
       measurements ->
         Task.Supervisor.start_child(TaskSupervisor, fn ->
