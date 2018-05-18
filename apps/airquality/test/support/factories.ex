@@ -17,8 +17,7 @@ defmodule Airquality.Factory do
       parameter: "pm10",
       measured_at: DateTime.from_naive!(~N[2019-01-01 00:00:00.000000], "Etc/UTC"),
       value: 0,
-      unit: :micro_grams_m3,
-      location: build(:location)
+      unit: :micro_grams_m3
     }
   end
 end
