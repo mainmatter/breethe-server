@@ -10,7 +10,7 @@ defmodule AirqualityWeb.LocationControllerTest do
 
   describe "index route: returns locations" do
     test "when filtering by location name" do
-      location = insert(:location)
+      location = insert(:location, measurements: [])
 
       Mock
       |> expect(:search_locations, fn _search_term -> [location] end)
@@ -29,7 +29,8 @@ defmodule AirqualityWeb.LocationControllerTest do
                    },
                    "relationships" => %{
                      "measurements" => %{
-                       "links" => %{"related" => "/locations/#{location.id}/measurements"}
+                       "links" => %{"related" => "/locations/#{location.id}/measurements"},
+                       "data" => []
                      }
                    },
                    "id" => "#{location.id}",
@@ -41,7 +42,7 @@ defmodule AirqualityWeb.LocationControllerTest do
     end
 
     test "when filtering by coordinates (lat/lon)" do
-      location = insert(:location)
+      location = insert(:location, measurements: [])
 
       Mock
       |> expect(:search_locations, fn _lat, _lon -> [location] end)
@@ -60,7 +61,8 @@ defmodule AirqualityWeb.LocationControllerTest do
                    },
                    "relationships" => %{
                      "measurements" => %{
-                       "links" => %{"related" => "/locations/#{location.id}/measurements"}
+                       "links" => %{"related" => "/locations/#{location.id}/measurements"},
+                       "data" => []
                      }
                    },
                    "id" => "#{location.id}",
@@ -74,7 +76,10 @@ defmodule AirqualityWeb.LocationControllerTest do
 
   describe "show route: returns location" do
     test "by id" do
-      location = insert(:location)
+      location = insert(:location, measurements: [])
+
+      Mock
+      |> expect(:get_location, fn _location_id -> location end)
 
       conn = get(build_conn(), "api/locations/#{location.id}", [])
 
@@ -89,7 +94,8 @@ defmodule AirqualityWeb.LocationControllerTest do
                  },
                  "relationships" => %{
                    "measurements" => %{
-                     "links" => %{"related" => "/locations/#{location.id}/measurements"}
+                     "links" => %{"related" => "/locations/#{location.id}/measurements"},
+                     "data" => []
                    }
                  },
                  "id" => "#{location.id}",
