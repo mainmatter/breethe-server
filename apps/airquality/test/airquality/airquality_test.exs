@@ -23,11 +23,7 @@ defmodule AirqualityTest do
 
       location = Airquality.get_location(cached_location.id)
 
-      TaskSupervisor
-      |> Task.Supervisor.children()
-      |> Enum.each(fn task ->
-        Task.Supervisor.terminate_child(TaskSupervisor, task)
-      end)
+      stop_background_tasks()
 
       assert location == cached_location
     end
@@ -42,12 +38,7 @@ defmodule AirqualityTest do
 
       location = Airquality.get_location(cached_location.id)
 
-      # stops background tasks to avoid throwing error when test process exits
-      TaskSupervisor
-      |> Task.Supervisor.children()
-      |> Enum.each(fn task ->
-        Task.Supervisor.terminate_child(TaskSupervisor, task)
-      end)
+      stop_background_tasks()
 
       assert location == cached_location
     end
@@ -91,12 +82,7 @@ defmodule AirqualityTest do
 
       locations = Airquality.search_locations("pdx")
 
-      # stops background tasks to avoid throwing error when test process exits
-      TaskSupervisor
-      |> Task.Supervisor.children()
-      |> Enum.each(fn task ->
-        Task.Supervisor.terminate_child(TaskSupervisor, task)
-      end)
+      stop_background_tasks()
 
       assert locations == cached_locations
     end
@@ -141,12 +127,7 @@ defmodule AirqualityTest do
 
       locations = Airquality.search_locations(lat, lon)
 
-      # stops background tasks to avoid throwing error when test process exits
-      TaskSupervisor
-      |> Task.Supervisor.children()
-      |> Enum.each(fn task ->
-        Task.Supervisor.terminate_child(TaskSupervisor, task)
-      end)
+      stop_background_tasks()
 
       assert locations == cached_locations
     end
@@ -196,12 +177,7 @@ defmodule AirqualityTest do
 
       measurements = Airquality.search_measurements(location.id)
 
-      # stops background tasks to avoid throwing error when test process exits
-      TaskSupervisor
-      |> Task.Supervisor.children()
-      |> Enum.each(fn task ->
-        Task.Supervisor.terminate_child(TaskSupervisor, task)
-      end)
+      stop_background_tasks()
 
       assert measurements == cached_measurement
     end
@@ -224,5 +200,13 @@ defmodule AirqualityTest do
         assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
       end)
     end
+  end
+
+  defp stop_background_tasks() do
+    TaskSupervisor
+    |> Task.Supervisor.children()
+    |> Enum.each(fn task ->
+      Task.Supervisor.terminate_child(TaskSupervisor, task)
+    end)
   end
 end
