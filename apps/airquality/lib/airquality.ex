@@ -14,11 +14,23 @@ defmodule Airquality do
   @source Application.get_env(:airquality, :source)
 
   defmodule Behaviour do
+    @callback get_location(location_id :: integer) :: %Airquality.Data.Location{}
     @callback search_locations(search_term :: String.t()) :: [%Airquality.Data.Location{}]
     @callback search_locations(lat :: number, lon :: number) :: [%Airquality.Data.Location{}]
     @callback search_measurements(location_id :: integer | String.t()) :: [
                 %Airquality.Data.Measurement{}
               ]
+  end
+
+  def get_location(location_id) do
+    location = Data.get_location(location_id)
+
+    {:ok, _pid} =
+      Task.Supervisor.start_child(TaskSupervisor, fn ->
+        @source.get_latest_measurements(location_id)
+      end)
+
+    location
   end
 
   def search_locations(search_term) do
@@ -63,9 +75,10 @@ defmodule Airquality do
         @source.get_latest_measurements(location_id)
 
       measurements ->
-        Task.Supervisor.start_child(TaskSupervisor, fn ->
-          @source.get_latest_measurements(location_id)
-        end)
+        {:ok, _pid} =
+          Task.Supervisor.start_child(TaskSupervisor, fn ->
+            @source.get_latest_measurements(location_id)
+          end)
 
         measurements
     end

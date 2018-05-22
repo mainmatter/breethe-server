@@ -10,6 +10,67 @@ defmodule AirqualityTest do
   setup :set_mox_global
   setup :verify_on_exit!
 
+  describe "get_location(location_id)" do
+    test "returns cached location with measurements if present in the DB" do
+      cached_location = insert(:location)
+      measurement = insert(:measurement, location_id: cached_location.id)
+      cached_location = %{cached_location | measurements: [measurement]}
+
+      Mock
+      |> expect(:get_latest_measurements, fn _location_id ->
+        [insert(:measurement, location: cached_location)]
+      end)
+
+      location = Airquality.get_location(cached_location.id)
+
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.each(fn task ->
+        Task.Supervisor.terminate_child(TaskSupervisor, task)
+      end)
+
+      assert location == cached_location
+    end
+
+    test "returns cached location without measurements if no measurements are present in the DB " do
+      cached_location = insert(:location, measurements: [])
+
+      Mock
+      |> expect(:get_latest_measurements, fn _location_id ->
+        [insert(:measurement, location: cached_location)]
+      end)
+
+      location = Airquality.get_location(cached_location.id)
+
+      # stops background tasks to avoid throwing error when test process exits
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.each(fn task ->
+        Task.Supervisor.terminate_child(TaskSupervisor, task)
+      end)
+
+      assert location == cached_location
+    end
+
+    test "starts a background task to get measurements for a location from the API" do
+      cached_location = insert(:location, measurements: [])
+
+      Mock
+      |> expect(:get_latest_measurements, fn _location_id ->
+        [insert(:measurement, location: cached_location)]
+      end)
+
+      Airquality.get_location(cached_location.id)
+
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.all?(fn task ->
+        ref = Process.monitor(task)
+        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
+      end)
+    end
+  end
+
   describe "search_locations(search_term):" do
     test "returns locations from the API if 9 or less are present in the DB" do
       location = build(:location)
