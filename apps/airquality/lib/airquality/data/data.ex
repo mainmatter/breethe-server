@@ -4,7 +4,18 @@ defmodule Airquality.Data do
   alias __MODULE__.{Location, Measurement}
   alias Airquality.Repo
 
-  def get_location(id), do: Repo.get(Location, id) |> Repo.preload(:measurements)
+  def get_location(id) do
+    Location
+    |> Repo.get(id)
+    |> Repo.preload(
+      measurements:
+        from(
+          m in Measurement,
+          where: m.measured_at > ago(24, "hour"),
+          distinct: m.parameter
+        )
+    )
+  end
 
   defp find_location(params) do
     Location
