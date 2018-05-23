@@ -9,11 +9,10 @@ defmodule Airquality.Data do
     |> Repo.get(id)
     |> Repo.preload(
       measurements:
-        from(
-          m in Measurement,
-          where: m.measured_at > ago(24, "hour"),
-          distinct: m.parameter
-        )
+        Measurement
+        |> Measurement.last_24h()
+        |> Measurement.one_per_parameter()
+        |> Measurement.most_recent_first()
     )
   end
 

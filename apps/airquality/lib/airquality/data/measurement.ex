@@ -1,6 +1,8 @@
 defmodule Airquality.Data.Measurement do
   use Ecto.Schema
-  import Ecto.Changeset
+
+  import Ecto.{Changeset, Query}
+
   alias Airquality.Data.{Measurement, Location}
 
   schema "measurements" do
@@ -19,5 +21,17 @@ defmodule Airquality.Data.Measurement do
     |> cast(attrs, [:location_id, :parameter, :measured_at, :value, :unit])
     |> cast_assoc(:location)
     |> validate_required([:location_id, :parameter, :measured_at, :value, :unit])
+  end
+
+  def last_24h(query) do
+    from(m in query, where: m.measured_at > ago(24, "hour"))
+  end
+
+  def most_recent_first(query) do
+    from(m in query, order_by: [desc: m.measured_at])
+  end
+
+  def one_per_parameter(query) do
+    from(m in query, distinct: m.parameter)
   end
 end
