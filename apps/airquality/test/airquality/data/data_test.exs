@@ -8,12 +8,46 @@ defmodule Airquality.DataTest do
 
   describe "get_location(id):" do
     test "returns a location by id" do
-      location =
-        :location
-        |> insert()
-        |> Repo.preload(:measurements)
+      location = insert(:location, measurements: [])
 
       assert location == Data.get_location(location.id)
+    end
+
+    test "returns a location and associated measurements no older than 24 hours" do
+      location = insert(:location)
+
+      insert(
+        :measurement,
+        measured_at: Timex.shift(DateTime.utc_now(), hours: -25),
+        parameter: :no2,
+        location_id: location.id
+      )
+
+      recent_measurement =
+        insert(:measurement, measured_at: DateTime.utc_now(), location_id: location.id)
+
+      location = Data.get_location(location.id)
+
+      assert Enum.count(location.measurements) == 1
+      assert List.first(location.measurements) == recent_measurement
+    end
+
+    test "returns a location and only the most recent associated measurement per parameter" do
+      location = insert(:location)
+
+      latest_measurement =
+        insert(:measurement, measured_at: DateTime.utc_now(), location_id: location.id)
+
+      insert(
+        :measurement,
+        measured_at: Timex.shift(DateTime.utc_now(), hours: -1),
+        location_id: location.id
+      )
+
+      location = Data.get_location(location.id)
+
+      assert Enum.count(location.measurements) == 1
+      assert List.first(location.measurements) == latest_measurement
     end
   end
 
