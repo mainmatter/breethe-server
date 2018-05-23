@@ -43,7 +43,7 @@ defmodule Airquality.Data do
 
   def create_measurement(params) do
     params
-    |> Map.take([:parameter, :measured_at])
+    |> Map.take([:parameter, :measured_at, :location_id])
     |> find_measurement()
     |> case do
       nil -> %Measurement{}
