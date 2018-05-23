@@ -152,6 +152,19 @@ defmodule Airquality.DataTest do
     end
   end
 
+  describe "find_measurement(location_id)" do
+    test "returns a measurement by location id" do
+      location = insert(:location)
+      measurement = insert(:measurement, location_id: location.id)
+      insert(:measurement, location: build(:location))
+
+      measurements = Data.find_measurements(location.id)
+
+      assert Enum.count(measurements) == 1
+      assert List.first(measurements) == measurement
+    end
+  end
+
   describe "create_measurement(params):" do
     test "creates a measurement" do
       location = insert(:location)
