@@ -23,6 +23,10 @@ defmodule Airquality.Data.Measurement do
     |> validate_required([:location_id, :parameter, :measured_at, :value, :unit])
   end
 
+  def for_location(query, location_id) do
+    from(m in query, where: m.location_id == ^location_id)
+  end
+
   def last_24h(query) do
     from(m in query, where: m.measured_at > ago(24, "hour"))
   end

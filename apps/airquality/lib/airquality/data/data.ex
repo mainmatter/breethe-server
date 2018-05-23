@@ -1,6 +1,4 @@
 defmodule Airquality.Data do
-  import Ecto.Query
-
   alias __MODULE__.{Location, Measurement}
   alias Airquality.Repo
 
@@ -48,8 +46,11 @@ defmodule Airquality.Data do
 
   defp find_measurement(params), do: Repo.get_by(Measurement, params)
 
-  def find_measurements(location_id),
-    do: Repo.all(from(m in Measurement, where: m.location_id == ^location_id))
+  def find_measurements(location_id) do
+    Measurement
+    |> Measurement.for_location(location_id)
+    |> Repo.all()
+  end
 
   def create_measurement(params) do
     params
