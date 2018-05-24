@@ -49,6 +49,9 @@ defmodule Airquality.Data do
   def find_measurements(location_id) do
     Measurement
     |> Measurement.for_location(location_id)
+    |> Measurement.last_24h()
+    |> Measurement.one_per_parameter()
+    |> Measurement.most_recent_first()
     |> Repo.all()
   end
 
