@@ -10,7 +10,8 @@ defmodule AirqualityWeb.LocationView do
     links: [
       related: "/locations/:id/measurements"
     ],
-    include: true
+    include: false,
+    identifiers: :when_included
   )
 
   defp name(struct, _conn), do: Map.get(struct, :identifier)
