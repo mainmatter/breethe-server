@@ -1,8 +1,6 @@
 defmodule AirqualityWeb.LocationController do
   use AirqualityWeb, :controller
 
-  alias Airquality.Data
-
   @source Application.get_env(:airquality_web, :source)
 
   def index(conn, %{"filter" => filter}) do
@@ -12,16 +10,30 @@ defmodule AirqualityWeb.LocationController do
         name -> @source.search_locations(name)
       end
 
-    render(conn, "index.json-api", data: locations)
+    opts =
+      locations
+      |> Enum.all?(fn location -> location.measurements == [] end)
+      |> case do
+        true -> []
+        false -> [include: "measurements"]
+      end
+
+    render(conn, "index.json-api", data: locations, opts: opts)
   end
 
   def show(conn, %{"id" => id}) do
     location =
       id
       |> String.to_integer()
-      |> Data.get_location()
+      |> @source.get_location()
 
-    render(conn, "show.json-api", data: location)
+    opts =
+      case location.measurements do
+        [] -> []
+        _ -> [include: "measurements"]
+      end
+
+    render(conn, "show.json-api", data: location, opts: opts)
   end
 
   defp process_params(%{"name" => name}), do: name

@@ -6,9 +6,12 @@ defmodule AirqualityWeb.LocationView do
 
   has_many(
     :measurements,
+    serializer: AirqualityWeb.MeasurementView,
     links: [
       related: "/locations/:id/measurements"
-    ]
+    ],
+    include: false,
+    identifiers: :when_included
   )
 
   defp name(struct, _conn), do: Map.get(struct, :identifier)
