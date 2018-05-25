@@ -71,6 +71,7 @@ defmodule AirqualityWeb.LocationControllerTest do
              }
     end
 
+    @tag :skip
     test "and includes measurements in payload" do
       location = insert(:location)
       measurement = insert(:measurement, location_id: location.id)
@@ -156,6 +157,7 @@ defmodule AirqualityWeb.LocationControllerTest do
              }
     end
 
+    @tag :skip
     test "and includes measurements in payload" do
       location = insert(:location)
       measurement = insert(:measurement, location_id: location.id)
