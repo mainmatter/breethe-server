@@ -74,7 +74,7 @@ defmodule AirqualityTest do
     end
 
     test "returns cached locations if 10 or more are present in DB" do
-      cached_locations = insert_list(10, :location, %{city: "pdx"})
+      cached_locations = insert_list(10, :location, %{city: "pdx", measurements: []})
 
       Mock
       |> expect(:get_locations, fn _search_term -> Mock.get_locations(0.0, 0.0) end)
@@ -120,7 +120,10 @@ defmodule AirqualityTest do
       lon = 0.0
 
       cached_locations =
-        insert_list(10, :location, %{coordinates: %Geo.Point{coordinates: {lat, lon}, srid: 4326}})
+        insert_list(10, :location, %{
+          coordinates: %Geo.Point{coordinates: {lat, lon}, srid: 4326},
+          measurements: []
+        })
 
       Mock
       |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)

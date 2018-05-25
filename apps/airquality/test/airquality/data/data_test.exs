@@ -108,10 +108,18 @@ defmodule Airquality.DataTest do
 
     test "orders results by closest to lat, lon" do
       closest_location =
-        insert(:location, coordinates: %Geo.Point{coordinates: {0.0, 0.0}, srid: 4326})
+        insert(
+          :location,
+          coordinates: %Geo.Point{coordinates: {0.0, 0.0}, srid: 4326},
+          measurements: []
+        )
 
       furthest_location =
-        insert(:location, coordinates: %Geo.Point{coordinates: {0.003, 0.001}, srid: 4326})
+        insert(
+          :location,
+          coordinates: %Geo.Point{coordinates: {0.003, 0.001}, srid: 4326},
+          measurements: []
+        )
 
       insert(:location, coordinates: %Geo.Point{coordinates: {0.001, 0.001}, srid: 4326})
 
@@ -138,7 +146,12 @@ defmodule Airquality.DataTest do
 
       location = Data.create_location(params)
 
-      assert Repo.get_by(Location, params) == location
+      stored_location =
+        Location
+        |> Repo.get_by(params)
+        |> Repo.preload(:measurements)
+
+      assert stored_location == location
     end
 
     test "updates if location already exists" do

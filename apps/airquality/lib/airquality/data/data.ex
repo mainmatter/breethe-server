@@ -5,13 +5,7 @@ defmodule Airquality.Data do
   def get_location(id) do
     Location
     |> Repo.get(id)
-    |> Repo.preload(
-      measurements:
-        Measurement
-        |> Measurement.last_24h()
-        |> Measurement.one_per_parameter()
-        |> Measurement.most_recent_first()
-    )
+    |> preload_measurements()
   end
 
   defp find_location(params) do
@@ -25,6 +19,7 @@ defmodule Airquality.Data do
     |> Location.matches(search_term)
     |> Location.first_ten()
     |> Repo.all()
+    |> preload_measurements()
   end
 
   def find_locations(lat, lon) do
@@ -33,6 +28,7 @@ defmodule Airquality.Data do
     |> Location.closest_first(lat, lon)
     |> Location.first_ten()
     |> Repo.all()
+    |> preload_measurements()
   end
 
   def create_location(params) do
@@ -42,6 +38,25 @@ defmodule Airquality.Data do
     end
     |> Location.changeset(params)
     |> Repo.insert_or_update!()
+    |> preload_measurements()
+  end
+
+  defp preload_measurements(locations) when is_list(locations) do
+    locations
+    |> Enum.map(fn location ->
+      preload_measurements(location)
+    end)
+  end
+
+  defp preload_measurements(location) do
+    location
+    |> Repo.preload(
+      measurements:
+        Measurement
+        |> Measurement.last_24h()
+        |> Measurement.one_per_parameter()
+        |> Measurement.most_recent_first()
+    )
   end
 
   defp find_measurement(params), do: Repo.get_by(Measurement, params)
