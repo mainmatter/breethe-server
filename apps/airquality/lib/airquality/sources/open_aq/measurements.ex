@@ -39,6 +39,8 @@ defmodule Airquality.Sources.OpenAQ.Measurements do
   end
 
   defp query_open_aq(identifier) do
+    identifier = URI.encode(identifier)
+
     url =
       "#{Application.get_env(:airquality, :open_aq_api_endpoint)}/latest?location=#{identifier}"
 
