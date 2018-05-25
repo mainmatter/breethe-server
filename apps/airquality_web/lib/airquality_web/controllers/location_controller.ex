@@ -10,7 +10,7 @@ defmodule AirqualityWeb.LocationController do
         name -> @source.search_locations(name)
       end
 
-    opts =
+    _opts =
       locations
       |> Enum.all?(fn location -> location.measurements == [] end)
       |> case do
@@ -18,7 +18,7 @@ defmodule AirqualityWeb.LocationController do
         false -> [include: "measurements"]
       end
 
-    render(conn, "index.json-api", data: locations, opts: opts)
+    render(conn, "index.json-api", data: locations, opts: [])
   end
 
   def show(conn, %{"id" => id}) do
@@ -27,13 +27,13 @@ defmodule AirqualityWeb.LocationController do
       |> String.to_integer()
       |> @source.get_location()
 
-    opts =
+    _opts =
       case location.measurements do
         [] -> []
         _ -> [include: "measurements"]
       end
 
-    render(conn, "show.json-api", data: location, opts: opts)
+    render(conn, "show.json-api", data: location, opts: [])
   end
 
   defp process_params(%{"name" => name}), do: name
