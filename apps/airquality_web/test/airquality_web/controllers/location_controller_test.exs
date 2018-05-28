@@ -25,7 +25,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "last-updated" => "2019-01-01T00:00:00.000000Z"
+                     "lastUpdated" => "2019-01-01T00:00:00.000000Z"
                    },
                    "relationships" => %{
                      "measurements" => %{
@@ -56,7 +56,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "last-updated" => "2019-01-01T00:00:00.000000Z"
+                     "lastUpdated" => "2019-01-01T00:00:00.000000Z"
                    },
                    "relationships" => %{
                      "measurements" => %{
@@ -91,7 +91,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "last-updated" => "2019-01-01T00:00:00.000000Z"
+                     "lastUpdated" => "2019-01-01T00:00:00.000000Z"
                    },
                    "relationships" => %{
                      "measurements" => %{
@@ -109,9 +109,9 @@ defmodule AirqualityWeb.LocationControllerTest do
                "included" => [
                  %{
                    "attributes" => %{
-                     "measured-at" => "2019-01-01T00:00:00.000000Z",
+                     "measuredAt" => "2019-01-01T00:00:00.000000Z",
                      "parameter" => "pm10",
-                     "quality-index" => "very_low",
+                     "qualityIndex" => "very_low",
                      "unit" => "micro_grams_m3",
                      "value" => 0.0
                    },
@@ -143,7 +143,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                    "city" => "test-city",
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",
-                   "last-updated" => "2019-01-01T00:00:00.000000Z"
+                   "lastUpdated" => "2019-01-01T00:00:00.000000Z"
                  },
                  "relationships" => %{
                    "measurements" => %{
@@ -174,7 +174,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                    "city" => "test-city",
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",
-                   "last-updated" => "2019-01-01T00:00:00.000000Z"
+                   "lastUpdated" => "2019-01-01T00:00:00.000000Z"
                  },
                  "relationships" => %{
                    "measurements" => %{
@@ -191,9 +191,9 @@ defmodule AirqualityWeb.LocationControllerTest do
                "included" => [
                  %{
                    "attributes" => %{
-                     "measured-at" => "2019-01-01T00:00:00.000000Z",
+                     "measuredAt" => "2019-01-01T00:00:00.000000Z",
                      "parameter" => "pm10",
-                     "quality-index" => "very_low",
+                     "qualityIndex" => "very_low",
                      "unit" => "micro_grams_m3",
                      "value" => 0.0
                    },

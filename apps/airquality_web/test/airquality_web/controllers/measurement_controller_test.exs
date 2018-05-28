@@ -24,8 +24,8 @@ defmodule AirqualityWeb.MeasurementControllerTest do
                  %{
                    "attributes" => %{
                      "parameter" => "pm10",
-                     "measured-at" => "2019-01-01T00:00:00.000000Z",
-                     "quality-index" => "very_low",
+                     "measuredAt" => "2019-01-01T00:00:00.000000Z",
+                     "qualityIndex" => "very_low",
                      "unit" => "micro_grams_m3",
                      "value" => 0.0
                    },
