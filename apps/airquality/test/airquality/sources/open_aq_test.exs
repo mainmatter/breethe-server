@@ -26,6 +26,25 @@ defmodule Airquality.Sources.OpenAQTest do
     ]
   }
 
+  @old_sample_location %{
+    "location" => "test-location",
+    "city" => "test-city",
+    "country" => "test-country",
+    "lastUpdated" => "2017-01-01T00:00:00Z",
+    "parameters" => [
+      "co",
+      "o3",
+      "no2",
+      "pm10",
+      "so2",
+      "pm25"
+    ],
+    "coordinates" => %{
+      "latitude" => 10.12345678,
+      "longitude" => 20.12345678
+    }
+  }
+
   @sample_measurement %{
     "results" => [
       %{
@@ -72,7 +91,7 @@ defmodule Airquality.Sources.OpenAQTest do
     {:ok, bypass: bypass}
   end
 
-  describe "load location data on demand" do
+  describe "load location data on demand:" do
     test "by latitude and longitude", %{bypass: bypass} do
       Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
         assert %{"nearest" => "10", "coordinates" => "10,20"} ==
@@ -126,9 +145,32 @@ defmodule Airquality.Sources.OpenAQTest do
 
       assert location.identifier == "test-location"
     end
+
+    test "ignores locations not updated in the last 7 days", %{bypass: bypass} do
+      results =
+        @sample_location
+        |> update_in(["results"], &(&1 ++ [@old_sample_location]))
+        |> Poison.encode!()
+
+      Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
+        Plug.Conn.resp(
+          conn,
+          200,
+          results
+        )
+      end)
+
+      locations = OpenAQ.get_locations(10, 20)
+
+      assert Enum.count(locations) == 1
+
+      assert List.first(locations).last_updated ==
+               DateTime.from_naive!(~N[2019-01-01 00:00:00.00], "Etc/UTC")
+               |> DateTime.truncate(:second)
+    end
   end
 
-  describe "load ppm data on demand" do
+  describe "load ppm data on demand:" do
     test "based on location id", %{
       bypass: bypass
     } do
