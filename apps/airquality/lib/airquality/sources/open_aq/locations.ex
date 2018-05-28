@@ -7,8 +7,15 @@ defmodule Airquality.Sources.OpenAQ.Locations do
     Enum.map(results, fn result ->
       params = parse_location(result)
 
-      Data.create_location(params)
+      params.last_updated
+      |> DateTime.diff(DateTime.utc_now(), :milliseconds)
+      |> recent?()
+      |> case do
+        true -> Data.create_location(params)
+        false -> []
+      end
     end)
+    |> List.flatten()
   end
 
   defp parse_location(location) do
@@ -44,4 +51,6 @@ defmodule Airquality.Sources.OpenAQ.Locations do
     %{"results" => results} = Poison.decode!(response.body)
     results
   end
+
+  defp recent?(diff), do: :timer.hours(24 * 7) * -1 < diff
 end
