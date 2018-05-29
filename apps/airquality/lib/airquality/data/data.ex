@@ -14,6 +14,8 @@ defmodule Airquality.Data do
     |> Repo.preload(:measurements)
   end
 
+  def all_locations(), do: Repo.all(Location)
+
   def find_locations(search_term) do
     Location
     |> Location.matches(search_term)
