@@ -108,7 +108,7 @@ defmodule Airquality.Sources.OpenAQTest do
       stop_background_tasks()
 
       assert location.identifier == "test-location"
-      assert location.label == "test-location"
+      assert location.label == nil
       assert location.city == "test-city"
       assert location.country == "test-country"
       assert location.last_updated == Timex.to_datetime({{2019, 1, 1}, {0, 0, 0, 0}})

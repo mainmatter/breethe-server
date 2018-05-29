@@ -34,7 +34,6 @@ defmodule Airquality.Data.Location do
     ])
     |> validate_required([
       :identifier,
-      :label,
       :city,
       :country,
       :available_parameters,

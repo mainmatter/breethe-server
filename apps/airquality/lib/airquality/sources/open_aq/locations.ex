@@ -33,7 +33,6 @@ defmodule Airquality.Sources.OpenAQ.Locations do
 
     %{
       identifier: identifier,
-      label: identifier,
       city: city,
       country: country,
       last_updated: Timex.parse!(last_updated, "{ISO:Extended:Z}"),
