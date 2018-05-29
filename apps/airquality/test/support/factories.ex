@@ -2,8 +2,11 @@ defmodule Airquality.Factory do
   use ExMachina.Ecto, repo: Airquality.Repo
 
   def location_factory do
+    identifier = sequence("test-identifier")
+
     %Airquality.Data.Location{
-      identifier: sequence("test-identifier"),
+      identifier: identifier,
+      label: identifier,
       city: "test-city",
       country: "test-country",
       last_updated: DateTime.from_naive!(~N[2019-01-01 00:00:00.000000], "Etc/UTC"),

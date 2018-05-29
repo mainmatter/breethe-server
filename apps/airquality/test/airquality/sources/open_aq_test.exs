@@ -103,6 +103,7 @@ defmodule Airquality.Sources.OpenAQTest do
       [location] = OpenAQ.get_locations(10, 20)
 
       assert location.identifier == "test-location"
+      assert location.label == "test-location"
       assert location.city == "test-city"
       assert location.country == "test-country"
       assert location.last_updated == Timex.to_datetime({{2019, 1, 1}, {0, 0, 0, 0}})
