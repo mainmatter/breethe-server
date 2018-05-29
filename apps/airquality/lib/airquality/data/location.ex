@@ -10,6 +10,7 @@ defmodule Airquality.Data.Location do
     has_many(:measurements, Measurement)
 
     field(:identifier, :string)
+    field(:label, :string)
     field(:city, :string)
     field(:country, :string)
     field(:last_updated, :utc_datetime)
@@ -24,13 +25,20 @@ defmodule Airquality.Data.Location do
     location
     |> cast(attrs, [
       :identifier,
+      :label,
       :city,
       :country,
       :last_updated,
       :available_parameters,
       :coordinates
     ])
-    |> validate_required([:identifier, :city, :country, :available_parameters, :coordinates])
+    |> validate_required([
+      :identifier,
+      :city,
+      :country,
+      :available_parameters,
+      :coordinates
+    ])
     |> unique_constraint(:identifier)
   end
 

@@ -1,7 +1,10 @@
 defmodule Airquality.Sources.OpenAQTest do
   use Airquality.DataCase
+
   import Airquality.Factory
+
   alias Airquality.Sources.OpenAQ
+  alias Airquality.TaskSupervisor
 
   @sample_location %{
     "results" => [
@@ -102,7 +105,10 @@ defmodule Airquality.Sources.OpenAQTest do
 
       [location] = OpenAQ.get_locations(10, 20)
 
+      stop_background_tasks()
+
       assert location.identifier == "test-location"
+      assert location.label == nil
       assert location.city == "test-city"
       assert location.country == "test-country"
       assert location.last_updated == Timex.to_datetime({{2019, 1, 1}, {0, 0, 0, 0}})
@@ -143,6 +149,8 @@ defmodule Airquality.Sources.OpenAQTest do
 
       [location] = OpenAQ.get_locations("marienplatz münchen")
 
+      stop_background_tasks()
+
       assert location.identifier == "test-location"
     end
 
@@ -162,11 +170,40 @@ defmodule Airquality.Sources.OpenAQTest do
 
       locations = OpenAQ.get_locations(10, 20)
 
+      stop_background_tasks()
+
       assert Enum.count(locations) == 1
 
       assert List.first(locations).last_updated ==
                DateTime.from_naive!(~N[2019-01-01 00:00:00.00], "Etc/UTC")
                |> DateTime.truncate(:second)
+    end
+
+    test "starts a background task to update each location's label", %{bypass: bypass} do
+      Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
+        Plug.Conn.resp(
+          conn,
+          200,
+          Poison.encode!(@sample_location)
+        )
+      end)
+
+      Bypass.expect(bypass, "GET", "/google-maps", fn conn ->
+        response = %{
+          "results" => [%{"formatted_address" => "test address"}]
+        }
+
+        Plug.Conn.resp(conn, 200, Poison.encode!(response))
+      end)
+
+      OpenAQ.get_locations(10, 20)
+
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.all?(fn task ->
+        ref = Process.monitor(task)
+        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
+      end)
     end
   end
 
@@ -224,5 +261,13 @@ defmodule Airquality.Sources.OpenAQTest do
 
       assert [] == OpenAQ.get_latest_measurements(location.id)
     end
+  end
+
+  defp stop_background_tasks() do
+    TaskSupervisor
+    |> Task.Supervisor.children()
+    |> Enum.each(fn task ->
+      Task.Supervisor.terminate_child(TaskSupervisor, task)
+    end)
   end
 end

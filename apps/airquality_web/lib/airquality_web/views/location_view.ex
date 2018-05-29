@@ -2,7 +2,7 @@ defmodule AirqualityWeb.LocationView do
   use AirqualityWeb, :view
   use JaSerializer.PhoenixView
 
-  attributes([:name, :city, :country, :last_updated, :coordinates])
+  attributes([:name, :label, :city, :country, :last_updated, :coordinates])
 
   has_many(
     :measurements,
@@ -15,6 +15,13 @@ defmodule AirqualityWeb.LocationView do
   )
 
   defp name(struct, _conn), do: Map.get(struct, :identifier)
+
+  defp label(struct, _conn) do
+    case Map.get(struct, :label) do
+      nil -> Map.get(struct, :identifier)
+      label -> label
+    end
+  end
 end
 
 defimpl JaSerializer.Formatter, for: [Geo.Point] do

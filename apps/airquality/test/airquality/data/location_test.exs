@@ -6,6 +6,7 @@ defmodule Airquality.Data.LocationTest do
 
   @valid_attrs %{
     identifier: "identifer",
+    label: "identifier",
     city: "city",
     country: "country",
     last_updated: DateTime.utc_now(),
