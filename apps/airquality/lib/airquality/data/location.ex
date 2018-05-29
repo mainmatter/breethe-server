@@ -10,6 +10,7 @@ defmodule Airquality.Data.Location do
     has_many(:measurements, Measurement)
 
     field(:identifier, :string)
+    field(:label, :string)
     field(:city, :string)
     field(:country, :string)
     field(:last_updated, :utc_datetime)
