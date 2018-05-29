@@ -14,6 +14,7 @@ defmodule Airquality.Sources.OpenAQ do
     locations = OpenAQ.Locations.get_locations(lat, lon)
 
     locations
+    |> Enum.reject(fn location -> location.label end)
     |> Enum.map(fn location ->
       {location_lat, location_lon} = location.coordinates.coordinates
 
