@@ -1,4 +1,4 @@
-defmodule Airquality.Umbrella.Mixfile do
+defmodule Breethe.Umbrella.Mixfile do
   use Mix.Project
 
   def project do
