@@ -22,6 +22,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                  %{
                    "attributes" => %{
                      "name" => location.identifier,
+                     "label" => location.label,
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
@@ -53,6 +54,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                  %{
                    "attributes" => %{
                      "name" => location.identifier,
+                     "label" => location.label,
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
@@ -88,6 +90,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                  %{
                    "attributes" => %{
                      "name" => location.identifier,
+                     "label" => location.label,
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
@@ -140,6 +143,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                "data" => %{
                  "attributes" => %{
                    "name" => location.identifier,
+                   "label" => location.label,
                    "city" => "test-city",
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",
@@ -171,6 +175,7 @@ defmodule AirqualityWeb.LocationControllerTest do
                "data" => %{
                  "attributes" => %{
                    "name" => location.identifier,
+                   "label" => location.label,
                    "city" => "test-city",
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",

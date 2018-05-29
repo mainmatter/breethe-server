@@ -2,7 +2,7 @@ defmodule AirqualityWeb.LocationView do
   use AirqualityWeb, :view
   use JaSerializer.PhoenixView
 
-  attributes([:name, :city, :country, :last_updated, :coordinates])
+  attributes([:name, :label, :city, :country, :last_updated, :coordinates])
 
   has_many(
     :measurements,
