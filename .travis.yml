@@ -15,7 +15,7 @@ install:
 jobs:
   include:
     - stage: test
-      before_script: psql -c "CREATE EXTENSION postgis; CREATE USER airquality WITH CREATEDB PASSWORD 'airquality'; ALTER USER airquality superuser;" -U postgres
+      before_script: psql -c "CREATE EXTENSION postgis; CREATE USER breethe WITH CREATEDB PASSWORD 'breethe'; ALTER USER breethe superuser;" -U postgres
       script: mix test
     - stage: test
       script: mix format --check-formatted

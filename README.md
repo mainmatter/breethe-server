@@ -41,4 +41,3 @@ reference, we do not grant a license to reuse or redistribute this in any form.
 
 If you would like to use this for educational or charitable purposes, please
 reach out at breethe@simplabs.com
-
