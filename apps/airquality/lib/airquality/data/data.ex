@@ -41,6 +41,12 @@ defmodule Airquality.Data do
     |> preload_measurements()
   end
 
+  def update_location_label(location, label) do
+    location
+    |> Location.changeset(%{label: label})
+    |> Repo.update!()
+  end
+
   defp preload_measurements(locations) when is_list(locations) do
     locations
     |> Enum.map(fn location ->

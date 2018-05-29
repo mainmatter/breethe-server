@@ -32,7 +32,14 @@ defmodule Airquality.Data.Location do
       :available_parameters,
       :coordinates
     ])
-    |> validate_required([:identifier, :label, :city, :country, :available_parameters, :coordinates])
+    |> validate_required([
+      :identifier,
+      :label,
+      :city,
+      :country,
+      :available_parameters,
+      :coordinates
+    ])
     |> unique_constraint(:identifier)
   end
 

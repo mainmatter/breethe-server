@@ -16,8 +16,7 @@ defmodule Airquality.Sources.Google.Geocoding do
     query =
       URI.encode_query(%{
         "latlng" => "#{lat},#{lon}",
-        "key" => Application.get_env(:airquality, :google_maps_api_key),
-        "result_type" => "street_address"
+        "key" => Application.get_env(:airquality, :google_maps_api_key)
       })
 
     query
@@ -35,5 +34,11 @@ defmodule Airquality.Sources.Google.Geocoding do
   defp strip(%{"results" => [%{"geometry" => %{"location" => %{"lat" => lat, "lng" => lon}}}]}),
     do: [lat, lon]
 
-  defp strip(%{"results" => [%{"formatted_address" => address}]}), do: address
+  defp strip(results) do
+    all = fn :get, data, next -> Enum.map(data, next) end
+
+    results
+    |> get_in(["results", all, "formatted_address"])
+    |> List.first()
+  end
 end
