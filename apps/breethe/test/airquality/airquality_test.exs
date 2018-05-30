@@ -69,8 +69,15 @@ defmodule BreetheTest do
       Mock
       |> expect(:get_locations, fn _search_term -> Mock.get_locations(0.0, 0.0) end)
       |> expect(:get_locations, fn _lat, _lon -> [location] end)
+      |> stub(:get_latest_measurements, fn _location_id ->
+        insert(:measurement, location: location)
+      end)
 
-      assert [location] == Breethe.search_locations("pdx")
+      locations = Breethe.search_locations("pdx")
+
+      stop_background_tasks()
+
+      assert [location] == locations
     end
 
     test "returns cached locations if 10 or more are present in DB" do
@@ -79,6 +86,11 @@ defmodule BreetheTest do
       Mock
       |> expect(:get_locations, fn _search_term -> Mock.get_locations(0.0, 0.0) end)
       |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
+      |> stub(:get_latest_measurements, fn _location_id ->
+        Enum.each(cached_locations, fn location ->
+          insert(:measurement, location: location)
+        end)
+      end)
 
       locations = Breethe.search_locations("pdx")
 
@@ -87,12 +99,59 @@ defmodule BreetheTest do
       assert locations == cached_locations
     end
 
+    test "starts a background task to get measurements if 9 or less locations are present in the DB" do
+      location = build(:location)
+
+      Mock
+      |> expect(:get_locations, fn _search_term -> Mock.get_locations(0.0, 0.0) end)
+      |> expect(:get_locations, fn _lat, _lon -> [location] end)
+      |> expect(:get_latest_measurements, fn _location_id ->
+        insert(:measurement, location: location)
+      end)
+
+      Breethe.search_locations("pdx")
+
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.all?(fn task ->
+        ref = Process.monitor(task)
+        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
+      end)
+    end
+
+    test "starts a background task to get measurements if 10 or more locations are present in the DB" do
+      cached_locations = insert_list(10, :location, %{city: "pdx", measurements: []})
+
+      Mock
+      |> expect(:get_locations, fn _search_term -> Mock.get_locations(0.0, 0.0) end)
+      |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
+      |> expect(:get_latest_measurements, 10, fn _location_id ->
+        Enum.each(cached_locations, fn location ->
+          insert(:measurement, location: location)
+        end)
+      end)
+
+      Breethe.search_locations("pdx")
+
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.all?(fn task ->
+        ref = Process.monitor(task)
+        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
+      end)
+    end
+
     test "starts a background task to get locations from the API if 10 or more are present in the DB" do
       cached_locations = insert_list(10, :location, %{city: "pdx"})
 
       Mock
       |> expect(:get_locations, fn _search_term -> Mock.get_locations(0.0, 0.0) end)
       |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
+      |> stub(:get_latest_measurements, fn _location_id ->
+        Enum.each(cached_locations, fn location ->
+          insert(:measurement, location: location)
+        end)
+      end)
 
       Breethe.search_locations("pdx")
 
@@ -111,8 +170,15 @@ defmodule BreetheTest do
 
       Mock
       |> expect(:get_locations, fn _lat, _lon -> [location] end)
+      |> stub(:get_latest_measurements, fn _location_id ->
+        insert(:measurement, location: location)
+      end)
 
-      assert [location] == Breethe.search_locations(0.0, 0.0)
+      locations = Breethe.search_locations(0.0, 0.0)
+
+      stop_background_tasks()
+
+      assert [location] == locations
     end
 
     test "returns cached locations if 10 or more are present in DB" do
@@ -127,12 +193,65 @@ defmodule BreetheTest do
 
       Mock
       |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
+      |> stub(:get_latest_measurements, fn _location_id ->
+        Enum.each(cached_locations, fn location ->
+          insert(:measurement, location: location)
+        end)
+      end)
 
       locations = Breethe.search_locations(lat, lon)
 
       stop_background_tasks()
 
       assert locations == cached_locations
+    end
+
+    test "starts a background task to get measurements if 9 or less locations are present in the DB" do
+      lat = 0.0
+      lon = 0.0
+
+      location =
+        insert(:location, %{coordinates: %Geo.Point{coordinates: {lat, lon}, srid: 4326}})
+
+      Mock
+      |> expect(:get_locations, fn _lat, _lon -> [location] end)
+      |> expect(:get_latest_measurements, fn _location_id ->
+        insert(:measurement, location: location)
+      end)
+
+      Breethe.search_locations(0.0, 0.0)
+
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.all?(fn task ->
+        ref = Process.monitor(task)
+        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
+      end)
+    end
+
+    test "starts a background task to get measurements if 10 or more locations are present in the DB" do
+      lat = 0.0
+      lon = 0.0
+
+      cached_locations =
+        insert_list(10, :location, %{coordinates: %Geo.Point{coordinates: {lat, lon}, srid: 4326}})
+
+      Mock
+      |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
+      |> expect(:get_latest_measurements, 10, fn _location_id ->
+        Enum.each(cached_locations, fn location ->
+          insert(:measurement, location: location)
+        end)
+      end)
+
+      Breethe.search_locations(0.0, 0.0)
+
+      TaskSupervisor
+      |> Task.Supervisor.children()
+      |> Enum.all?(fn task ->
+        ref = Process.monitor(task)
+        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
+      end)
     end
 
     test "starts a background task to get locations from the API if 10 or more are present in the DB" do
@@ -144,6 +263,11 @@ defmodule BreetheTest do
 
       Mock
       |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
+      |> stub(:get_latest_measurements, fn _location_id ->
+        Enum.each(cached_locations, fn location ->
+          insert(:measurement, location: location)
+        end)
+      end)
 
       Breethe.search_locations(lat, lon)
 
