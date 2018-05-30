@@ -38,13 +38,18 @@ defmodule Breethe do
 
     case length(locations) > 9 do
       false ->
-        @source.get_locations(search_term)
+        locations = @source.get_locations(search_term)
+        {:ok, _pid} = start_measurement_task(locations)
+
+        locations
 
       true ->
         {:ok, _pid} =
           Task.Supervisor.start_child(TaskSupervisor, fn ->
             @source.get_locations(search_term)
           end)
+
+        {:ok, _pid} = start_measurement_task(locations)
 
         locations
     end
@@ -55,13 +60,18 @@ defmodule Breethe do
 
     case length(locations) > 9 do
       false ->
-        @source.get_locations(lat, lon)
+        locations = @source.get_locations(lat, lon)
+        {:ok, _pid} = start_measurement_task(locations)
+
+        locations
 
       true ->
         {:ok, _pid} =
           Task.Supervisor.start_child(TaskSupervisor, fn ->
             @source.get_locations(lat, lon)
           end)
+
+        {:ok, _pid} = start_measurement_task(locations)
 
         locations
     end
@@ -82,5 +92,13 @@ defmodule Breethe do
 
         measurements
     end
+  end
+
+  defp start_measurement_task(locations) do
+    Task.Supervisor.start_child(TaskSupervisor, fn ->
+      Enum.map(locations, fn location ->
+        @source.get_latest_measurements(location.id)
+      end)
+    end)
   end
 end
