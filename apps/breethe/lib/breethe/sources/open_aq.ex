@@ -1,8 +1,16 @@
 defmodule Breethe.Sources.OpenAQ do
-  @behaviour Breethe.Sources.Behaviour
+  @behaviour __MODULE__.Behaviour
 
   alias Breethe.{TaskSupervisor, Data}
   alias Breethe.Sources.{Google, OpenAQ}
+
+  defmodule Behaviour do
+    @callback get_locations(search_term :: String.t()) :: [%Breethe.Data.Location{}]
+    @callback get_locations(lat :: number, lon :: number) :: [%Breethe.Data.Location{}]
+    @callback get_latest_measurements(location_id :: integer | String.t()) :: [
+                %Breethe.Data.Measurement{}
+              ]
+  end
 
   def get_locations(search_term) do
     [lat, lon] = Google.Geocoding.find_location(search_term)
