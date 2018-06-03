@@ -8,9 +8,9 @@ defmodule Breethe.Data do
     |> preload_measurements()
   end
 
-  defp find_location(params) do
+  defp find_location_by_identifier(identifier) do
     Location
-    |> Repo.get_by(Map.take(params, [:city, :coordinates, :identifier, :country]))
+    |> Repo.get_by(identifier: identifier)
     |> Repo.preload(:measurements)
   end
 
@@ -34,7 +34,7 @@ defmodule Breethe.Data do
   end
 
   def create_location(params) do
-    case find_location(params) do
+    case find_location_by_identifier(params.identifier) do
       nil -> %Location{}
       location -> location
     end

@@ -156,7 +156,7 @@ defmodule Breethe.DataTest do
 
     test "updates if location already exists" do
       params = params_for(:location, last_updated: DateTime.utc_now())
-      location = insert(:location, %{identifier: params.identifier})
+      location = insert(:location, %{identifier: params.identifier, city: "a different city"})
 
       updated_location = Data.create_location(params)
 
