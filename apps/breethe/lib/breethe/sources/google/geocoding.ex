@@ -9,6 +9,8 @@ defmodule Breethe.Sources.Google.Geocoding do
     query
     |> query_google_api()
     |> Poison.decode!()
+    |> (& &1["results"]).()
+    |> List.first()
     |> strip()
   end
 
@@ -31,8 +33,7 @@ defmodule Breethe.Sources.Google.Geocoding do
     response.body
   end
 
-  defp strip(%{"results" => [%{"geometry" => %{"location" => %{"lat" => lat, "lng" => lon}}}]}),
-    do: [lat, lon]
+  defp strip(%{"geometry" => %{"location" => %{"lat" => lat, "lng" => lon}}}), do: [lat, lon]
 
   defp strip(results) do
     all = fn :get, data, next -> Enum.map(data, next) end

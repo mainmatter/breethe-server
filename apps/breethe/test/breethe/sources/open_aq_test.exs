@@ -30,7 +30,7 @@ defmodule Breethe.Sources.OpenAQTest do
   }
 
   @old_sample_location %{
-    "location" => "test-location",
+    "location" => "old-test-location",
     "city" => "test-city",
     "country" => "test-country",
     "lastUpdated" => "2017-01-01T00:00:00Z",
@@ -152,6 +152,46 @@ defmodule Breethe.Sources.OpenAQTest do
       stop_background_tasks()
 
       assert location.identifier == "test-location"
+    end
+
+    test "returns first location by search term if there are multiple results", %{bypass: bypass} do
+      Bypass.expect(bypass, "GET", "/google-maps", fn conn ->
+        assert %{
+                 "address" => "marienplatz münchen",
+                 "key" => Application.get_env(:breethe, :google_maps_api_key)
+               } == URI.decode_query(conn.query_string)
+
+        response = %{
+          "results" => [
+            %{
+              "geometry" => %{
+                "location" => %{"lat" => 10, "lng" => 20}
+              }
+            },
+            %{
+              "geometry" => %{
+                "location" => %{"lat" => 12, "lng" => 20}
+              }
+            }
+          ]
+        }
+
+        Plug.Conn.resp(conn, 200, Poison.encode!(response))
+      end)
+
+      Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
+        assert %{"nearest" => "10", "coordinates" => "10,20"} ==
+                 URI.decode_query(conn.query_string)
+
+        Plug.Conn.resp(conn, 200, Poison.encode!(@sample_location))
+      end)
+
+      locations = OpenAQ.get_locations("marienplatz münchen")
+
+      stop_background_tasks()
+
+      assert length(locations) == 1
+      assert List.first(locations).identifier == "test-location"
     end
 
     test "ignores locations not updated in the last 7 days", %{bypass: bypass} do
