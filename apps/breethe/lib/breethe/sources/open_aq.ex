@@ -13,9 +13,10 @@ defmodule Breethe.Sources.OpenAQ do
   end
 
   def get_locations(search_term) do
-    [lat, lon] = Google.Geocoding.find_location(search_term)
-
-    get_locations(lat, lon)
+    case Google.Geocoding.find_location(search_term) do
+      [lat, lon] -> get_locations(lat, lon)
+      [] -> []
+    end
   end
 
   def get_locations(lat, lon) do
