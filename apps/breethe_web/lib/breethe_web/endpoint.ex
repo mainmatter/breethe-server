@@ -42,6 +42,7 @@ defmodule BreetheWeb.Endpoint do
     signing_salt: "KUZ/RHEu"
   )
 
+  plug(CORSPlug)
   plug(BreetheWeb.Router)
 
   @doc """
