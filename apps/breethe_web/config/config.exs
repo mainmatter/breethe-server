@@ -35,8 +35,6 @@ config :mime, :types, %{
 config :ja_serializer, key_format: {:custom, JsonApiKeys, :camelize, :underscore}
 config :ja_serializer, type_format: {:custom, JsonApiKeys, :camelize}
 
-config :cors_plug, origin: ["https://breethe.app", "http://dev.breethe.app"]
-
 config :sentry,
   dsn: System.get_env("SENTRY_DSN"),
   environment_name: Mix.env(),

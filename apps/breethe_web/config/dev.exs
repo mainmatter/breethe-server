@@ -13,8 +13,6 @@ config :breethe_web, BreetheWeb.Endpoint,
   check_origin: false,
   watchers: []
 
-config :cors_plug, origin: ["*"]
-
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed
