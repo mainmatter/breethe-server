@@ -33,6 +33,7 @@ defmodule Breethe.Sources.Google.Geocoding do
     response.body
   end
 
+  defp strip(results) when is_nil(results), do: []
   defp strip(%{"geometry" => %{"location" => %{"lat" => lat, "lng" => lon}}}), do: [lat, lon]
 
   defp strip(results) do
