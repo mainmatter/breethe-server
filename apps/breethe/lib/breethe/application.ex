@@ -12,6 +12,8 @@ defmodule Breethe.Application do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
+    :ok = :error_logger.add_report_handler(Sentry.Logger)
+
     Supervisor.start_link(
       [
         supervisor(Breethe.Repo, []),

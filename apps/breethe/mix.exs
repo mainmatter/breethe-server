@@ -23,7 +23,7 @@ defmodule Breethe.Mixfile do
   def application do
     [
       mod: {Breethe.Application, []},
-      extra_applications: [:logger, :runtime_tools, :httpoison]
+      extra_applications: [:logger, :runtime_tools, :httpoison, :sentry]
     ]
   end
 
@@ -45,7 +45,8 @@ defmodule Breethe.Mixfile do
       {:bypass, "~> 0.8", only: :test},
       {:poison, "~> 3.1"},
       {:timex, "~> 3.1"},
-      {:mox, "~> 0.3", only: :test}
+      {:mox, "~> 0.3", only: :test},
+      {:sentry, "~> 6.2.1"}
     ]
   end
 
