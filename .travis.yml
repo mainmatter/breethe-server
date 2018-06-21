@@ -1,6 +1,11 @@
 language: elixir
 elixir: "1.6.4"
 
+cache:
+  directories:
+  - _build
+  - deps
+
 addons:
   postgresql: "9.6"
   apt:
@@ -19,6 +24,8 @@ jobs:
       script: mix test
     - stage: test
       script: mix format --check-formatted
+    - stage: test
+      script: mix dialyzer --halt-exit-status
 
 notifications:
   email: false
