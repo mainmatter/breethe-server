@@ -8,7 +8,8 @@ defmodule Breethe.Umbrella.Mixfile do
       deps: deps(),
       dialyzer: [
         plt_add_apps: [:mix],
-        ignore_warnings: ".dialyzer_ignore.exs",
+        plt_add_deps: :transitive,
+        # ignore_warnings: ".dialyzer_ignore.exs",
         flags: [:unmatched_returns, :error_handling, :underspecs]
       ]
     ]
