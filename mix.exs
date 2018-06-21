@@ -6,7 +6,11 @@ defmodule Breethe.Umbrella.Mixfile do
       apps_path: "apps",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      dialyzer: [plt_add_apps: [:mix]]
+      dialyzer: [
+        plt_add_apps: [:mix],
+        ignore_warnings: ".dialyzer_ignore.exs",
+        flags: [:unmatched_returns, :error_handling, :underspecs]
+      ]
     ]
   end
 
