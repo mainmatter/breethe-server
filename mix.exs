@@ -5,7 +5,10 @@ defmodule Breethe.Umbrella.Mixfile do
     [
       apps_path: "apps",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      dialyzer: [
+        plt_add_apps: [:mix]
+      ]
     ]
   end
 
@@ -22,6 +25,6 @@ defmodule Breethe.Umbrella.Mixfile do
   # Dependencies listed here are available only for this project
   # and cannot be accessed from applications inside the apps folder
   defp deps do
-    []
+    [{:dialyxir, "~> 1.0.0-rc.2", only: [:dev], runtime: false}]
   end
 end
