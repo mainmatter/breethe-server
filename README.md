@@ -7,7 +7,7 @@ solutions for our clients to rely on.**
 Breethe allows instant access to up to date air quality data for locations
 across the world. Pollution and global warming are getting worse rather than
 better and affect everyone's daily lives. Easily accessible data on how bad
-things actually are might help raising attention and awareness 🌳💨
+things actually are might help raising attention and awareness 🌳💨.
 
 The data is retrieved from the [openaq](https://openaq.org) API - be sure to
 check that project out!
