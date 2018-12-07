@@ -10,7 +10,6 @@ defmodule Breethe.Data.Measurement do
     field(:parameter, ParameterEnum)
     field(:measured_at, :utc_datetime)
     field(:value, :float)
-    field(:unit, UnitEnum)
 
     timestamps()
   end
@@ -18,9 +17,9 @@ defmodule Breethe.Data.Measurement do
   @doc false
   def changeset(%Measurement{} = measurement, attrs) do
     measurement
-    |> cast(attrs, [:location_id, :parameter, :measured_at, :value, :unit])
+    |> cast(attrs, [:location_id, :parameter, :measured_at, :value])
     |> cast_assoc(:location)
-    |> validate_required([:location_id, :parameter, :measured_at, :value, :unit])
+    |> validate_required([:location_id, :parameter, :measured_at, :value])
   end
 
   def for_location(query, location_id) do

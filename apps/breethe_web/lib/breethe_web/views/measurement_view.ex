@@ -21,6 +21,10 @@ defmodule BreetheWeb.MeasurementView do
 
   has_one(:location, type: "location", field: :location_id)
 
+  defp unit(struct, _conn) do
+    "micro_grams_m3"
+  end
+
   defp quality_index(struct, _conn) do
     struct
     |> Map.get(:value)

@@ -64,7 +64,7 @@ defmodule Breethe.Sources.OpenAQTest do
           %{
             "parameter" => "no2",
             "value" => 0,
-            "unit" => "ppm",
+            "unit" => "µg/m³",
             "lastUpdated" => "2019-01-01T00:00:00Z"
           }
         ],
@@ -285,14 +285,12 @@ defmodule Breethe.Sources.OpenAQTest do
           location_id: location1,
           measured_at: measured_at1,
           parameter: parameter1,
-          unit: unit1,
           value: value1
         },
         %Breethe.Data.Measurement{
           location_id: location2,
           measured_at: measured_at2,
           parameter: parameter2,
-          unit: unit2,
           value: value2
         }
       ] = measurements
@@ -305,7 +303,6 @@ defmodule Breethe.Sources.OpenAQTest do
 
       assert parameter1 == :pm10
       assert parameter2 == :no2
-      assert unit1 == unit2 && unit1 == :micro_grams_m3
       assert value1 == value2 && value1 == 0
     end
 
