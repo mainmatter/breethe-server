@@ -7,7 +7,6 @@ defmodule Breethe.Data.MeasurementTest do
     parameter: :pm10,
     measured_at: DateTime.utc_now(),
     value: 0,
-    unit: :micro_grams_m3,
     quality_index: :very_low
   }
   @invalid_attrs %{}
