@@ -37,12 +37,12 @@ defmodule Breethe.Mixfile do
   defp deps do
     [
       {:postgrex, ">= 0.0.0"},
-      {:ecto, "~> 2.1"},
-      {:ecto_enum, "~> 1.0"},
-      {:geo_postgis, "~> 1.1"},
+      {:ecto_sql, "~> 3.0"},
+      {:ecto_enum, "~> 1.1"},
+      {:geo_postgis, "~> 3.0"},
       {:ex_machina, "~> 2.1", only: :test},
       {:httpoison, "~> 1.0"},
-      {:bypass, "~> 0.8", only: :test},
+      {:bypass, "~> 1.0", only: :test},
       {:poison, "~> 3.1"},
       {:timex, "~> 3.1"},
       {:mox, "~> 0.3", only: :test}

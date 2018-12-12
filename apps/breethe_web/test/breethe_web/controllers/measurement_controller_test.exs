@@ -24,7 +24,7 @@ defmodule BreetheWeb.MeasurementControllerTest do
                  %{
                    "attributes" => %{
                      "parameter" => "pm10",
-                     "measuredAt" => "2019-01-01T00:00:00.000000Z",
+                     "measuredAt" => "2019-01-01T00:00:00Z",
                      "qualityIndex" => "very_low",
                      "unit" => "micro_grams_m3",
                      "value" => 0.0
