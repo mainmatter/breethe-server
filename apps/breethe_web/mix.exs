@@ -42,7 +42,7 @@ defmodule BreetheWeb.Mixfile do
       {:phoenix_ecto, "~> 3.2"},
       {:gettext, "~> 0.11"},
       {:breethe, in_umbrella: true},
-      {:cowboy, "~> 1.0"},
+      {:plug_cowboy, "~> 1.0"},
       {:ja_serializer, "~> 0.13.0"},
       {:cors_plug, "~> 1.5"},
       {:sentry, "~> 6.2.1"}
