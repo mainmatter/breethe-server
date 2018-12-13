@@ -3,7 +3,6 @@ defmodule Breethe.Repo.Migrations.CreateEnumTypes do
 
   def up do
     ParameterEnum.create_type
-    UnitEnum.create_type
   end
 
   def down do

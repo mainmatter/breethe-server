@@ -7,7 +7,7 @@ defmodule Breethe.Repo.Migrations.CreateMeasurements do
       add :location_id, references(:locations), null: false
       add :measured_at, :utc_datetime
       add :value, :float
-      add :unit, :unit
+      add :unit, :string
       add :coordinates, :geometry
 
       timestamps()
