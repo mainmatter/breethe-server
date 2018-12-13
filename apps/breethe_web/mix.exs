@@ -39,7 +39,6 @@ defmodule BreetheWeb.Mixfile do
     [
       {:phoenix, "~> 1.4.0"},
       {:phoenix_pubsub, "~> 1.0"},
-      {:phoenix_ecto, "~> 3.2"},
       {:gettext, "~> 0.11"},
       {:breethe, in_umbrella: true},
       {:plug_cowboy, "~> 1.0"},
