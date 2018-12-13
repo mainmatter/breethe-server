@@ -44,7 +44,7 @@ defmodule BreetheWeb.Mixfile do
       {:breethe, in_umbrella: true},
       {:plug_cowboy, "~> 1.0"},
       {:ja_serializer, "~> 0.13.0"},
-      {:cors_plug, "~> 1.5"},
+      {:cors_plug, "~> 2.0"},
       {:sentry, "~> 6.2.1"}
     ]
   end
