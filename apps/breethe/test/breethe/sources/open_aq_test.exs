@@ -100,7 +100,7 @@ defmodule Breethe.Sources.OpenAQTest do
         assert %{"nearest" => "10", "coordinates" => "10,20"} ==
                  URI.decode_query(conn.query_string)
 
-        Plug.Conn.resp(conn, 200, Poison.encode!(@sample_location))
+        Plug.Conn.resp(conn, 200, Jason.encode!(@sample_location))
       end)
 
       [location] = OpenAQ.get_locations(10, 20)
@@ -137,14 +137,14 @@ defmodule Breethe.Sources.OpenAQTest do
           ]
         }
 
-        Plug.Conn.resp(conn, 200, Poison.encode!(response))
+        Plug.Conn.resp(conn, 200, Jason.encode!(response))
       end)
 
       Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
         assert %{"nearest" => "10", "coordinates" => "10,20"} ==
                  URI.decode_query(conn.query_string)
 
-        Plug.Conn.resp(conn, 200, Poison.encode!(@sample_location))
+        Plug.Conn.resp(conn, 200, Jason.encode!(@sample_location))
       end)
 
       [location] = OpenAQ.get_locations("marienplatz münchen")
@@ -176,14 +176,14 @@ defmodule Breethe.Sources.OpenAQTest do
           ]
         }
 
-        Plug.Conn.resp(conn, 200, Poison.encode!(response))
+        Plug.Conn.resp(conn, 200, Jason.encode!(response))
       end)
 
       Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
         assert %{"nearest" => "10", "coordinates" => "10,20"} ==
                  URI.decode_query(conn.query_string)
 
-        Plug.Conn.resp(conn, 200, Poison.encode!(@sample_location))
+        Plug.Conn.resp(conn, 200, Jason.encode!(@sample_location))
       end)
 
       locations = OpenAQ.get_locations("marienplatz münchen")
@@ -203,7 +203,7 @@ defmodule Breethe.Sources.OpenAQTest do
 
         response = %{"results" => []}
 
-        Plug.Conn.resp(conn, 200, Poison.encode!(response))
+        Plug.Conn.resp(conn, 200, Jason.encode!(response))
       end)
 
       locations = OpenAQ.get_locations("marienplatz münchen")
@@ -217,7 +217,7 @@ defmodule Breethe.Sources.OpenAQTest do
       results =
         @sample_location
         |> update_in(["results"], &(&1 ++ [@old_sample_location]))
-        |> Poison.encode!()
+        |> Jason.encode!()
 
       Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
         Plug.Conn.resp(
@@ -243,7 +243,7 @@ defmodule Breethe.Sources.OpenAQTest do
         Plug.Conn.resp(
           conn,
           200,
-          Poison.encode!(@sample_location)
+          Jason.encode!(@sample_location)
         )
       end)
 
@@ -252,7 +252,7 @@ defmodule Breethe.Sources.OpenAQTest do
           "results" => [%{"formatted_address" => "test address"}]
         }
 
-        Plug.Conn.resp(conn, 200, Poison.encode!(response))
+        Plug.Conn.resp(conn, 200, Jason.encode!(response))
       end)
 
       OpenAQ.get_locations(10, 20)
@@ -275,7 +275,7 @@ defmodule Breethe.Sources.OpenAQTest do
       Bypass.expect(bypass, "GET", "/open-aq/latest", fn conn ->
         assert %{"location" => location.identifier} == URI.decode_query(conn.query_string)
 
-        Plug.Conn.resp(conn, 200, Poison.encode!(@sample_measurement))
+        Plug.Conn.resp(conn, 200, Jason.encode!(@sample_measurement))
       end)
 
       measurements = OpenAQ.get_latest_measurements(location.id)
@@ -315,7 +315,7 @@ defmodule Breethe.Sources.OpenAQTest do
       Bypass.expect(bypass, "GET", "/open-aq/latest", fn conn ->
         assert %{"location" => location.identifier} == URI.decode_query(conn.query_string)
 
-        Plug.Conn.resp(conn, 200, Poison.encode!(%{"results" => []}))
+        Plug.Conn.resp(conn, 200, Jason.encode!(%{"results" => []}))
       end)
 
       assert [] == OpenAQ.get_latest_measurements(location.id)

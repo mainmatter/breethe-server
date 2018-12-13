@@ -46,7 +46,7 @@ defmodule Breethe.Sources.OpenAQ.Locations do
       "#{Application.get_env(:breethe, :open_aq_api_endpoint)}/locations?coordinates=#{lat},#{lon}&nearest=10"
 
     {:ok, response} = HTTPoison.get(url)
-    %{"results" => results} = Poison.decode!(response.body)
+    %{"results" => results} = Jason.decode!(response.body)
     results
   end
 
