@@ -26,7 +26,7 @@ config :logger, :console,
 
 config :breethe_web, :generators, context_app: :breethe
 
-config :phoenix, :format_encoders, "json-api": Poison
+config :phoenix, :format_encoders, "json-api": Jason
 
 config :mime, :types, %{
   "application/vnd.api+json" => ["json-api"]

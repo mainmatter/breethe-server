@@ -42,8 +42,8 @@ defmodule Breethe.Mixfile do
       {:geo_postgis, "~> 3.0"},
       {:ex_machina, "~> 2.1", only: :test},
       {:httpoison, "~> 1.0"},
+      {:jason, "~> 1.1"},
       {:bypass, "~> 1.0", only: :test},
-      {:poison, "~> 3.1"},
       {:timex, "~> 3.1"},
       {:mox, "~> 0.3", only: :test}
     ]

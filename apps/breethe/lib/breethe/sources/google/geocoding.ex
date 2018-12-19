@@ -8,7 +8,7 @@ defmodule Breethe.Sources.Google.Geocoding do
 
     query
     |> query_google_api()
-    |> Poison.decode!()
+    |> Jason.decode!()
     |> (& &1["results"]).()
     |> List.first()
     |> strip()
@@ -23,7 +23,7 @@ defmodule Breethe.Sources.Google.Geocoding do
 
     query
     |> query_google_api()
-    |> Poison.decode!()
+    |> Jason.decode!()
     |> strip()
   end
 

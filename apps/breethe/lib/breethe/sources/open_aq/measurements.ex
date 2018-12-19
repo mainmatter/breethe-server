@@ -44,7 +44,7 @@ defmodule Breethe.Sources.OpenAQ.Measurements do
     url = "#{Application.get_env(:breethe, :open_aq_api_endpoint)}/latest?location=#{identifier}"
 
     {:ok, response} = HTTPoison.get(url)
-    Poison.decode!(response.body)
+    Jason.decode!(response.body)
   end
 
   defp convert_measurement(parameter, value, unit) do
