@@ -33,8 +33,7 @@ defmodule Breethe.Sources.OpenAQ.Measurements do
     %{
       parameter: parameter,
       measured_at: Timex.parse!(measured_at, "{ISO:Extended:Z}"),
-      value: value,
-      unit: unit
+      value: value
     }
   end
 
