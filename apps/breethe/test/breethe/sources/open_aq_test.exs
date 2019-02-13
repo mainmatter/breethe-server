@@ -12,7 +12,7 @@ defmodule Breethe.Sources.OpenAQTest do
         "location" => "test-location",
         "city" => "test-city",
         "country" => "test-country",
-        "lastUpdated" => "2019-01-01T00:00:00Z",
+        "lastUpdated" => "2200-01-01T00:00:00Z",
         "parameters" => [
           "co",
           "o3",
@@ -59,13 +59,13 @@ defmodule Breethe.Sources.OpenAQTest do
             "parameter" => "pm10",
             "value" => 0,
             "unit" => "µg/m³",
-            "lastUpdated" => "2019-01-01T00:00:00Z"
+            "lastUpdated" => "2200-01-01T00:00:00Z"
           },
           %{
             "parameter" => "no2",
             "value" => 0,
             "unit" => "µg/m³",
-            "lastUpdated" => "2019-01-01T00:00:00Z"
+            "lastUpdated" => "2200-01-01T00:00:00Z"
           }
         ],
         "coordinates" => %{
@@ -111,7 +111,7 @@ defmodule Breethe.Sources.OpenAQTest do
       assert location.label == nil
       assert location.city == "test-city"
       assert location.country == "test-country"
-      assert location.last_updated == Timex.to_datetime({{2019, 1, 1}, {0, 0, 0, 0}})
+      assert location.last_updated == Timex.to_datetime({{2200, 1, 1}, {0, 0, 0, 0}})
       assert location.available_parameters == [:co, :o3, :no2, :pm10, :so2, :pm25]
 
       assert location.coordinates == %Geo.Point{
@@ -234,7 +234,7 @@ defmodule Breethe.Sources.OpenAQTest do
       assert Enum.count(locations) == 1
 
       assert List.first(locations).last_updated ==
-               DateTime.from_naive!(~N[2019-01-01 00:00:00.00], "Etc/UTC")
+               DateTime.from_naive!(~N[2200-01-01 00:00:00.00], "Etc/UTC")
                |> DateTime.truncate(:second)
     end
 
@@ -299,7 +299,7 @@ defmodule Breethe.Sources.OpenAQTest do
       assert measured_at1 == measured_at2
 
       assert :eq ==
-               DateTime.compare(measured_at2, Timex.to_datetime({{2019, 1, 1}, {0, 0, 0, 0}}))
+               DateTime.compare(measured_at2, Timex.to_datetime({{2200, 1, 1}, {0, 0, 0, 0}}))
 
       assert parameter1 == :pm10
       assert parameter2 == :no2
