@@ -12,7 +12,12 @@ defmodule BreetheWeb.MeasurementControllerTest do
     test "when filtering by location id" do
       location = build(:location)
       measurement = insert(:measurement, location: location)
-
+      
+      measured_at = 
+        location.last_updated
+        |> Map.put(:microsecond, {0, 0})
+        |> DateTime.to_iso8601()
+      
       Mock
       |> expect(:search_measurements, fn _id -> [measurement] end)
 
@@ -24,7 +29,7 @@ defmodule BreetheWeb.MeasurementControllerTest do
                  %{
                    "attributes" => %{
                      "parameter" => "pm10",
-                     "measuredAt" => "2200-01-01T00:00:00Z",
+                     "measuredAt" => measured_at,
                      "qualityIndex" => "very_low",
                      "unit" => "micro_grams_m3",
                      "value" => 0.0
