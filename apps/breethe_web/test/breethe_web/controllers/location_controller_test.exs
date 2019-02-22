@@ -88,6 +88,11 @@ defmodule BreetheWeb.LocationControllerTest do
       location = insert(:location)
       measurement = insert(:measurement, location_id: location.id)
 
+      measured_at = 
+        location.last_updated
+        |> Map.put(:microsecond, {0, 0})
+        |> DateTime.to_iso8601()
+
       Mock
       |> expect(:search_locations, fn _search_term ->
         [%{location | measurements: measurement}]
@@ -104,7 +109,7 @@ defmodule BreetheWeb.LocationControllerTest do
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "lastUpdated" => "2200-01-01T00:00:00Z"
+                     "lastUpdated" => measured_at
                    },
                    "relationships" => %{
                      "measurements" => %{
@@ -122,7 +127,7 @@ defmodule BreetheWeb.LocationControllerTest do
                "included" => [
                  %{
                    "attributes" => %{
-                     "measuredAt" => "2200-01-01T00:00:00Z",
+                     "measuredAt" => measured_at,
                      "parameter" => "pm10",
                      "qualityIndex" => "very_low",
                      "unit" => "micro_grams_m3",
@@ -181,6 +186,11 @@ defmodule BreetheWeb.LocationControllerTest do
       location = insert(:location)
       measurement = insert(:measurement, location_id: location.id)
 
+      measured_at = 
+        location.last_updated
+        |> Map.put(:microsecond, {0, 0})
+        |> DateTime.to_iso8601()
+
       Mock
       |> expect(:get_location, fn _location_id -> %{location | measurements: measurement} end)
 
@@ -194,7 +204,7 @@ defmodule BreetheWeb.LocationControllerTest do
                    "city" => "test-city",
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",
-                   "lastUpdated" => "2200-01-01T00:00:00Z"
+                   "lastUpdated" => measured_at
                  },
                  "relationships" => %{
                    "measurements" => %{
@@ -211,7 +221,7 @@ defmodule BreetheWeb.LocationControllerTest do
                "included" => [
                  %{
                    "attributes" => %{
-                     "measuredAt" => "2200-01-01T00:00:00Z",
+                     "measuredAt" => measured_at,
                      "parameter" => "pm10",
                      "qualityIndex" => "very_low",
                      "unit" => "micro_grams_m3",
