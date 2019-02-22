@@ -9,7 +9,7 @@ defmodule Breethe.Factory do
       label: identifier,
       city: "test-city",
       country: "test-country",
-      last_updated: DateTime.from_naive!(~N[2200-01-01 00:00:00.000000], "Etc/UTC"),
+      last_updated: DateTime.utc_now(),
       available_parameters: [:pm10, :pm25, :so2, :no2, :o3, :co, :bc],
       coordinates: %Geo.Point{coordinates: {10.0, 20.0}, srid: 4326}
     }
@@ -18,7 +18,7 @@ defmodule Breethe.Factory do
   def measurement_factory do
     %Breethe.Data.Measurement{
       parameter: "pm10",
-      measured_at: DateTime.from_naive!(~N[2200-01-01 00:00:00.000000], "Etc/UTC"),
+      measured_at: DateTime.utc_now(),
       value: 0
     }
   end
