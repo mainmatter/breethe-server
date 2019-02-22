@@ -12,7 +12,7 @@ defmodule BreetheWeb.LocationControllerTest do
     test "when filtering by location name" do
       location = insert(:location, measurements: [])
 
-      measured_at = 
+      measured_at =
         location.last_updated
         |> Map.put(:microsecond, {0, 0})
         |> DateTime.to_iso8601()
@@ -48,8 +48,8 @@ defmodule BreetheWeb.LocationControllerTest do
 
     test "when filtering by coordinates (lat/lon)" do
       location = insert(:location, measurements: [])
- 
-      measured_at = 
+
+      measured_at =
         location.last_updated
         |> Map.put(:microsecond, {0, 0})
         |> DateTime.to_iso8601()
@@ -88,7 +88,7 @@ defmodule BreetheWeb.LocationControllerTest do
       location = insert(:location)
       measurement = insert(:measurement, location_id: location.id)
 
-      measured_at = 
+      measured_at =
         location.last_updated
         |> Map.put(:microsecond, {0, 0})
         |> DateTime.to_iso8601()
@@ -149,7 +149,7 @@ defmodule BreetheWeb.LocationControllerTest do
     test "by id" do
       location = insert(:location, measurements: [])
 
-      measured_at = 
+      measured_at =
         location.last_updated
         |> Map.put(:microsecond, {0, 0})
         |> DateTime.to_iso8601()
@@ -186,7 +186,7 @@ defmodule BreetheWeb.LocationControllerTest do
       location = insert(:location)
       measurement = insert(:measurement, location_id: location.id)
 
-      measured_at = 
+      measured_at =
         location.last_updated
         |> Map.put(:microsecond, {0, 0})
         |> DateTime.to_iso8601()
