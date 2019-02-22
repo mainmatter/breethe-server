@@ -12,6 +12,11 @@ defmodule BreetheWeb.LocationControllerTest do
     test "when filtering by location name" do
       location = insert(:location, measurements: [])
 
+      measured_at = 
+        location.last_updated
+        |> Map.put(:microsecond, {0, 0})
+        |> DateTime.to_iso8601()
+
       Mock
       |> expect(:search_locations, fn _search_term -> [location] end)
 
@@ -26,7 +31,7 @@ defmodule BreetheWeb.LocationControllerTest do
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "lastUpdated" => "2200-01-01T00:00:00Z"
+                     "lastUpdated" => measured_at
                    },
                    "relationships" => %{
                      "measurements" => %{
@@ -43,6 +48,11 @@ defmodule BreetheWeb.LocationControllerTest do
 
     test "when filtering by coordinates (lat/lon)" do
       location = insert(:location, measurements: [])
+ 
+      measured_at = 
+        location.last_updated
+        |> Map.put(:microsecond, {0, 0})
+        |> DateTime.to_iso8601()
 
       Mock
       |> expect(:search_locations, fn _lat, _lon -> [location] end)
@@ -58,7 +68,7 @@ defmodule BreetheWeb.LocationControllerTest do
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "lastUpdated" => "2200-01-01T00:00:00Z"
+                     "lastUpdated" => measured_at
                    },
                    "relationships" => %{
                      "measurements" => %{
@@ -134,6 +144,11 @@ defmodule BreetheWeb.LocationControllerTest do
     test "by id" do
       location = insert(:location, measurements: [])
 
+      measured_at = 
+        location.last_updated
+        |> Map.put(:microsecond, {0, 0})
+        |> DateTime.to_iso8601()
+
       Mock
       |> expect(:get_location, fn _location_id -> location end)
 
@@ -147,7 +162,7 @@ defmodule BreetheWeb.LocationControllerTest do
                    "city" => "test-city",
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",
-                   "lastUpdated" => "2200-01-01T00:00:00Z"
+                   "lastUpdated" => measured_at
                  },
                  "relationships" => %{
                    "measurements" => %{
