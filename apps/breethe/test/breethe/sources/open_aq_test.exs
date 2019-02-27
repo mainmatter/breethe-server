@@ -6,13 +6,15 @@ defmodule Breethe.Sources.OpenAQTest do
   alias Breethe.Sources.OpenAQ
   alias Breethe.TaskSupervisor
 
+  @last_updated DateTime.utc_now()
+
   @sample_location %{
     "results" => [
       %{
         "location" => "test-location",
         "city" => "test-city",
         "country" => "test-country",
-        "lastUpdated" => "2200-01-01T00:00:00Z",
+        "lastUpdated" => @last_updated,
         "parameters" => [
           "co",
           "o3",
@@ -59,13 +61,13 @@ defmodule Breethe.Sources.OpenAQTest do
             "parameter" => "pm10",
             "value" => 0,
             "unit" => "µg/m³",
-            "lastUpdated" => "2200-01-01T00:00:00Z"
+            "lastUpdated" => @last_updated
           },
           %{
             "parameter" => "no2",
             "value" => 0,
             "unit" => "µg/m³",
-            "lastUpdated" => "2200-01-01T00:00:00Z"
+            "lastUpdated" => @last_updated
           }
         ],
         "coordinates" => %{
@@ -111,7 +113,7 @@ defmodule Breethe.Sources.OpenAQTest do
       assert location.label == nil
       assert location.city == "test-city"
       assert location.country == "test-country"
-      assert location.last_updated == Timex.to_datetime({{2200, 1, 1}, {0, 0, 0, 0}})
+      assert location.last_updated == Map.put(@last_updated, :microsecond, {0, 0})
       assert location.available_parameters == [:co, :o3, :no2, :pm10, :so2, :pm25]
 
       assert location.coordinates == %Geo.Point{
@@ -233,9 +235,7 @@ defmodule Breethe.Sources.OpenAQTest do
 
       assert Enum.count(locations) == 1
 
-      assert List.first(locations).last_updated ==
-               DateTime.from_naive!(~N[2200-01-01 00:00:00.00], "Etc/UTC")
-               |> DateTime.truncate(:second)
+      assert List.first(locations).last_updated == Map.put(@last_updated, :microsecond, {0, 0})
     end
 
     test "starts a background task to update each location's label", %{bypass: bypass} do
@@ -298,8 +298,7 @@ defmodule Breethe.Sources.OpenAQTest do
       assert location1 == location2 && location2 == location.id
       assert measured_at1 == measured_at2
 
-      assert :eq ==
-               DateTime.compare(measured_at2, Timex.to_datetime({{2200, 1, 1}, {0, 0, 0, 0}}))
+      assert :eq == DateTime.compare(measured_at2, Map.put(@last_updated, :microsecond, {0, 0}))
 
       assert parameter1 == :pm10
       assert parameter2 == :no2
