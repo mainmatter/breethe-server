@@ -12,11 +12,6 @@ defmodule BreetheWeb.LocationControllerTest do
     test "when filtering by location name" do
       location = insert(:location, measurements: [])
 
-      measured_at =
-        location.last_updated
-        |> Map.put(:microsecond, {0, 0})
-        |> DateTime.to_iso8601()
-
       Mock
       |> expect(:search_locations, fn _search_term -> [location] end)
 
@@ -31,7 +26,7 @@ defmodule BreetheWeb.LocationControllerTest do
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "lastUpdated" => measured_at
+                     "lastUpdated" => trim_microseconds(location.last_updated)
                    },
                    "relationships" => %{
                      "measurements" => %{
@@ -49,11 +44,6 @@ defmodule BreetheWeb.LocationControllerTest do
     test "when filtering by coordinates (lat/lon)" do
       location = insert(:location, measurements: [])
 
-      measured_at =
-        location.last_updated
-        |> Map.put(:microsecond, {0, 0})
-        |> DateTime.to_iso8601()
-
       Mock
       |> expect(:search_locations, fn _lat, _lon -> [location] end)
 
@@ -68,7 +58,7 @@ defmodule BreetheWeb.LocationControllerTest do
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "lastUpdated" => measured_at
+                     "lastUpdated" => trim_microseconds(location.last_updated)
                    },
                    "relationships" => %{
                      "measurements" => %{
@@ -88,11 +78,6 @@ defmodule BreetheWeb.LocationControllerTest do
       location = insert(:location)
       measurement = insert(:measurement, location_id: location.id)
 
-      measured_at =
-        location.last_updated
-        |> Map.put(:microsecond, {0, 0})
-        |> DateTime.to_iso8601()
-
       Mock
       |> expect(:search_locations, fn _search_term ->
         [%{location | measurements: measurement}]
@@ -109,7 +94,7 @@ defmodule BreetheWeb.LocationControllerTest do
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "lastUpdated" => measured_at
+                     "lastUpdated" => trim_microseconds(location.last_updated)
                    },
                    "relationships" => %{
                      "measurements" => %{
@@ -127,7 +112,7 @@ defmodule BreetheWeb.LocationControllerTest do
                "included" => [
                  %{
                    "attributes" => %{
-                     "measuredAt" => measured_at,
+                     "measuredAt" => trim_microseconds(location.last_updated),
                      "parameter" => "pm10",
                      "qualityIndex" => "very_low",
                      "unit" => "micro_grams_m3",
@@ -149,11 +134,6 @@ defmodule BreetheWeb.LocationControllerTest do
     test "by id" do
       location = insert(:location, measurements: [])
 
-      measured_at =
-        location.last_updated
-        |> Map.put(:microsecond, {0, 0})
-        |> DateTime.to_iso8601()
-
       Mock
       |> expect(:get_location, fn _location_id -> location end)
 
@@ -167,7 +147,7 @@ defmodule BreetheWeb.LocationControllerTest do
                    "city" => "test-city",
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",
-                   "lastUpdated" => measured_at
+                   "lastUpdated" => trim_microseconds(location.last_updated)
                  },
                  "relationships" => %{
                    "measurements" => %{
@@ -186,11 +166,6 @@ defmodule BreetheWeb.LocationControllerTest do
       location = insert(:location)
       measurement = insert(:measurement, location_id: location.id)
 
-      measured_at =
-        location.last_updated
-        |> Map.put(:microsecond, {0, 0})
-        |> DateTime.to_iso8601()
-
       Mock
       |> expect(:get_location, fn _location_id -> %{location | measurements: measurement} end)
 
@@ -204,7 +179,7 @@ defmodule BreetheWeb.LocationControllerTest do
                    "city" => "test-city",
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",
-                   "lastUpdated" => measured_at
+                   "lastUpdated" => trim_microseconds(location.last_updated)
                  },
                  "relationships" => %{
                    "measurements" => %{
@@ -221,7 +196,7 @@ defmodule BreetheWeb.LocationControllerTest do
                "included" => [
                  %{
                    "attributes" => %{
-                     "measuredAt" => measured_at,
+                     "measuredAt" => trim_microseconds(location.last_updated),
                      "parameter" => "pm10",
                      "qualityIndex" => "very_low",
                      "unit" => "micro_grams_m3",
@@ -237,5 +212,11 @@ defmodule BreetheWeb.LocationControllerTest do
                "jsonapi" => %{"version" => "1.0"}
              }
     end
+  end
+
+  defp trim_microseconds(measured_at) do
+    measured_at
+    |> Map.put(:microsecond, {0, 0})
+    |> DateTime.to_iso8601()
   end
 end
