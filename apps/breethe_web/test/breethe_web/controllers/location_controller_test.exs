@@ -26,7 +26,7 @@ defmodule BreetheWeb.LocationControllerTest do
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "lastUpdated" => "2019-01-01T00:00:00Z"
+                     "lastUpdated" => trim_microseconds(location.last_updated)
                    },
                    "relationships" => %{
                      "measurements" => %{
@@ -58,7 +58,7 @@ defmodule BreetheWeb.LocationControllerTest do
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "lastUpdated" => "2019-01-01T00:00:00Z"
+                     "lastUpdated" => trim_microseconds(location.last_updated)
                    },
                    "relationships" => %{
                      "measurements" => %{
@@ -94,7 +94,7 @@ defmodule BreetheWeb.LocationControllerTest do
                      "city" => "test-city",
                      "coordinates" => [10.0, 20.0],
                      "country" => "test-country",
-                     "lastUpdated" => "2019-01-01T00:00:00Z"
+                     "lastUpdated" => trim_microseconds(location.last_updated)
                    },
                    "relationships" => %{
                      "measurements" => %{
@@ -112,7 +112,7 @@ defmodule BreetheWeb.LocationControllerTest do
                "included" => [
                  %{
                    "attributes" => %{
-                     "measuredAt" => "2019-01-01T00:00:00Z",
+                     "measuredAt" => trim_microseconds(location.last_updated),
                      "parameter" => "pm10",
                      "qualityIndex" => "very_low",
                      "unit" => "micro_grams_m3",
@@ -147,7 +147,7 @@ defmodule BreetheWeb.LocationControllerTest do
                    "city" => "test-city",
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",
-                   "lastUpdated" => "2019-01-01T00:00:00Z"
+                   "lastUpdated" => trim_microseconds(location.last_updated)
                  },
                  "relationships" => %{
                    "measurements" => %{
@@ -179,7 +179,7 @@ defmodule BreetheWeb.LocationControllerTest do
                    "city" => "test-city",
                    "coordinates" => [10.0, 20.0],
                    "country" => "test-country",
-                   "lastUpdated" => "2019-01-01T00:00:00Z"
+                   "lastUpdated" => trim_microseconds(location.last_updated)
                  },
                  "relationships" => %{
                    "measurements" => %{
@@ -196,7 +196,7 @@ defmodule BreetheWeb.LocationControllerTest do
                "included" => [
                  %{
                    "attributes" => %{
-                     "measuredAt" => "2019-01-01T00:00:00Z",
+                     "measuredAt" => trim_microseconds(location.last_updated),
                      "parameter" => "pm10",
                      "qualityIndex" => "very_low",
                      "unit" => "micro_grams_m3",
@@ -212,5 +212,11 @@ defmodule BreetheWeb.LocationControllerTest do
                "jsonapi" => %{"version" => "1.0"}
              }
     end
+  end
+
+  defp trim_microseconds(measured_at) do
+    measured_at
+    |> Map.put(:microsecond, {0, 0})
+    |> DateTime.to_iso8601()
   end
 end
