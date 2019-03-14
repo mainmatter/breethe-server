@@ -8,7 +8,7 @@ defmodule Breethe.Sources.OpenAQ.Locations do
       params = parse_location(result)
 
       params.last_updated
-      |> DateTime.diff(DateTime.utc_now(), :milliseconds)
+      |> DateTime.diff(DateTime.utc_now(), :millisecond)
       |> recent?()
       |> case do
         true -> Data.create_location(params)
