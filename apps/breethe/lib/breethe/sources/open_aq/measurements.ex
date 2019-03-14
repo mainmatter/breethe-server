@@ -28,7 +28,7 @@ defmodule Breethe.Sources.OpenAQ.Measurements do
       "unit" => unit
     } = measurement
 
-    {value, unit} = convert_measurement(parameter, value, unit)
+    {value, _unit} = convert_measurement(parameter, value, unit)
 
     %{
       parameter: parameter,
