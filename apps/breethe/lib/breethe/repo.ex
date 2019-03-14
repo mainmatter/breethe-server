@@ -1,5 +1,5 @@
 defmodule Breethe.Repo do
-  use Ecto.Repo, otp_app: :breethe
+  use Ecto.Repo, otp_app: :breethe, adapter: Ecto.Adapters.Postgres
 
   @doc """
   Dynamically loads the repository url from the
