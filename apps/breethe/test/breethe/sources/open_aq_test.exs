@@ -6,7 +6,7 @@ defmodule Breethe.Sources.OpenAQTest do
   alias Breethe.Sources.OpenAQ
   alias Breethe.TaskSupervisor
 
-  @last_updated DateTime.add(DateTime.utc_now(), :timer.hours(2), :millisecond)
+  @last_updated DateTime.add(DateTime.utc_now(), -:timer.hours(2), :millisecond)
 
   @sample_location %{
     "results" => [
@@ -272,7 +272,7 @@ defmodule Breethe.Sources.OpenAQTest do
     } do
       location =
         insert(:location,
-          last_updated: DateTime.add(DateTime.utc_now(), :timer.hours(2), :millisecond)
+          last_updated: DateTime.add(DateTime.utc_now(), -:timer.hours(2), :millisecond)
         )
 
       Bypass.expect(bypass, "GET", "/open-aq/latest", fn conn ->
@@ -311,7 +311,7 @@ defmodule Breethe.Sources.OpenAQTest do
     test "returns empty list if no measurements for a location are available", %{bypass: bypass} do
       location =
         insert(:location,
-          last_updated: DateTime.add(DateTime.utc_now(), :timer.hours(2), :millisecond)
+          last_updated: DateTime.add(DateTime.utc_now(), -:timer.hours(2), :millisecond)
         )
 
       Bypass.expect(bypass, "GET", "/open-aq/latest", fn conn ->
