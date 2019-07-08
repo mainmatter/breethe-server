@@ -19,13 +19,21 @@ defmodule BreetheWeb.MeasurementView do
 
   attributes([:parameter, :value, :unit, :measured_at, :quality_index])
 
-  has_one(:location, type: "location", field: :location_id)
+  def relationships(measurement, conn) do
+    %{
+      location: %HasOne{
+        serializer: BreetheWeb.LocationView,
+        type: "location",
+        data: measurement.location
+      }
+    }
+  end
 
-  defp unit(_struct, _conn) do
+  def unit(_struct, _conn) do
     "micro_grams_m3"
   end
 
-  defp quality_index(struct, _conn) do
+  def quality_index(struct, _conn) do
     struct
     |> Map.get(:value)
     |> case do

@@ -42,8 +42,7 @@ config :sentry,
   environment_name: Mix.env(),
   enable_source_code_context: true,
   root_source_code_path: File.cwd!(),
-  included_environments: [:prod],
-  json_library: Poison
+  included_environments: [:prod]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

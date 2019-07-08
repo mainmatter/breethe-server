@@ -14,9 +14,9 @@ defmodule BreetheWeb.LocationView do
     identifiers: :when_included
   )
 
-  defp name(struct, _conn), do: Map.get(struct, :identifier)
+  def name(struct, _conn), do: Map.get(struct, :identifier)
 
-  defp label(struct, _conn) do
+  def label(struct, _conn) do
     case Map.get(struct, :label) do
       nil -> Map.get(struct, :identifier)
       label -> label
