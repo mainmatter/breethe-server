@@ -22,7 +22,7 @@ defmodule BreetheWeb.MeasurementView do
   def relationships(measurement, conn) do
     %{
       location: %HasOne{
-        serializer:  BreetheWeb.LocationView,
+        serializer: BreetheWeb.LocationView,
         type: "location",
         data: measurement.location
       }
