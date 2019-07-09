@@ -19,7 +19,7 @@ defmodule BreetheWeb.MeasurementView do
 
   attributes([:parameter, :value, :unit, :measured_at, :quality_index])
 
-  def relationships(measurement, conn) do
+  def relationships(measurement, _conn) do
     %{
       location: %HasOne{
         serializer: BreetheWeb.LocationView,
