@@ -45,7 +45,7 @@ defmodule BreetheWeb.Mixfile do
       {:ja_serializer, "~> 0.15.0"},
       {:cors_plug, "~> 2.0"},
       {:sentry, "~> 7.1.0"},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 4.0"}
     ]
   end
 
