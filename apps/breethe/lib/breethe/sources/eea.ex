@@ -1,10 +1,17 @@
 defmodule Breethe.Sources.EEA do
   require IEx
+  alias Breethe.Data
 
   alias NimbleCSV.RFC4180, as: CSV
 
-  def parse_csv() do
+  def process_data() do
     "data/CH_PM10.csv"
+    |> parse_csv()
+    |> store_data()
+  end
+
+  def parse_csv(path) do
+    path
     |> File.stream!()
     |> CSV.parse_stream()
     |> Stream.map(fn [
@@ -60,5 +67,34 @@ defmodule Breethe.Sources.EEA do
         value_unit: value_unit
       }
     end)
+  end
+
+  def store_data(stream) do
+    stream
+    |> store_locations()
+    |> store_measurements()
+  end
+
+  def store_locations(stream) do
+    res = stream
+    |> Stream.map(&extract_location/1)
+    |> Stream.run()
+  end
+
+  def store_measurements(stream) do
+    
+  end
+
+  def extract_location(location) do
+    params = %{
+      identifier: location.station_code,
+      city: "S",
+      country: location.network_countrycode,
+      last_updated: Timex.parse!(location.value_datetime_updated, "{ISO:Extended:Z}"),
+      available_parameters: [],
+      coordinates: %Geo.Point{coordinates: {location.samplingpoint_y, location.samplingpoint_x}, srid: 4326}
+    }
+
+    Data.create_location(params)
   end
 end
