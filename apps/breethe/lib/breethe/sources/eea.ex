@@ -71,38 +71,43 @@ defmodule Breethe.Sources.EEA do
 
   def store_data(stream) do
     stream
-    |> Stream.map(&extract_measurement/1)
+    |> Stream.map(&store_datum/1)
     |> Stream.run()
   end
 
-  def extract_location(location) do
-    params = %{
-      identifier: location.station_code,
+  def store_datum(datum) do
+    location =
+      datum
+      |> extract_location()
+      |> Data.create_location()
+
+    _measurement =
+      datum
+      |> extract_measurement()
+      |> Map.put_new(:location_id, location.id)
+      |> Data.create_measurement()
+  end
+
+  def extract_location(datum) do
+    %{
+      identifier: datum.station_code,
       city: "S",
-      country: location.network_countrycode,
-      last_updated: Timex.parse!(location.value_datetime_updated, "{ISO:Extended:Z}"),
+      country: datum.network_countrycode,
+      last_updated: Timex.parse!(datum.value_datetime_updated, "{ISO:Extended:Z}"),
       available_parameters: [],
       coordinates: %Geo.Point{
-        coordinates: {location.samplingpoint_y, location.samplingpoint_x},
+        coordinates: {datum.samplingpoint_y, datum.samplingpoint_x},
         srid: 4326
       }
     }
-
-    Data.create_location(params)
   end
 
   def extract_measurement(datum) do
-    location = extract_location(datum)
-
-    params = %{
+    %{
       parameter: determine_pollutant(datum.pollutant),
       measured_at: Timex.parse!(datum.value_datetime_updated, "{ISO:Extended:Z}"),
       value: datum.value_numeric
     }
-
-    params
-    |> Map.put_new(:location_id, location.id)
-    |> Data.create_measurement()
   end
 
   def determine_pollutant(pollutant) do
