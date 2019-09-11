@@ -71,18 +71,8 @@ defmodule Breethe.Sources.EEA do
 
   def store_data(stream) do
     stream
-    |> store_locations()
-    |> store_measurements()
-  end
-
-  def store_locations(stream) do
-    res = stream
-    |> Stream.map(&extract_location/1)
+    |> Stream.map(&extract_measurement/1)
     |> Stream.run()
-  end
-
-  def store_measurements(stream) do
-    
   end
 
   def extract_location(location) do
@@ -92,9 +82,33 @@ defmodule Breethe.Sources.EEA do
       country: location.network_countrycode,
       last_updated: Timex.parse!(location.value_datetime_updated, "{ISO:Extended:Z}"),
       available_parameters: [],
-      coordinates: %Geo.Point{coordinates: {location.samplingpoint_y, location.samplingpoint_x}, srid: 4326}
+      coordinates: %Geo.Point{
+        coordinates: {location.samplingpoint_y, location.samplingpoint_x},
+        srid: 4326
+      }
     }
 
     Data.create_location(params)
+  end
+
+  def extract_measurement(datum) do
+    location = extract_location(datum)
+
+    params = %{
+      parameter: determine_pollutant(datum.pollutant),
+      measured_at: Timex.parse!(datum.value_datetime_updated, "{ISO:Extended:Z}"),
+      value: datum.value_numeric
+    }
+
+    params
+    |> Map.put_new(:location_id, location.id)
+    |> Data.create_measurement()
+  end
+
+  def determine_pollutant(pollutant) do
+    case pollutant do
+      "PM10" -> :pm10
+      _ -> :bc
+    end
   end
 end
