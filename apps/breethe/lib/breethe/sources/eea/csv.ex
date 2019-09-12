@@ -111,6 +111,11 @@ defmodule Breethe.Sources.EEA.CSV do
   defp determine_pollutant(pollutant) do
     case pollutant do
       "PM10" -> :pm10
+      "PM2.5" -> :pm25
+      "SO2" -> :so2
+      "NO2" -> :no2
+      "O3" -> :o3
+      "CO" -> :co
       _ -> :bc
     end
   end

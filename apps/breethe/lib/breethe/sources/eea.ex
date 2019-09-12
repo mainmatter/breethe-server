@@ -3,7 +3,7 @@ defmodule Breethe.Sources.EEA do
 
   def get_data(country, pollutant) do
     {country, pollutant}
-    |> Download.download_file()
+    |> Download.get_latest()
     |> CSV.process_data()
   end
 end
