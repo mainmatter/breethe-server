@@ -1,6 +1,5 @@
 defmodule Breethe.Sources.EEA.CSV do
   alias Breethe.Data
-
   alias NimbleCSV.RFC4180, as: NimbleCSV
 
   def process_data(data) do
@@ -69,6 +68,7 @@ defmodule Breethe.Sources.EEA.CSV do
 
   defp store_data(stream) do
     stream
+    |> Stream.filter(fn datum -> datum.value_numeric != "" end)
     |> Stream.map(&store_datum/1)
     |> Stream.run()
   end

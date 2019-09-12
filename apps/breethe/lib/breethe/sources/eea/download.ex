@@ -1,8 +1,7 @@
 defmodule Breethe.Sources.EEA.Download do
-  def get_latest({country, pollutant}) do
-    url = "#{Application.get_env(:breethe, :eea_endpoint)}/#{country}_#{pollutant}.csv"
+  def get_latest(country, param) do
+    url = "#{Application.get_env(:breethe, :eea_endpoint)}/#{country}_#{param}.csv"
 
-    {:ok, response} = HTTPoison.get(url)
-    response.body
+    HTTPoison.get(url)
   end
 end
