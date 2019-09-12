@@ -3,16 +3,15 @@ defmodule Breethe.Sources.EEA.CSV do
 
   alias NimbleCSV.RFC4180, as: NimbleCSV
 
-  def process_data(path_to_file) do
-    path_to_file
+  def process_data(data) do
+    data
     |> parse_csv()
     |> store_data()
   end
 
-  defp parse_csv(path) do
-    path
-    |> File.stream!()
-    |> NimbleCSV.parse_stream()
+  defp parse_csv(data) do
+    data
+    |> NimbleCSV.parse_string()
     |> Stream.map(fn [
                        network_countrycode,
                        network_localid,
