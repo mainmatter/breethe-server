@@ -1,6 +1,9 @@
 defmodule Breethe.Sources.EEA.CSV do
   alias Breethe.Data
+  alias Breethe.Sources.Google.Geocoding
   alias NimbleCSV.RFC4180, as: NimbleCSV
+
+  require IEx
 
   def process_data(data) do
     data
@@ -89,14 +92,15 @@ defmodule Breethe.Sources.EEA.CSV do
   defp extract_location(datum) do
     %{
       identifier: datum.station_code,
-      city: "S",
+      city: datum.station_name |> String.split(" - ") |> List.first(),
       country: datum.network_countrycode,
       last_updated: Timex.parse!(datum.value_datetime_updated, "{ISO:Extended:Z}"),
       available_parameters: [],
       coordinates: %Geo.Point{
         coordinates: {datum.samplingpoint_y, datum.samplingpoint_x},
         srid: 4326
-      }
+      },
+      label: datum.station_name
     }
   end
 

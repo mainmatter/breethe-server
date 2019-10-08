@@ -1,4 +1,6 @@
 defmodule Breethe.Sources.Google.Geocoding do
+  require IEx
+
   def find_location(search_term) do
     query =
       URI.encode_query(%{
@@ -26,6 +28,20 @@ defmodule Breethe.Sources.Google.Geocoding do
     |> Jason.decode!()
     |> strip()
   end
+
+  # def find_location_city(lat, lon) do
+  #   query =
+  #     URI.encode_query(%{
+  #       "latlng" => "#{lat},#{lon}",
+  #       "result_type" => "locality",
+  #       "key" => Application.get_env(:breethe, :google_maps_api_key)
+  #     })
+
+  #   query
+  #   |> query_google_api()
+  #   |> Jason.decode!()
+  #   |> strip()
+  # end
 
   defp query_google_api(query) do
     url = "#{Application.get_env(:breethe, :google_maps_api_endpoint)}?#{query}"
