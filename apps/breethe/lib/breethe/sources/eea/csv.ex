@@ -1,6 +1,5 @@
 defmodule Breethe.Sources.EEA.CSV do
   alias Breethe.Data
-  alias Breethe.Sources.Google.Geocoding
   alias NimbleCSV.RFC4180, as: NimbleCSV
 
   require IEx
