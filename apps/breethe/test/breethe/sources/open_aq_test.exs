@@ -99,7 +99,7 @@ defmodule Breethe.Sources.OpenAQTest do
   describe "load location data on demand:" do
     test "by latitude and longitude", %{bypass: bypass} do
       Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
-        assert %{"nearest" => "10", "coordinates" => "10,20"} ==
+        assert %{"order_by" => "distance", "limit" => "10", "coordinates" => "10,20"} ==
                  URI.decode_query(conn.query_string)
 
         Plug.Conn.resp(conn, 200, Jason.encode!(@sample_location))
@@ -143,7 +143,7 @@ defmodule Breethe.Sources.OpenAQTest do
       end)
 
       Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
-        assert %{"nearest" => "10", "coordinates" => "10,20"} ==
+        assert %{"order_by" => "distance", "limit" => "10", "coordinates" => "10,20"} ==
                  URI.decode_query(conn.query_string)
 
         Plug.Conn.resp(conn, 200, Jason.encode!(@sample_location))
@@ -182,7 +182,7 @@ defmodule Breethe.Sources.OpenAQTest do
       end)
 
       Bypass.expect(bypass, "GET", "/open-aq/locations", fn conn ->
-        assert %{"nearest" => "10", "coordinates" => "10,20"} ==
+        assert %{"order_by" => "distance", "limit" => "10", "coordinates" => "10,20"} ==
                  URI.decode_query(conn.query_string)
 
         Plug.Conn.resp(conn, 200, Jason.encode!(@sample_location))

@@ -43,7 +43,7 @@ defmodule Breethe.Sources.OpenAQ.Locations do
 
   defp query_open_aq(lat, lon) do
     url =
-      "#{Application.get_env(:breethe, :open_aq_api_endpoint)}/locations?coordinates=#{lat},#{lon}&nearest=10"
+      "#{Application.get_env(:breethe, :open_aq_api_endpoint)}/locations?coordinates=#{lat},#{lon}&order_by=distance&limit=10"
 
     {:ok, response} = HTTPoison.get(url)
     %{"results" => results} = Jason.decode!(response.body)
