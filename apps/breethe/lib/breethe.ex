@@ -5,6 +5,8 @@ defmodule Breethe do
 
   Contexts are also responsible for managing your data, regardless
   if it comes from the database, an external API or others.
+
+  Breethe searches the database for existing data and delegates external data queries to Source.
   """
 
   @behaviour Breethe.Behaviour
