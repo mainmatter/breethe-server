@@ -5,6 +5,10 @@ defmodule Breethe.Sources do
     If not in Europe, initiates search through OpenAQ
   """
 
+  alias __MODULE__.{Google, OpenAQ, EEA}
+
+  require IEx
+
   defmodule Behaviour do
     @callback get_locations(search_term :: String.t()) :: [%Breethe.Data.Location{}]
     @callback get_locations(lat :: number, lon :: number) :: [%Breethe.Data.Location{}]
@@ -14,6 +18,13 @@ defmodule Breethe.Sources do
   end
 
   def get_locations(search_term) do
+    search_term
+    |> Google.Geocoding.find_location_country_code()
+    |> (&Enum.member?(EEA.country_codes(), &1)).()
+    |> case do
+      true -> :ok
+      false -> OpenAQ.get_locations(search_term)
+    end
   end
 
   def get_locations(lat, lon) do

@@ -7,4 +7,5 @@ config :breethe, Breethe.Repo,
   password: "breethe",
   database: "breethe_dev",
   hostname: "localhost",
-  pool_size: 10
+  pool_size: 10,
+  owenership_timeout: 99_999_999

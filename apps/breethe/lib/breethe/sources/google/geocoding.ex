@@ -29,6 +29,22 @@ defmodule Breethe.Sources.Google.Geocoding do
     |> strip()
   end
 
+  def find_location_country_code(search_term) do
+    query =
+      URI.encode_query(%{
+        "address" => search_term,
+        "key" => Application.get_env(:breethe, :google_maps_api_key)
+      })
+
+    query
+    |> query_google_api()
+    |> Jason.decode!()
+    |> (& &1["results"]).()
+    |> List.first()
+    |> (& &1["address_components"]).()
+    |> find_country_code()
+  end
+
   # def find_location_city(lat, lon) do
   #   query =
   #     URI.encode_query(%{
@@ -58,5 +74,13 @@ defmodule Breethe.Sources.Google.Geocoding do
     results
     |> get_in(["results", all, "formatted_address"])
     |> List.first()
+  end
+
+  defp find_country_code(results) do
+    results
+    |> Enum.find(fn results ->
+      match?(%{"short_name" => _, "types" => ["country", _]}, results)
+    end)
+    |> Map.get("short_name")
   end
 end
