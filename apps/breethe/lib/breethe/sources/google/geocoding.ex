@@ -45,6 +45,22 @@ defmodule Breethe.Sources.Google.Geocoding do
     |> find_country_code()
   end
 
+  def find_location_country_code(lat, lon) do
+    query =
+      URI.encode_query(%{
+        "latlng" => "#{lat},#{lon}",
+        "key" => Application.get_env(:breethe, :google_maps_api_key)
+      })
+
+    query
+    |> query_google_api()
+    |> Jason.decode!()
+    |> (& &1["results"]).()
+    |> List.first()
+    |> (& &1["address_components"]).()
+    |> find_country_code()
+  end
+
   # def find_location_city(lat, lon) do
   #   query =
   #     URI.encode_query(%{

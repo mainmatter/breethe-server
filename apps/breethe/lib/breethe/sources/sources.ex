@@ -12,9 +12,9 @@ defmodule Breethe.Sources do
   defmodule Behaviour do
     @callback get_locations(search_term :: String.t()) :: [%Breethe.Data.Location{}]
     @callback get_locations(lat :: number, lon :: number) :: [%Breethe.Data.Location{}]
-    @callback get_latest_measurements(location_id :: integer | String.t()) :: [
-                %Breethe.Data.Measurement{}
-              ]
+    # @callback get_latest_measurements(location_id :: integer | String.t()) :: [
+    #             %Breethe.Data.Measurement{}
+    #           ]
   end
 
   def get_locations(search_term) do
@@ -22,14 +22,28 @@ defmodule Breethe.Sources do
     |> Google.Geocoding.find_location_country_code()
     |> (&Enum.member?(EEA.country_codes(), &1)).()
     |> case do
-      true -> :ok
+      true -> []
       false -> OpenAQ.get_locations(search_term)
     end
   end
 
   def get_locations(lat, lon) do
+    lat
+    |> Google.Geocoding.find_location_country_code(lon)
+    |> (&Enum.member?(EEA.country_codes(), &1)).()
+    |> case do
+      true -> []
+      false -> OpenAQ.get_locations(lat, lon)
+    end
   end
 
-  def get_latest_measurements(location_id) do
+  def get_latest_measurements(location_id, lat, lon) do
+    lat
+    |> Google.Geocoding.find_location_country_code(lon)
+    |> (&Enum.member?(EEA.country_codes(), &1)).()
+    |> case do
+      true -> []
+      false -> OpenAQ.get_latest_measurements(location_id)
+    end
   end
 end

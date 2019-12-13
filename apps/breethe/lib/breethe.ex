@@ -13,6 +13,8 @@ defmodule Breethe do
 
   alias __MODULE__.{Data, TaskSupervisor}
 
+  require IEx
+
   @source Application.get_env(:breethe, :source)
 
   defmodule Behaviour do
@@ -80,16 +82,20 @@ defmodule Breethe do
   end
 
   def search_measurements(location_id) do
+    location = Data.get_location(location_id)
+
+    {lat, lon} = location.coordinates.coordinates
+
     location_id
     |> Data.find_measurements()
     |> case do
       [] ->
-        @source.get_latest_measurements(location_id)
+        @source.get_latest_measurements(location_id, lat, lon)
 
       measurements ->
         {:ok, _pid} =
           Task.Supervisor.start_child(TaskSupervisor, fn ->
-            @source.get_latest_measurements(location_id)
+            @source.get_latest_measurements(location_id, lat, lon)
           end)
 
         measurements
@@ -99,7 +105,8 @@ defmodule Breethe do
   defp start_measurement_task(locations) do
     Task.Supervisor.start_child(TaskSupervisor, fn ->
       Enum.map(locations, fn location ->
-        @source.get_latest_measurements(location.id)
+        {lat, lon} = location.coordinates.coordinates
+        @source.get_latest_measurements(location.id, lat, lon)
       end)
     end)
   end

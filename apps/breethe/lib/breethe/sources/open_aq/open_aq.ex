@@ -4,6 +4,8 @@ defmodule Breethe.Sources.OpenAQ do
   alias Breethe.{TaskSupervisor, Data}
   alias Breethe.Sources.{Google, OpenAQ}
 
+  require IEx
+
   defmodule Behaviour do
     @callback get_locations(search_term :: String.t()) :: [%Breethe.Data.Location{}]
     @callback get_locations(lat :: number, lon :: number) :: [%Breethe.Data.Location{}]
@@ -21,6 +23,8 @@ defmodule Breethe.Sources.OpenAQ do
 
   def get_locations(lat, lon) do
     locations = OpenAQ.Locations.get_locations(lat, lon)
+
+    IEx.pry
 
     locations
     |> Enum.reject(fn location -> location.label end)
