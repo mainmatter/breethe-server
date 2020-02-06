@@ -62,13 +62,11 @@ defmodule BreetheTest do
   end
 
   describe "search_locations(search_term):" do
-    test "returns locations from the API if 9 or less are present in the DB" do
+    test "queries sources for locations if 9 or less are present in the DB" do
       location = build(:location)
 
-      OpenAQMock
-      |> expect(:get_locations, fn _search_term -> OpenAQMock.get_locations(0.0, 0.0) end)
-      |> expect(:get_locations, fn _lat, _lon -> [location] end)
-      |> stub(:get_latest_measurements, fn _location_id -> [] end)
+      SourcesMock
+      |> expect(:get_locations, fn _search_term -> [location] end)
 
       locations = Breethe.search_locations("pdx")
 
@@ -80,10 +78,8 @@ defmodule BreetheTest do
     test "returns cached locations if 10 or more are present in DB" do
       cached_locations = insert_list(10, :location, %{city: "pdx", measurements: []})
 
-      OpenAQMock
-      |> expect(:get_locations, fn _search_term -> OpenAQMock.get_locations(0.0, 0.0) end)
-      |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
-      |> stub(:get_latest_measurements, fn _location_id -> [] end)
+      SourcesMock
+      |> stub(:get_locations, fn _search_term -> [] end)
 
       locations = Breethe.search_locations("pdx")
 
@@ -96,9 +92,8 @@ defmodule BreetheTest do
       cached_locations = insert_list(10, :location, %{city: "pdx"})
 
       SourcesMock
-      |> expect(:get_locations, fn _search_term -> OpenAQMock.get_locations(0.0, 0.0) end)
-      |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
-      |> stub(:get_latest_measurements, fn _location_id ->
+      |> expect(:get_locations, fn _search_term -> [cached_locations | insert_pair(:location)] end)
+      |> stub(:get_latest_measurements, fn _location_id, _lat, _lon ->
         Enum.each(cached_locations, fn location ->
           insert(:measurement, location: location)
         end)
@@ -117,10 +112,9 @@ defmodule BreetheTest do
     test "starts a background task to get measurements if 9 or less locations are present in the DB" do
       location = build(:location)
 
-      OpenAQMock
-      |> expect(:get_locations, fn _search_term -> OpenAQMock.get_locations(0.0, 0.0) end)
-      |> expect(:get_locations, fn _lat, _lon -> [location] end)
-      |> expect(:get_latest_measurements, fn _location_id ->
+      SourcesMock
+      |> stub(:get_locations, fn _search_term -> [location] end)
+      |> expect(:get_latest_measurements, fn _location_id, _lat, _lon -> 
         insert(:measurement, location: location)
       end)
 
@@ -137,14 +131,13 @@ defmodule BreetheTest do
     test "starts a background task to get measurements if 10 or more locations are present in the DB" do
       cached_locations = insert_list(10, :location, %{city: "pdx", measurements: []})
 
-      OpenAQMock
-      |> expect(:get_locations, fn _search_term -> OpenAQMock.get_locations(0.0, 0.0) end)
-      |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
-      |> expect(:get_latest_measurements, 10, fn _location_id ->
-        Enum.each(cached_locations, fn location ->
-          insert(:measurement, location: location)
+      SourcesMock
+      |> stub(:get_locations, fn _search_term -> [cached_locations | insert_pair(:location)] end)
+      |> expect(:get_latest_measurements, 10, fn _location_id, _lat, _lon ->
+          Enum.each(cached_locations, fn location ->
+            insert(:measurement, location: location)
+          end)
         end)
-      end)
 
       Breethe.search_locations("pdx")
 
@@ -164,9 +157,9 @@ defmodule BreetheTest do
 
       location = build(:location, %{coordinates: %Geo.Point{coordinates: {lat, lon}, srid: 4326}})
 
-      OpenAQMock
+      SourcesMock
       |> expect(:get_locations, fn _lat, _lon -> [location] end)
-      |> stub(:get_latest_measurements, fn _location_id -> [] end)
+      |> stub(:get_latest_measurements, fn _location_id, _lat, _lon -> [] end)
 
       locations = Breethe.search_locations(lat, lon)
 
@@ -185,9 +178,9 @@ defmodule BreetheTest do
           measurements: []
         })
 
-      OpenAQMock
+      SourcesMock
       |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
-      |> stub(:get_latest_measurements, fn _location_id -> [] end)
+      |> stub(:get_latest_measurements, fn _location_id, _lat, _lon -> [] end)
 
       locations = Breethe.search_locations(lat, lon)
 
@@ -203,9 +196,9 @@ defmodule BreetheTest do
       cached_locations =
         insert_list(10, :location, %{coordinates: %Geo.Point{coordinates: {lat, lon}, srid: 4326}})
 
-      OpenAQMock
+      SourcesMock
       |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
-      |> stub(:get_latest_measurements, fn _location_id ->
+      |> stub(:get_latest_measurements, fn _location_id, _lat, _lon ->
         Enum.each(cached_locations, fn location ->
           insert(:measurement, location: location)
         end)
@@ -228,9 +221,9 @@ defmodule BreetheTest do
       location =
         insert(:location, %{coordinates: %Geo.Point{coordinates: {lat, lon}, srid: 4326}})
 
-      OpenAQMock
-      |> expect(:get_locations, fn _lat, _lon -> [location] end)
-      |> expect(:get_latest_measurements, fn _location_id ->
+      SourcesMock
+      |> stub(:get_locations, fn _lat, _lon -> [location] end)
+      |> expect(:get_latest_measurements, fn _location_id, _lat, _lon ->
         insert(:measurement, location: location)
       end)
 
@@ -251,9 +244,9 @@ defmodule BreetheTest do
       cached_locations =
         insert_list(10, :location, %{coordinates: %Geo.Point{coordinates: {lat, lon}, srid: 4326}})
 
-      OpenAQMock
-      |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
-      |> expect(:get_latest_measurements, 10, fn _location_id ->
+      SourcesMock
+      |> stub(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
+      |> expect(:get_latest_measurements, 10, fn _location_id, _lat, _lon ->
         Enum.each(cached_locations, fn location ->
           insert(:measurement, location: location)
         end)
@@ -274,8 +267,8 @@ defmodule BreetheTest do
     test "returns measurements from the API if none are present in the DB" do
       location = insert(:location)
 
-      OpenAQMock
-      |> expect(:get_latest_measurements, fn _location_id ->
+      SourcesMock
+      |> expect(:get_latest_measurements, fn _location_id, _lat, _lon ->
         insert(:measurement, location: location)
       end)
 
@@ -287,8 +280,8 @@ defmodule BreetheTest do
       location = insert(:location)
       cached_measurement = [insert(:measurement, location_id: location.id)]
 
-      OpenAQMock
-      |> stub(:get_latest_measurements, fn _location_id -> [] end)
+      SourcesMock
+      |> stub(:get_latest_measurements, fn _location_id, _lat, _lon -> [] end)
 
       measurements = Breethe.search_measurements(location.id)
 
@@ -301,8 +294,8 @@ defmodule BreetheTest do
       location = insert(:location)
       insert(:measurement, location: location)
 
-      OpenAQMock
-      |> expect(:get_latest_measurements, fn _location_id ->
+      SourcesMock
+      |> expect(:get_latest_measurements, fn _location_id, _lat, _lon ->
         insert(:measurement, location: location)
       end)
 

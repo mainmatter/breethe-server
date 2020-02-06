@@ -63,7 +63,7 @@ defmodule Breethe do
   def search_locations(lat, lon) do
     locations = Data.find_locations(lat, lon)
 
-    case length(locations) > 9 do
+    case length(locations) > 9 do #note: case where locations = [] is not handled
       false ->
         locations = @source.get_locations(lat, lon)
         {:ok, _pid} = start_measurement_task(locations)

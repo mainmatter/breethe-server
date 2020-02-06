@@ -12,7 +12,11 @@ defmodule Breethe.Sources do
   defmodule Behaviour do
     @callback get_locations(search_term :: String.t()) :: [%Breethe.Data.Location{}]
     @callback get_locations(lat :: number, lon :: number) :: [%Breethe.Data.Location{}]
-    @callback get_latest_measurements(location_id :: integer | String.t(), lat :: number, lon :: number) :: [
+    @callback get_latest_measurements(
+                location_id :: integer | String.t(),
+                lat :: number,
+                lon :: number
+              ) :: [
                 %Breethe.Data.Measurement{}
               ]
   end
