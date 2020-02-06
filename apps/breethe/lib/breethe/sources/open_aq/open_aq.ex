@@ -24,8 +24,6 @@ defmodule Breethe.Sources.OpenAQ do
   def get_locations(lat, lon) do
     locations = OpenAQ.Locations.get_locations(lat, lon)
 
-    IEx.pry
-
     locations
     |> Enum.reject(fn location -> location.label end)
     |> Enum.map(fn location ->

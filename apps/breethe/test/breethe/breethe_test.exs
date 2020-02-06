@@ -5,7 +5,10 @@ defmodule BreetheTest do
   import Breethe.Factory
 
   alias Breethe.Sources.OpenAQMock
+  alias Breethe.SourcesMock
   alias Breethe.TaskSupervisor
+
+  require IEx
 
   setup :set_mox_global
   setup :verify_on_exit!
@@ -16,8 +19,8 @@ defmodule BreetheTest do
       measurement = insert(:measurement, location_id: cached_location.id)
       cached_location = %{cached_location | measurements: [measurement]}
 
-      OpenAQMock
-      |> stub(:get_latest_measurements, fn _location_id -> [] end)
+      SourcesMock
+      |> stub(:get_latest_measurements, fn _location_id, _lat, _lon -> [] end)
 
       location = Breethe.get_location(cached_location.id)
 
@@ -29,8 +32,8 @@ defmodule BreetheTest do
     test "returns cached location without measurements if no measurements are present in the DB " do
       cached_location = insert(:location, measurements: [])
 
-      OpenAQMock
-      |> stub(:get_latest_measurements, fn _location_id -> [] end)
+      SourcesMock
+      |> stub(:get_latest_measurements, fn _location_id, _lat, _lon -> [] end)
 
       location = Breethe.get_location(cached_location.id)
 
@@ -42,8 +45,8 @@ defmodule BreetheTest do
     test "starts a background task to get measurements for a location from the API" do
       cached_location = insert(:location, measurements: [])
 
-      OpenAQMock
-      |> expect(:get_latest_measurements, fn _location_id ->
+      SourcesMock
+      |> expect(:get_latest_measurements, fn _location_id, _lat, _lon ->
         [insert(:measurement, location: cached_location)]
       end)
 
@@ -92,7 +95,7 @@ defmodule BreetheTest do
     test "starts a background task to get locations from the API if 10 or more are present in the DB" do
       cached_locations = insert_list(10, :location, %{city: "pdx"})
 
-      OpenAQMock
+      SourcesMock
       |> expect(:get_locations, fn _search_term -> OpenAQMock.get_locations(0.0, 0.0) end)
       |> expect(:get_locations, fn _lat, _lon -> [cached_locations | insert_pair(:location)] end)
       |> stub(:get_latest_measurements, fn _location_id ->

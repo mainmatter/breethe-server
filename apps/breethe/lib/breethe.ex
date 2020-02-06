@@ -28,10 +28,11 @@ defmodule Breethe do
 
   def get_location(location_id) do
     location = Data.get_location(location_id)
+    {lat, lon} = location.coordinates.coordinates
 
     {:ok, _pid} =
       Task.Supervisor.start_child(TaskSupervisor, fn ->
-        @source.get_latest_measurements(location_id)
+        @source.get_latest_measurements(location_id, lat, lon)
       end)
 
     location
