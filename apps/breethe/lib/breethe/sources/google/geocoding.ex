@@ -1,6 +1,4 @@
 defmodule Breethe.Sources.Google.Geocoding do
-  require IEx
-
   def find_location(search_term) do
     query =
       URI.encode_query(%{

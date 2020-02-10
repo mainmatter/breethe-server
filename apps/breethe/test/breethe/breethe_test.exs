@@ -4,11 +4,8 @@ defmodule BreetheTest do
   import Mox
   import Breethe.Factory
 
-  alias Breethe.Sources.OpenAQMock
   alias Breethe.SourcesMock
   alias Breethe.TaskSupervisor
-
-  require IEx
 
   setup :set_mox_global
   setup :verify_on_exit!
@@ -114,7 +111,7 @@ defmodule BreetheTest do
 
       SourcesMock
       |> stub(:get_locations, fn _search_term -> [location] end)
-      |> expect(:get_latest_measurements, fn _location_id, _lat, _lon -> 
+      |> expect(:get_latest_measurements, fn _location_id, _lat, _lon ->
         insert(:measurement, location: location)
       end)
 
@@ -134,10 +131,10 @@ defmodule BreetheTest do
       SourcesMock
       |> stub(:get_locations, fn _search_term -> [cached_locations | insert_pair(:location)] end)
       |> expect(:get_latest_measurements, 10, fn _location_id, _lat, _lon ->
-          Enum.each(cached_locations, fn location ->
-            insert(:measurement, location: location)
-          end)
+        Enum.each(cached_locations, fn location ->
+          insert(:measurement, location: location)
         end)
+      end)
 
       Breethe.search_locations("pdx")
 

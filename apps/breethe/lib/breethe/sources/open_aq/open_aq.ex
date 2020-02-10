@@ -4,8 +4,6 @@ defmodule Breethe.Sources.OpenAQ do
   alias Breethe.{TaskSupervisor, Data}
   alias Breethe.Sources.{Google, OpenAQ}
 
-  require IEx
-
   defmodule Behaviour do
     @callback get_locations(search_term :: String.t()) :: [%Breethe.Data.Location{}]
     @callback get_locations(lat :: number, lon :: number) :: [%Breethe.Data.Location{}]

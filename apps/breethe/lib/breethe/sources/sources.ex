@@ -7,8 +7,6 @@ defmodule Breethe.Sources do
 
   alias __MODULE__.{Google, OpenAQ, EEA}
 
-  require IEx
-
   defmodule Behaviour do
     @callback get_locations(search_term :: String.t()) :: [%Breethe.Data.Location{}]
     @callback get_locations(lat :: number, lon :: number) :: [%Breethe.Data.Location{}]

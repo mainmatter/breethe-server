@@ -13,8 +13,6 @@ defmodule Breethe do
 
   alias __MODULE__.{Data, TaskSupervisor}
 
-  require IEx
-
   @source Application.get_env(:breethe, :source)
 
   defmodule Behaviour do
@@ -63,7 +61,8 @@ defmodule Breethe do
   def search_locations(lat, lon) do
     locations = Data.find_locations(lat, lon)
 
-    case length(locations) > 9 do #note: case where locations = [] is not handled
+    # note: case where locations = [] is not handled
+    case length(locations) > 9 do
       false ->
         locations = @source.get_locations(lat, lon)
         {:ok, _pid} = start_measurement_task(locations)

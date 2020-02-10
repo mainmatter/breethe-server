@@ -2,8 +2,6 @@ defmodule Breethe.Sources.EEA.CSV do
   alias Breethe.Data
   alias NimbleCSV.RFC4180, as: NimbleCSV
 
-  require IEx
-
   def process_data(data) do
     data
     |> parse_csv()
