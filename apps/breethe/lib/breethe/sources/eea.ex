@@ -1,5 +1,5 @@
 defmodule Breethe.Sources.EEA do
-  alias __MODULE__.{CSV, Download}
+  alias __MODULE__.CSV
 
   def country_codes(),
     do: [
@@ -47,11 +47,17 @@ defmodule Breethe.Sources.EEA do
   def get_data() do
     for country <- country_codes(), param <- parameters() do
       country
-      |> Download.get_latest(param)
+      |> download_latest(param)
       |> case do
         {:ok, response} -> CSV.process_data(response.body)
         {:error, reason} -> reason
       end
     end
+  end
+
+  defp download_latest(country, param) do
+    url = "#{Application.get_env(:breethe, :eea_endpoint)}/#{country}_#{param}.csv"
+
+    HTTPoison.get(url)
   end
 end
