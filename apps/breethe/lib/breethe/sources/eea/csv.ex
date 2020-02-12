@@ -117,7 +117,6 @@ defmodule Breethe.Sources.EEA.CSV do
       "NO2" -> :no2
       "O3" -> :o3
       "CO" -> :co
-      _ -> :bc
     end
   end
 end
