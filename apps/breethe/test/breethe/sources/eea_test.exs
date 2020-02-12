@@ -1,9 +1,6 @@
 defmodule Breethe.Sources.EEATest do
   use Breethe.DataCase
 
-  import Mox
-  import Breethe.Factory
-
   alias Breethe.Sources.EEA
 
   setup do

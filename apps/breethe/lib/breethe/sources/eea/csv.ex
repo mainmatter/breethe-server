@@ -30,7 +30,7 @@ defmodule Breethe.Sources.EEA.CSV do
                        value_datetime_begin,
                        value_datetime_end,
                        value_datetime_inserted,
-                       value_datetime_updated,
+                       _value_datetime_updated,
                        value_numeric,
                        value_validity,
                        value_verification,
@@ -56,6 +56,7 @@ defmodule Breethe.Sources.EEA.CSV do
         value_datetime_begin: value_datetime_begin,
         value_datetime_end: value_datetime_end,
         value_datetime_inserted: value_datetime_inserted,
+        # using inserted here as updated is an offset
         value_datetime_updated: value_datetime_inserted,
         value_numeric: value_numeric,
         value_validity: value_validity,
