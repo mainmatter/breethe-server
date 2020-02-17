@@ -1,6 +1,9 @@
 defmodule Breethe.Sources.EEA do
   alias __MODULE__.CSV
 
+  # @parameters ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]
+  @parameters ["SO2", "NO2", "O3", "CO"]
+
   def country_codes(),
     do: [
       "BG",
@@ -41,8 +44,7 @@ defmodule Breethe.Sources.EEA do
       "EE"
     ]
 
-  # @parameters ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]
-  def parameters(), do: ["SO2", "NO2", "O3", "CO"]
+  def parameters(), do: @parameters
 
   def get_data() do
     for country <- country_codes(), param <- parameters() do
