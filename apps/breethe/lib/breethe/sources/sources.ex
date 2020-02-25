@@ -7,18 +7,6 @@ defmodule Breethe.Sources do
 
   alias __MODULE__.{Google, OpenAQ, EEA}
 
-  defmodule Behaviour do
-    @callback get_locations(search_term :: String.t()) :: [%Breethe.Data.Location{}]
-    @callback get_locations(lat :: number, lon :: number) :: [%Breethe.Data.Location{}]
-    @callback get_latest_measurements(
-                location_id :: integer | String.t(),
-                lat :: number,
-                lon :: number
-              ) :: [
-                %Breethe.Data.Measurement{}
-              ]
-  end
-
   # @spec get_data([%Breethe.Data.Location{}], String.t()) :: [%Breethe.Data.Location{}]
   def get_data(locations, search_term) do
     search_term
