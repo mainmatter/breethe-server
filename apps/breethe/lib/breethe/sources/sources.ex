@@ -4,8 +4,10 @@ defmodule Breethe.Sources do
     If in Europe, exits as data should already be in DB. 
     If not in Europe, initiates search through OpenAQ
   """
-
+  alias Breethe.TaskSupervisor
   alias __MODULE__.{Google, OpenAQ, EEA}
+
+  require IEx
 
   @open_aq Application.get_env(:breethe, :open_aq)
   @google Application.get_env(:breethe, :google)
