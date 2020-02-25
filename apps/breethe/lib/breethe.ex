@@ -36,7 +36,7 @@ defmodule Breethe do
   # def search_locations(search_term) do
   #   search_term
   #   |> Data.find_locations()
-  #   |> @source.get_data(search_term)
+  #   |> Source.get_data(search_term)
 
   #   # if over 9, return and search for locations in background (Only if OpenAQ)
   #   # if under 9 but search data (if open aq) for measurements as well
@@ -68,7 +68,7 @@ defmodule Breethe do
 
   # def search_locations(lat, lon) do
   #   locations = Data.find_locations(lat, lon)
-  #   @source.get_data(locations, lat, lon)
+  #   Source.get_data(locations, lat, lon)
   # end
 
   def search_locations(lat, lon) do
