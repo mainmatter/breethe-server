@@ -11,8 +11,12 @@ defmodule Breethe.Sources do
   @google Application.get_env(:breethe, :google)
 
   defmodule Behaviour do
-    @callback get_data(locations :: [%Breethe.Data.Location{}], search_term :: String.t()) :: [%Breethe.Data.Location{}]
-    @callback get_data(locations :: [%Breethe.Data.Location{}], lat :: number, lon :: number) :: [%Breethe.Data.Location{}]
+    @callback get_data(locations :: [%Breethe.Data.Location{}], search_term :: String.t()) :: [
+                %Breethe.Data.Location{}
+              ]
+    @callback get_data(locations :: [%Breethe.Data.Location{}], lat :: number, lon :: number) :: [
+                %Breethe.Data.Location{}
+              ]
   end
 
   # @spec get_data([%Breethe.Data.Location{}], String.t()) :: [%Breethe.Data.Location{}]

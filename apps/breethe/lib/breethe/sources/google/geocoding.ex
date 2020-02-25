@@ -1,5 +1,4 @@
 defmodule Breethe.Sources.Google.Geocoding do
-
   defmodule Behaviour do
     @callback find_location_country_code(search_term :: String.t()) :: String.t()
   end
