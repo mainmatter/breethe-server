@@ -37,7 +37,8 @@ defmodule Breethe.Sources.OpenAQ.Locations do
       country: country,
       last_updated: Timex.parse!(last_updated, "{ISO:Extended:Z}"),
       available_parameters: available_parameters,
-      coordinates: %Geo.Point{coordinates: {lat, lon}, srid: 4326}
+      coordinates: %Geo.Point{coordinates: {lat, lon}, srid: 4326},
+      source: :oaq
     }
   end
 

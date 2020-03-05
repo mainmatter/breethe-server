@@ -16,7 +16,7 @@ defmodule Breethe.Data.Location do
     field(:last_updated, :utc_datetime)
     field(:available_parameters, {:array, ParameterEnum})
     field(:coordinates, Geo.PostGIS.Geometry)
-    field(:source, :string)
+    field(:source, SourceEnum)
 
     timestamps()
   end

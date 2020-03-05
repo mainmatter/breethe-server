@@ -98,7 +98,8 @@ defmodule Breethe.Sources.EEA.CSV do
         coordinates: {datum.samplingpoint_y, datum.samplingpoint_x},
         srid: 4326
       },
-      label: datum.station_name
+      label: datum.station_name,
+      source: :eea
     }
   end
 
