@@ -9,7 +9,7 @@ defmodule Breethe do
 
   @behaviour Breethe.Behaviour
 
-  alias __MODULE__.{Data, TaskSupervisor, Sources}
+  alias __MODULE__.{Data, TaskSupervisor}
 
   @source Application.get_env(:breethe, :source)
 
@@ -33,17 +33,6 @@ defmodule Breethe do
     location
   end
 
-  # def search_locations(search_term) do
-  #   search_term
-  #   |> Data.find_locations()
-  #   |> Source.get_data(search_term)
-
-  #   # if over 9, return and search for locations in background (Only if OpenAQ)
-  #   # if under 9 but search data (if open aq) for measurements as well
-
-  #   # if not openAq return and that's it 
-  # end
-
   def search_locations(search_term) do
     locations = Data.find_locations(search_term)
 
@@ -65,11 +54,6 @@ defmodule Breethe do
         locations
     end
   end
-
-  # def search_locations(lat, lon) do
-  #   locations = Data.find_locations(lat, lon)
-  #   Source.get_data(locations, lat, lon)
-  # end
 
   def search_locations(lat, lon) do
     locations = Data.find_locations(lat, lon)

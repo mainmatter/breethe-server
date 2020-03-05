@@ -7,8 +7,6 @@ defmodule Breethe.SourcesTest do
   alias Breethe.{Sources, TaskSupervisor}
   alias Breethe.Sources.{OpenAQMock, GoogleMock}
 
-  require IEx
-
   setup :set_mox_global
   setup :verify_on_exit!
 

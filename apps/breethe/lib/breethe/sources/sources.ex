@@ -5,9 +5,7 @@ defmodule Breethe.Sources do
     If not in Europe, initiates search through OpenAQ
   """
   alias Breethe.TaskSupervisor
-  alias __MODULE__.{Google, OpenAQ, EEA}
-
-  require IEx
+  alias __MODULE__.{Google, EEA}
 
   @open_aq Application.get_env(:breethe, :open_aq)
   @google Application.get_env(:breethe, :google)
@@ -26,7 +24,6 @@ defmodule Breethe.Sources do
               ]
   end
 
-  # @spec get_data([%Breethe.Data.Location{}], String.t()) :: [%Breethe.Data.Location{}]
   def get_data(cached_locations, search_term) do
     search_term
     |> @google.find_location_country_code()
@@ -47,7 +44,6 @@ defmodule Breethe.Sources do
     end
   end
 
-  # @spec query_open_aq([%Breethe.Data.Location{}], String.t()) :: [%Breethe.Data.Location{}]
   defp query_open_aq([], search_term), do: @open_aq.get_locations(search_term)
 
   defp query_open_aq(cached_locations, search_term) when length(cached_locations) < 10 do
