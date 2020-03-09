@@ -193,11 +193,11 @@ defmodule Breethe.SourcesTest do
 
   defp assert_tasks_started() do
     TaskSupervisor
-      |> Task.Supervisor.children()
-      |> Enum.all?(fn task ->
-        ref = Process.monitor(task)
-        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
-      end)
+    |> Task.Supervisor.children()
+    |> Enum.all?(fn task ->
+      ref = Process.monitor(task)
+      assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
+    end)
   end
 
   defp stop_background_tasks() do

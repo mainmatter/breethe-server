@@ -7,8 +7,6 @@ defmodule Breethe.Sources do
   alias Breethe.TaskSupervisor
   alias __MODULE__.{Google, EEA}
 
-  require IEx
-
   @open_aq Application.get_env(:breethe, :open_aq)
   @google Application.get_env(:breethe, :google)
 
