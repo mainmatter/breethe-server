@@ -10,17 +10,23 @@ defmodule Breethe.SourcesTest do
   setup :set_mox_global
   setup :verify_on_exit!
 
-  describe "get_data(cached_locations, search_term), location is in the EEA list:" do
-    test "no-op and returns cached_locations" do
+  describe "get_data(cached_locations, search_term), location source is EEA:" do
+    test "returns cached_locations if cache is empty" do
       search_term = "Munich"
       expect(GoogleMock, :find_location_country_code, fn ^search_term -> "DE" end)
 
       assert [] = Sources.get_data([], search_term)
     end
+
+    test "returns cached_locations if cache isn't empty" do
+      cached_locations = insert_list(10, :location, source: :eea)
+
+      assert cached_locations = Sources.get_data(cached_locations, "Munich")
+    end
   end
 
-  describe "get_data(cached_locations, search_term), location isn't in the EEA list:" do
-    test "returns OpenAQ locations if cached_locations list is empty" do
+  describe "get_data(cached_locations, search_term), location source is OAQ:" do
+    test "returns OpenAQ locations if cache is empty" do
       search_term = "Portland"
 
       expect(GoogleMock, :find_location_country_code, fn ^search_term -> "US" end)
@@ -29,7 +35,7 @@ defmodule Breethe.SourcesTest do
       assert [] = Sources.get_data([], search_term)
     end
 
-    test "returns OpenAQ locations if cached_locations list is smaller than 10" do
+    test "returns OpenAQ locations if cache is smaller than 10" do
       search_term = "Portland"
 
       cached_locations = [insert(:location, source: :oaq)]
@@ -43,7 +49,7 @@ defmodule Breethe.SourcesTest do
       assert open_aq_locations == returned_locations
     end
 
-    test "starts a background task for measurements if cached_locations list is smaller than 10" do
+    test "starts a background task for measurements if cache is smaller than 10" do
       search_term = "Portland"
 
       cached_locations = [insert(:location, source: :oaq)]
@@ -58,7 +64,7 @@ defmodule Breethe.SourcesTest do
       assert_tasks_started()
     end
 
-    test "no-op and returns cached_locations if locations list is larger than 10" do
+    test "returns cached_locations if cache is larger than 10" do
       search_term = "Portland"
 
       cached_locations = insert_list(10, :location, source: :oaq)
@@ -74,7 +80,7 @@ defmodule Breethe.SourcesTest do
       assert cached_locations == returned_locations
     end
 
-    test "starts background tasks for locations and measurements if cached_locations list is larger than 10" do
+    test "starts background tasks for locations and measurements if cache is larger than 10" do
       search_term = "Portland"
 
       cached_locations = insert_list(10, :location, source: :oaq)
@@ -90,7 +96,7 @@ defmodule Breethe.SourcesTest do
     end
   end
 
-  describe "get_data(cached_locations, lat, lon), location is in the EEA list:" do
+  describe "get_data(cached_locations, lat, lon), location source is EEA:" do
     test "no-op and returns cached_locations" do
       lat = 0.0
       lon = 0.0
@@ -99,10 +105,18 @@ defmodule Breethe.SourcesTest do
 
       assert [] = Sources.get_data([], lat, lon)
     end
+
+    test "returns cached_locations if cache isn't empty" do
+      lat = 0.0
+      lon = 0.0
+      cached_locations = insert_list(10, :location, source: :eea)
+
+      assert cached_locations = Sources.get_data(cached_locations, lat, lon)
+    end
   end
 
-  describe "get_data(cached_locations, lat, lon), location isn't the EEA list:" do
-    test "returns OpenAQ locations if cached_locations list is empty" do
+  describe "get_data(cached_locations, lat, lon), location source is OAQ:" do
+    test "returns OpenAQ locations if cache is empty" do
       lat = 0.0
       lon = 0.0
 
@@ -112,7 +126,7 @@ defmodule Breethe.SourcesTest do
       assert [] = Sources.get_data([], lat, lon)
     end
 
-    test "returns OpenAQ locations if cached_locations list is smaller than 10" do
+    test "returns OpenAQ locations if cache is smaller than 10" do
       lat = 0.0
       lon = 0.0
 
@@ -127,7 +141,7 @@ defmodule Breethe.SourcesTest do
       assert open_aq_locations == returned_locations
     end
 
-    test "starts a background task for measurements if cached_locations list is smaller than 10" do
+    test "starts a background task for measurements if cache is smaller than 10" do
       lat = 0.0
       lon = 0.0
 
@@ -143,7 +157,7 @@ defmodule Breethe.SourcesTest do
       assert_tasks_started()
     end
 
-    test "no-op and returns cached_locations if locations list is larger than 10" do
+    test "returns cached_locations if cache is larger than 10" do
       lat = 0.0
       lon = 0.0
 
@@ -160,7 +174,7 @@ defmodule Breethe.SourcesTest do
       assert cached_locations == returned_locations
     end
 
-    test "starts background tasks for locations and measurements if cached_locations list is larger than 10" do
+    test "starts background tasks for locations and measurements if cache is larger than 10" do
       lat = 0.0
       lon = 0.0
 
