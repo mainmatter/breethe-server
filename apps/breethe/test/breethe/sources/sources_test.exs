@@ -32,10 +32,9 @@ defmodule Breethe.SourcesTest do
     test "returns OpenAQ locations if cached_locations list is smaller than 10" do
       search_term = "Portland"
 
-      cached_locations = [insert(:location)]
-      open_aq_locations = build_list(3, :location)
+      cached_locations = [insert(:location, source: :oaq)]
+      open_aq_locations = build_list(3, :location, source: :oaq)
 
-      expect(GoogleMock, :find_location_country_code, fn ^search_term -> "US" end)
       expect(OpenAQMock, :get_locations, fn ^search_term -> open_aq_locations end)
 
       returned_locations = Sources.get_data(cached_locations, search_term)
@@ -47,10 +46,8 @@ defmodule Breethe.SourcesTest do
     test "starts a background task for measurements if cached_locations list is smaller than 10" do
       search_term = "Portland"
 
-      cached_locations = [insert(:location)]
-      open_aq_locations = build_list(3, :location)
-
-      stub(GoogleMock, :find_location_country_code, fn ^search_term -> "US" end)
+      cached_locations = [insert(:location, source: :oaq)]
+      open_aq_locations = build_list(3, :location, source: :oaq)
 
       OpenAQMock
       |> stub(:get_locations, fn ^search_term -> open_aq_locations end)
@@ -58,21 +55,14 @@ defmodule Breethe.SourcesTest do
 
       Sources.get_data(cached_locations, "Portland")
 
-      TaskSupervisor
-      |> Task.Supervisor.children()
-      |> Enum.all?(fn task ->
-        ref = Process.monitor(task)
-        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
-      end)
+      assert_tasks_started()
     end
 
     test "no-op and returns cached_locations if locations list is larger than 10" do
       search_term = "Portland"
 
-      cached_locations = insert_list(10, :location)
-      open_aq_locations = build_list(2, :location)
-
-      expect(GoogleMock, :find_location_country_code, fn ^search_term -> "US" end)
+      cached_locations = insert_list(10, :location, source: :oaq)
+      open_aq_locations = build_list(2, :location, source: :oaq)
 
       OpenAQMock
       |> stub(:get_locations, fn ^search_term -> open_aq_locations end)
@@ -87,10 +77,8 @@ defmodule Breethe.SourcesTest do
     test "starts background tasks for locations and measurements if cached_locations list is larger than 10" do
       search_term = "Portland"
 
-      cached_locations = insert_list(10, :location)
-      open_aq_locations = build_list(2, :location)
-
-      expect(GoogleMock, :find_location_country_code, fn ^search_term -> "US" end)
+      cached_locations = insert_list(10, :location, source: :oaq)
+      open_aq_locations = build_list(2, :location, source: :oaq)
 
       OpenAQMock
       |> expect(:get_locations, fn ^search_term -> open_aq_locations end)
@@ -98,12 +86,7 @@ defmodule Breethe.SourcesTest do
 
       Sources.get_data(cached_locations, search_term)
 
-      TaskSupervisor
-      |> Task.Supervisor.children()
-      |> Enum.all?(fn task ->
-        ref = Process.monitor(task)
-        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
-      end)
+      assert_tasks_started()
     end
   end
 
@@ -133,10 +116,9 @@ defmodule Breethe.SourcesTest do
       lat = 0.0
       lon = 0.0
 
-      cached_locations = [insert(:location)]
-      open_aq_locations = build_list(3, :location)
+      cached_locations = [insert(:location, source: :oaq)]
+      open_aq_locations = build_list(3, :location, source: :oaq)
 
-      expect(GoogleMock, :find_location_country_code, fn ^lat, ^lon -> "US" end)
       expect(OpenAQMock, :get_locations, fn ^lat, ^lon -> open_aq_locations end)
 
       returned_locations = Sources.get_data(cached_locations, lat, lon)
@@ -149,10 +131,8 @@ defmodule Breethe.SourcesTest do
       lat = 0.0
       lon = 0.0
 
-      cached_locations = [insert(:location)]
-      open_aq_locations = build_list(3, :location)
-
-      stub(GoogleMock, :find_location_country_code, fn ^lat, ^lon -> "US" end)
+      cached_locations = [insert(:location, source: :oaq)]
+      open_aq_locations = build_list(3, :location, source: :oaq)
 
       OpenAQMock
       |> stub(:get_locations, fn ^lat, ^lon -> open_aq_locations end)
@@ -160,22 +140,15 @@ defmodule Breethe.SourcesTest do
 
       Sources.get_data(cached_locations, lat, lon)
 
-      TaskSupervisor
-      |> Task.Supervisor.children()
-      |> Enum.all?(fn task ->
-        ref = Process.monitor(task)
-        assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
-      end)
+      assert_tasks_started()
     end
 
     test "no-op and returns cached_locations if locations list is larger than 10" do
       lat = 0.0
       lon = 0.0
 
-      cached_locations = insert_list(10, :location)
-      open_aq_locations = build_list(2, :location)
-
-      expect(GoogleMock, :find_location_country_code, fn ^lat, ^lon -> "US" end)
+      cached_locations = insert_list(10, :location, source: :oaq)
+      open_aq_locations = build_list(2, :location, source: :oaq)
 
       OpenAQMock
       |> stub(:get_locations, fn ^lat, ^lon -> open_aq_locations end)
@@ -191,10 +164,8 @@ defmodule Breethe.SourcesTest do
       lat = 0.0
       lon = 0.0
 
-      cached_locations = insert_list(10, :location)
-      open_aq_locations = build_list(2, :location)
-
-      expect(GoogleMock, :find_location_country_code, fn ^lat, ^lon -> "US" end)
+      cached_locations = insert_list(10, :location, source: :oaq)
+      open_aq_locations = build_list(2, :location, source: :oaq)
 
       OpenAQMock
       |> expect(:get_locations, fn ^lat, ^lon -> open_aq_locations end)
@@ -202,13 +173,17 @@ defmodule Breethe.SourcesTest do
 
       Sources.get_data(cached_locations, lat, lon)
 
-      TaskSupervisor
+      assert_tasks_started()
+    end
+  end
+
+  defp assert_tasks_started() do
+    TaskSupervisor
       |> Task.Supervisor.children()
       |> Enum.all?(fn task ->
         ref = Process.monitor(task)
         assert_receive {:DOWN, ^ref, :process, _, :normal}, 500
       end)
-    end
   end
 
   defp stop_background_tasks() do
