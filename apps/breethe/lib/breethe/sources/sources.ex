@@ -7,6 +7,8 @@ defmodule Breethe.Sources do
   alias Breethe.TaskSupervisor
   alias __MODULE__.{Google, EEA}
 
+  require IEx
+
   @open_aq Application.get_env(:breethe, :open_aq)
   @google Application.get_env(:breethe, :google)
 
@@ -24,23 +26,43 @@ defmodule Breethe.Sources do
               ]
   end
 
-  def get_data(cached_locations, search_term) do
+  def get_data([], search_term) do
     search_term
     |> @google.find_location_country_code()
     |> (&Enum.member?(EEA.country_codes(), &1)).()
     |> case do
-      true -> cached_locations
-      false -> query_open_aq(cached_locations, search_term)
+      true -> []
+      false -> query_open_aq([], search_term)
     end
   end
 
-  def get_data(cached_locations, lat, lon) do
+  def get_data(cached_locations, search_term) do
+    cached_locations
+    |> List.first()
+    |> Map.fetch!(:source)
+    |> case do
+      :eea -> cached_locations
+      :oaq -> query_open_aq(cached_locations, search_term)
+    end
+  end
+
+  def get_data([], lat, lon) do
     lat
     |> @google.find_location_country_code(lon)
     |> (&Enum.member?(EEA.country_codes(), &1)).()
     |> case do
-      true -> cached_locations
-      false -> query_open_aq(cached_locations, lat, lon)
+      true -> []
+      false -> query_open_aq([], lat, lon)
+    end
+  end
+
+  def get_data(cached_locations, lat, lon) do
+    cached_locations
+    |> List.first()
+    |> Map.fetch!(:source)
+    |> case do
+      :eea -> cached_locations
+      :oaq -> query_open_aq(cached_locations, lat, lon)
     end
   end
 
