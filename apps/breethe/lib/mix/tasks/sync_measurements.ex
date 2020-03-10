@@ -1,16 +1,11 @@
 defmodule Mix.Tasks.SyncMeasurements do
   use Mix.Task
 
-  alias Breethe.{Sources.OpenAQ, Data}
+  alias Breethe.{Sources.EEA, Data}
 
-  @shortdoc "Syncs measurements for all locations in db"
+  @shortdoc "Refreshes European data"
 
   def run(_args) do
     Mix.Task.run("app.start")
-
-    Data.all_locations()
-    |> Enum.each(fn location ->
-      OpenAQ.get_latest_measurements(location.id)
-    end)
   end
 end
