@@ -1,5 +1,5 @@
 defmodule Breethe.Sources.EEATest do
-  use Breethe.DataCase
+  use ExUnit.Case
 
   alias Breethe.Sources.EEA
 
