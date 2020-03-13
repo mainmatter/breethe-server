@@ -51,44 +51,6 @@ defmodule Breethe.DataTest do
     end
   end
 
-  describe "find_locations(search_term):" do
-    test "returns results containing the search_term in identifier" do
-      insert(:location, identifier: "Portland Near Road")
-      insert(:location, identifier: "portland pearl")
-      ignored_location = insert(:location, identifier: "London Camden")
-
-      locations = Data.find_locations("Portland")
-
-      assert Enum.count(locations) == 2
-
-      Enum.map(locations, fn location ->
-        refute location == ignored_location
-      end)
-    end
-
-    test "returns results containing search_term in city" do
-      insert(:location, city: "London")
-      insert(:location, identifier: "London Camden")
-      ignored_location = insert(:location, city: "Portland")
-
-      locations = Data.find_locations("London")
-
-      assert Enum.count(locations) == 2
-
-      Enum.map(locations, fn location ->
-        refute location == ignored_location
-      end)
-    end
-
-    test "returns a maximum of 10 results" do
-      insert_list(11, :location, city: "London")
-
-      locations = Data.find_locations("London")
-
-      assert Enum.count(locations) == 10
-    end
-  end
-
   describe "find_locations(lat, lon):" do
     test "returns results within 1000 meters of lat, lon" do
       insert(:location, coordinates: %Geo.Point{coordinates: {0.0, 0.0}, srid: 4326})

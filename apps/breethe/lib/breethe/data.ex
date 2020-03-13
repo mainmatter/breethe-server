@@ -16,14 +16,6 @@ defmodule Breethe.Data do
 
   def all_locations(), do: Repo.all(Location)
 
-  def find_locations(search_term) do
-    Location
-    |> Location.matches(search_term)
-    |> Location.first_ten()
-    |> Repo.all()
-    |> preload_measurements()
-  end
-
   def find_locations(lat, lon) do
     Location
     |> Location.within_meters(lat, lon, 1000)

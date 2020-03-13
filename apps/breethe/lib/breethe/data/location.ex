@@ -42,12 +42,6 @@ defmodule Breethe.Data.Location do
     |> unique_constraint(:identifier)
   end
 
-  def matches(query, search_term) do
-    search_term = "%" <> search_term <> "%"
-
-    from(l in query, where: ilike(l.identifier, ^search_term) or ilike(l.city, ^search_term))
-  end
-
   def within_meters(query, lat, lon, 1000) do
     search_term = geo_from_coordinates(lat, lon)
 
