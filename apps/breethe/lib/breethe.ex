@@ -7,11 +7,10 @@ defmodule Breethe do
   if it comes from the database, an external API or others.
   """
 
+  alias __MODULE__.Data
+
   @behaviour Breethe.Behaviour
-
-  alias __MODULE__.{Data, TaskSupervisor}
-
-  @source Application.get_env(:breethe, :source)
+  @geocoding_api Application.get_env(:breethe, :google_api)
 
   defmodule Behaviour do
     @callback get_location(location_id :: integer) :: %Breethe.Data.Location{}
@@ -24,7 +23,12 @@ defmodule Breethe do
 
   def get_location(location_id), do: Data.get_location(location_id)
 
-  def search_locations(search_term), do: Data.find_locations(search_term)
+  def search_locations(search_term) do
+    case @geocoding_api.find_location(search_term) do
+      [lat, lon] -> Data.find_locations(lat, lon)
+      [] -> []
+    end
+  end
 
   def search_locations(lat, lon), do: Data.find_locations(lat, lon)
 

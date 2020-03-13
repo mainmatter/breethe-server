@@ -1,7 +1,12 @@
 defmodule BreetheTest do
   use Breethe.DataCase
 
+  import Mox
   import Breethe.Factory
+
+  alias Breethe.Sources.Google.GeocodingMock
+
+  setup :verify_on_exit!
 
   describe "get_location(location_id):" do
     test "returns a location by id" do
@@ -13,9 +18,17 @@ defmodule BreetheTest do
 
   describe "search_locations(search_term):" do
     test "returns locations for a search term" do
-      location = insert(:location, city: "london", measurements: [])
+      search_term = "test-city"
 
-      assert [location] == Breethe.search_locations("london")
+      location =
+        insert(:location,
+          measurements: [],
+          coordinates: %Geo.Point{coordinates: {0.0, 0.0}, srid: 4326}
+        )
+
+      expect(GeocodingMock, :find_location, fn ^search_term -> [0.0, 0.0] end)
+
+      assert [location] == Breethe.search_locations(search_term)
     end
   end
 
