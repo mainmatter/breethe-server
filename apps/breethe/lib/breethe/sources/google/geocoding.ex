@@ -1,4 +1,8 @@
 defmodule Breethe.Sources.Google.Geocoding do
+  defmodule Behaviour do
+    @callback find_location(search_term :: String.t()) :: [coordinates :: number]
+  end
+
   def find_location(search_term) do
     query =
       URI.encode_query(%{
@@ -14,19 +18,6 @@ defmodule Breethe.Sources.Google.Geocoding do
     |> strip()
   end
 
-  def find_location(lat, lon) do
-    query =
-      URI.encode_query(%{
-        "latlng" => "#{lat},#{lon}",
-        "key" => Application.get_env(:breethe, :google_maps_api_key)
-      })
-
-    query
-    |> query_google_api()
-    |> Jason.decode!()
-    |> strip()
-  end
-
   defp query_google_api(query) do
     url = "#{Application.get_env(:breethe, :google_maps_api_endpoint)}?#{query}"
     {:ok, response} = HTTPoison.get(url)
@@ -35,12 +26,4 @@ defmodule Breethe.Sources.Google.Geocoding do
 
   defp strip(results) when is_nil(results), do: []
   defp strip(%{"geometry" => %{"location" => %{"lat" => lat, "lng" => lon}}}), do: [lat, lon]
-
-  defp strip(results) do
-    all = fn :get, data, next -> Enum.map(data, next) end
-
-    results
-    |> get_in(["results", all, "formatted_address"])
-    |> List.first()
-  end
 end
