@@ -4,13 +4,11 @@
 built by [simplabs](https://simplabs.com). We build custom web and mobile
 solutions for our clients to rely on.**
 
-Breethe allows instant access to up to date air quality data for locations
-across the world. Pollution and global warming are getting worse rather than
+Breethe allows instant access to up to date air quality data for locations in Europe. Pollution and global warming are getting worse rather than
 better and affect everyone's daily lives. Easily accessible data on how bad
 things actually are might help raising attention and awareness 🌳💨
 
-The data is retrieved from the [openaq](https://openaq.org) API - be sure to
-check that project out!
+The data is retrieved from the [European Environment Agency](https://www.eea.europa.eu/).
 
 ## The Stack
 
@@ -26,7 +24,7 @@ exposes data to the
 
 We built Breethe for maximum efficiency and performance. The server is a caching
 proxy that caches, filters and processes data obtained from the
-[openaq](https://openaq.org) API.
+[European Environment Agency](https://www.eea.europa.eu/).
 
 **This project is still in a relatively early stage. There are likely still
 bugs and there is definitely lots of room for even more improvement.** If you

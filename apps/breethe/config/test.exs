@@ -9,5 +9,5 @@ config :breethe, Breethe.Repo,
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
-config :breethe, source: Breethe.Sources.OpenAQMock
 config :breethe, google_maps_api_key: "google_api_key"
+config :breethe, google_api: Breethe.Sources.Google.GeocodingMock
