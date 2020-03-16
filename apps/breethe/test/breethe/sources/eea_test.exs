@@ -17,7 +17,7 @@ defmodule Breethe.Sources.EEATest do
 
   describe "sends request to download data:" do
     test "for a list of countries and params", %{bypass: bypass} do
-      for country <- EEA.country_codes(), param <- EEA.parameters() do
+      for %{country: country, params: params} <- EEA.countries(), param <- params do
         Bypass.expect_once(bypass, "GET", "/eea/#{country}_#{param}.csv", fn conn ->
           Plug.Conn.resp(
             conn,
@@ -28,7 +28,7 @@ defmodule Breethe.Sources.EEATest do
       end
 
       result = EEA.get_data()
-      assert length(result) == 144
+      assert length(result) == 203
     end
   end
 end
