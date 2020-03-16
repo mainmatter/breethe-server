@@ -42,10 +42,10 @@ defmodule Breethe.Data.Location do
     |> unique_constraint(:identifier)
   end
 
-  def within_meters(query, lat, lon, 1000) do
+  def within_meters(query, lat, lon, distance) do
     search_term = geo_from_coordinates(lat, lon)
 
-    from(l in query, where: st_dwithin_in_meters(l.coordinates, ^search_term, 1000))
+    from(l in query, where: st_dwithin_in_meters(l.coordinates, ^search_term, ^distance))
   end
 
   def closest_first(query, lat, lon) do
