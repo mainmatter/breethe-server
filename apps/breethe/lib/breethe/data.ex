@@ -18,7 +18,7 @@ defmodule Breethe.Data do
 
   def find_locations(lat, lon) do
     Location
-    |> Location.within_meters(lat, lon, 1000)
+    |> Location.within_meters(lat, lon, 10000)
     |> Location.closest_first(lat, lon)
     |> Location.first_ten()
     |> Repo.all()
