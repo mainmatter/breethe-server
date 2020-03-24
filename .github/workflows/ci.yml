@@ -17,6 +17,12 @@ jobs:
         with:
           otp-version: 22.0
           elixir-version: 1.10.1
+      - uses: actions/cache@v1
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
       - run: mix deps.get
       - run: mix format --check-formatted
 
@@ -30,6 +36,12 @@ jobs:
         with:
           otp-version: 22.0
           elixir-version: 1.10.1
+      - uses: actions/cache@v1
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
       - uses: huaxk/postgis-action@v1
         with:
           postgresql password: 'breethe'
@@ -48,5 +60,11 @@ jobs:
         with:
           otp-version: 22.0
           elixir-version: 1.10.1
+      - uses: actions/cache@v1
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
       - run: mix deps.get
       - run: mix dialyzer
