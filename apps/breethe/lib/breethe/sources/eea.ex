@@ -1,49 +1,27 @@
 defmodule Breethe.Sources.EEA do
   alias __MODULE__.CSV
 
-  @countries [
-    %{country: "AD", params: ["PM10", "SO2", "NO2", "O3", "CO"]},
-    %{country: "AT", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "BA", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "BE", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "BG", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "CH", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "CY", params: ["SO2", "NO2", "O3", "CO"]},
-    %{country: "CZ", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "DE", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "DK", params: ["SO2", "NO2", "O3", "CO"]},
-    %{country: "EE", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "ES", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "FI", params: ["PM10", "PM2.5", "SO2", "NO2", "O3"]},
-    %{country: "FR", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "GB", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "GE", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "GI", params: ["PM10", "SO2", "NO2", "O3", "CO"]},
-    %{country: "GR", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "HR", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "HU", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "IE", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "IS", params: ["PM10", "PM2.5", "SO2", "NO2"]},
-    %{country: "IT", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "LT", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "LU", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "LV", params: ["SO2", "NO2", "O3", "CO"]},
-    %{country: "MK", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "MT", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "NL", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "NO", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "PL", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "PT", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "RS", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]},
-    %{country: "SE", params: ["PM10", "PM2.5", "SO2", "NO2", "O3"]},
-    %{country: "SI", params: ["PM10", "SO2", "NO2", "O3", "CO"]},
-    %{country: "SK", params: ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]}
-  ]
+  @supported_params ["PM10", "PM2.5", "SO2", "NO2", "O3", "CO"]
+  @file_regex ~r/.*(?<country>\w{2})_(?<param>[\w\.]{2,5})\.csv$/
 
-  def countries(), do: @countries
+  def available_countries_and_params() do
+    {:ok, response} = download_countries_and_params()
+
+    response.body
+    |> String.split("\n")
+    |> Enum.map(&String.trim(&1))
+    |> Enum.map(&Regex.named_captures(@file_regex, &1))
+    |> Enum.reject(&is_nil/1)
+    |> Enum.filter(fn %{"param" => param} -> Enum.member?(@supported_params, param) end)
+    |> Enum.group_by(&Map.get(&1, "country"))
+    |> Enum.map(fn {country, data} ->
+      %{country: country, params: Enum.map(data, &Map.get(&1, "param"))}
+    end)
+  end
 
   def get_data() do
-    for %{country: country, params: params} <- countries(), param <- params do
+    for %{country: country, params: params} <- available_countries_and_params(),
+        param <- params do
       country
       |> download_latest(param)
       |> case do
@@ -55,6 +33,12 @@ defmodule Breethe.Sources.EEA do
 
   defp download_latest(country, param) do
     url = "#{Application.get_env(:breethe, :eea_endpoint)}/#{country}_#{param}.csv"
+
+    HTTPoison.get(url)
+  end
+
+  defp download_countries_and_params do
+    url = "#{Application.get_env(:breethe, :eea_endpoint)}/files.txt"
 
     HTTPoison.get(url)
   end
