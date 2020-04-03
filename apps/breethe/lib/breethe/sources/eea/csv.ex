@@ -69,19 +69,27 @@ defmodule Breethe.Sources.EEA.CSV do
 
   defp store_data(stream) do
     stream
-    |> Stream.filter(fn datum -> datum.value_numeric != "" end)
-    |> Stream.map(&store_datum/1)
+    |> Enum.filter(fn datum -> datum.value_numeric != "" end)
+    |> Enum.group_by(&Map.get(&1, :station_code))
+    |> Stream.map(&store_station/1)
     |> Stream.run()
   end
 
-  defp store_datum(datum) do
+  defp store_station(station_data) do
+    {_, measurements} = station_data
+
+    sorted_mesaurements =
+      Enum.sort(measurements, &(&1.value_datetime_updated > &2.value_datetime_updated))
+
+    [first_measurement | _] = sorted_mesaurements
+
     location =
-      datum
+      first_measurement
       |> extract_location()
       |> Data.create_location()
 
     _measurement =
-      datum
+      sorted_mesaurements
       |> extract_measurement()
       |> Map.put_new(:location_id, location.id)
       |> Data.create_measurement()
