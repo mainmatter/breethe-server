@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request: {}
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          otp-version: 22.0
+          elixir-version: 1.10.1
+      - uses: actions/cache@v1
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
+      - run: mix deps.get
+      - run: mix format --check-formatted
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          otp-version: 22.0
+          elixir-version: 1.10.1
+      - uses: actions/cache@v1
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
+      - uses: huaxk/postgis-action@v1
+        with:
+          postgresql password: 'breethe'
+          postgresql user: 'breethe'
+          postgresql db: 'breethe_test'
+      - run: mix deps.get
+      - run: mix test
+
+  dialyzer:
+    name: Dialyzer
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          otp-version: 22.0
+          elixir-version: 1.10.1
+      - uses: actions/cache@v1
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
+      - uses: actions/cache@v1
+        with:
+          path: deps
+          key: ${{ runner.os }}-plt-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-plt-
+      - run: mix deps.get
+      - run: mix dialyzer
