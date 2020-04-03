@@ -95,7 +95,7 @@ defmodule Breethe.Sources.EEA.CSV do
         Map.put_new(measurement_params, :location_id, location.id)
       end)
 
-    Data.create_measurements(measurements_params)
+    Data.import_measurements(location, measurements_params)
   end
 
   defp extract_location(datum) do
