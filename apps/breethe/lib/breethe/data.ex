@@ -1,6 +1,8 @@
 defmodule Breethe.Data do
   alias __MODULE__.{Location, Measurement}
   alias Breethe.Repo
+  alias Ecto.Multi
+  import Ecto.Query, only: [from: 2]
 
   def get_location(id) do
     Location
@@ -59,8 +61,6 @@ defmodule Breethe.Data do
     )
   end
 
-  defp find_measurement(params), do: Repo.get_by(Measurement, params)
-
   def find_measurements(location_id) do
     Measurement
     |> Measurement.for_location(location_id)
@@ -70,15 +70,31 @@ defmodule Breethe.Data do
     |> Repo.all()
   end
 
-  def create_measurement(params) do
-    params
-    |> Map.take([:parameter, :measured_at, :location_id])
-    |> find_measurement()
-    |> case do
-      nil -> %Measurement{}
-      measurement -> measurement
+  def import_measurements(location, measurements_params) do
+    latest_measurement_date = find_latest_measurement_date(location)
+
+    params =
+      measurements_params
+      |> Enum.map(fn measurement_params ->
+        Map.take(measurement_params, [:parameter, :measured_at, :location_id, :value])
+      end)
+      |> Enum.filter(&(&1.measured_at > latest_measurement_date))
+
+    result =
+      Enum.reduce(params, Multi.new(), fn measurement_params, multi ->
+        changeset = Measurement.changeset(%Measurement{}, measurement_params)
+        Multi.insert(multi, {:write, measurement_params.measured_at}, changeset)
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, result} -> result
+      {:error, _, changeset, _} -> {:error, changeset}
     end
-    |> Measurement.changeset(params)
-    |> Repo.insert_or_update!()
+  end
+
+  def find_latest_measurement_date(location) do
+    query = from(m in Measurement, where: m.location_id == ^location.id)
+    Repo.aggregate(query, :max, :measured_at)
   end
 end

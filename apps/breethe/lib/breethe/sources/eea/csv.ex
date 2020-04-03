@@ -11,32 +11,32 @@ defmodule Breethe.Sources.EEA.CSV do
   defp parse_csv(data) do
     data
     |> NimbleCSV.parse_string()
-    |> Stream.map(fn [
-                       network_countrycode,
-                       network_localid,
-                       network_name,
-                       network_namespace,
-                       network_timezone,
-                       pollutant,
-                       samplingpoint_localid,
-                       samplingpoint_namespace,
-                       samplingpoint_x,
-                       samplingpoint_y,
-                       coordsys,
-                       station_code,
-                       station_localid,
-                       station_name,
-                       station_namespace,
-                       value_datetime_begin,
-                       value_datetime_end,
-                       value_datetime_inserted,
-                       _value_datetime_updated,
-                       value_numeric,
-                       value_validity,
-                       value_verification,
-                       station_altitude,
-                       value_unit
-                     ] ->
+    |> Enum.map(fn [
+                     network_countrycode,
+                     network_localid,
+                     network_name,
+                     network_namespace,
+                     network_timezone,
+                     pollutant,
+                     samplingpoint_localid,
+                     samplingpoint_namespace,
+                     samplingpoint_x,
+                     samplingpoint_y,
+                     coordsys,
+                     station_code,
+                     station_localid,
+                     station_name,
+                     station_namespace,
+                     value_datetime_begin,
+                     value_datetime_end,
+                     value_datetime_inserted,
+                     _value_datetime_updated,
+                     value_numeric,
+                     value_validity,
+                     value_verification,
+                     station_altitude,
+                     value_unit
+                   ] ->
       %{
         network_countrycode: network_countrycode,
         network_localid: network_localid,
@@ -67,24 +67,35 @@ defmodule Breethe.Sources.EEA.CSV do
     end)
   end
 
-  defp store_data(stream) do
-    stream
-    |> Stream.filter(fn datum -> datum.value_numeric != "" end)
-    |> Stream.map(&store_datum/1)
-    |> Stream.run()
+  defp store_data(data) do
+    data
+    |> Enum.filter(fn datum -> datum.value_numeric != "" end)
+    |> Enum.group_by(&Map.get(&1, :station_code))
+    |> Enum.map(&store_station/1)
   end
 
-  defp store_datum(datum) do
+  defp store_station(station_data) do
+    {_, measurements} = station_data
+
+    sorted_mesaurements =
+      Enum.sort(measurements, &(&1.value_datetime_updated > &2.value_datetime_updated))
+
+    [first_measurement | _] = sorted_mesaurements
+
     location =
-      datum
+      first_measurement
       |> extract_location()
       |> Data.create_location()
 
-    _measurement =
-      datum
-      |> extract_measurement()
-      |> Map.put_new(:location_id, location.id)
-      |> Data.create_measurement()
+    measurements_params =
+      sorted_mesaurements
+      |> Enum.uniq_by(& &1.value_datetime_updated)
+      |> Enum.map(&extract_measurement/1)
+      |> Enum.map(fn measurement_params ->
+        Map.put_new(measurement_params, :location_id, location.id)
+      end)
+
+    Data.import_measurements(location, measurements_params)
   end
 
   defp extract_location(datum) do

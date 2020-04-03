@@ -144,26 +144,36 @@ defmodule Breethe.DataTest do
     end
   end
 
-  describe "create_measurement(params):" do
-    test "creates a measurement" do
+  describe "create_measurements(params):" do
+    test "creates measurements" do
       location = insert(:location)
       params = params_for(:measurement, location: location)
 
-      measurement = Data.create_measurement(params)
+      Data.import_measurements(location, [params])
 
-      assert Repo.get_by(Measurement, params) == measurement
+      assert Repo.aggregate(Measurement, :count) == 1
     end
 
-    test "updates (no-op) if measurement already exists" do
-      params = params_for(:measurement)
+    test "only inserts new measurements" do
       location = insert(:location)
-      measurement = insert(:measurement, location: location)
 
-      created_measurement =
-        Data.create_measurement(params)
-        |> Repo.preload(:location)
+      insert(:measurement,
+        location: location,
+        measured_at: Timex.shift(DateTime.utc_now(), days: -1)
+      )
 
-      assert measurement == created_measurement
+      params_old =
+        params_for(:measurement,
+          location: location,
+          measured_at: Timex.shift(DateTime.utc_now(), days: -2)
+        )
+
+      params_new = params_for(:measurement, location: location, measured_at: DateTime.utc_now())
+
+      Data.import_measurements(location, [params_old, params_new])
+
+      # params_old was not inserted
+      assert Repo.aggregate(Measurement, :count) == 2
     end
   end
 end
