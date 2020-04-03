@@ -1,6 +1,7 @@
 defmodule Breethe.Data do
   alias __MODULE__.{Location, Measurement}
   alias Breethe.Repo
+  alias Ecto.Multi
 
   def get_location(id) do
     Location
@@ -80,5 +81,30 @@ defmodule Breethe.Data do
     end
     |> Measurement.changeset(params)
     |> Repo.insert_or_update!()
+  end
+
+  def create_measurements(measurements_params) do
+    result =
+      Enum.reduce(measurements_params, Multi.new(), fn measurement_params, multi ->
+        params = Map.take(measurement_params, [:parameter, :measured_at, :location_id, :value])
+
+        changeset =
+          Ecto.Multi.run(multi, {:read, params.measured_at}, fn _, _ ->
+            find_measurement(params)
+          end)
+          |> case do
+            {:ok, measurement} -> measurement
+            _ -> %Measurement{}
+          end
+          |> Measurement.changeset(params)
+
+        Multi.insert_or_update(multi, {:write, params.measured_at}, changeset)
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, result} -> result
+      {:error, _, changeset, _} -> {:error, changeset}
+    end
   end
 end
