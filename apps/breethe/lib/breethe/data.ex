@@ -97,4 +97,33 @@ defmodule Breethe.Data do
     query = from(m in Measurement, where: m.location_id == ^location.id)
     Repo.aggregate(query, :max, :measured_at)
   end
+
+  def delete_old_data(threshold_days) do
+    Repo.transaction(fn ->
+      delete_old_measurements!(threshold_days)
+      delete_empty_locations!()
+    end)
+  end
+
+  defp delete_old_measurements!(threshold_days) do
+    cutoff_date_time = Timex.shift(DateTime.utc_now(), days: -threshold_days)
+
+    from(m in Measurement, where: m.measured_at < ^cutoff_date_time)
+    |> Repo.delete_all()
+  end
+
+  defp delete_empty_locations!() do
+    location_ids =
+      from(l in Location,
+        select: l.id,
+        left_join: m in Measurement,
+        on: m.location_id == l.id,
+        group_by: l.id,
+        having: count(m.location_id) == 0
+      )
+      |> Repo.all()
+
+    from(l in Location, where: l.id in ^location_ids)
+    |> Repo.delete_all()
+  end
 end

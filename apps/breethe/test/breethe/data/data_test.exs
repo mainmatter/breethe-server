@@ -176,4 +176,44 @@ defmodule Breethe.DataTest do
       assert Repo.aggregate(Measurement, :count) == 2
     end
   end
+
+  describe "delete_old_data" do
+    test "deletes measurements older than the threshold" do
+      location = insert(:location)
+
+      insert(:measurement,
+        location: location,
+        measured_at: DateTime.utc_now()
+      )
+
+      insert(:measurement,
+        location: location,
+        measured_at: Timex.shift(DateTime.utc_now(), days: -4)
+      )
+
+      Data.delete_old_data(3)
+
+      assert Repo.aggregate(Measurement, :count) == 1
+    end
+
+    test "deletes locations that do not have measurements" do
+      empty_location = insert(:location)
+      location = insert(:location)
+      old_location = insert(:location)
+
+      insert(:measurement,
+        location: location,
+        measured_at: DateTime.utc_now()
+      )
+
+      insert(:measurement,
+        location: old_location,
+        measured_at: Timex.shift(DateTime.utc_now(), days: -4)
+      )
+
+      Data.delete_old_data(3)
+
+      assert Repo.aggregate(Location, :count) == 1
+    end
+  end
 end
