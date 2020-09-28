@@ -46,7 +46,7 @@ defmodule Breethe.Mixfile do
       {:bypass, "~> 1.0", only: :test},
       {:timex, "~> 3.1"},
       {:mox, "~> 1.0", only: :test},
-      {:nimble_csv, "~> 0.6"}
+      {:nimble_csv, "~> 1.0"}
     ]
   end
 
