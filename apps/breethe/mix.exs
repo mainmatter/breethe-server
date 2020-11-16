@@ -43,7 +43,7 @@ defmodule Breethe.Mixfile do
       {:ex_machina, "~> 2.1", only: :test},
       {:httpoison, "~> 1.0"},
       {:jason, "~> 1.1"},
-      {:bypass, "~> 1.0", only: :test},
+      {:bypass, "~> 2.1", only: :test},
       {:timex, "~> 3.1"},
       {:mox, "~> 1.0", only: :test},
       {:nimble_csv, "~> 1.0"}
